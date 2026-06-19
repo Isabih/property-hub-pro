@@ -13,13 +13,13 @@ import { Route as SiteRouteImport } from './routes/_site'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
-import { Route as SitePropertiesRouteImport } from './routes/_site.properties'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
 import { Route as SiteListPropertyRouteImport } from './routes/_site.list-property'
 import { Route as SiteInvestorsRouteImport } from './routes/_site.investors'
 import { Route as SiteContactRouteImport } from './routes/_site.contact'
 import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
+import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
 
 const SiteRoute = SiteRouteImport.update({
@@ -39,11 +39,6 @@ const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
 const SiteServicesRoute = SiteServicesRouteImport.update({
   id: '/services',
   path: '/services',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SitePropertiesRoute = SitePropertiesRouteImport.update({
-  id: '/properties',
-  path: '/properties',
   getParentRoute: () => SiteRoute,
 } as any)
 const SitePortfolioRoute = SitePortfolioRouteImport.update({
@@ -76,10 +71,15 @@ const SiteAboutRoute = SiteAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => SiteRoute,
 } as any)
+const SitePropertiesIndexRoute = SitePropertiesIndexRouteImport.update({
+  id: '/properties/',
+  path: '/properties/',
+  getParentRoute: () => SiteRoute,
+} as any)
 const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => SitePropertiesRoute,
+  id: '/properties/$slug',
+  path: '/properties/$slug',
+  getParentRoute: () => SiteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -90,10 +90,10 @@ export interface FileRoutesByFullPath {
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
   '/portfolio': typeof SitePortfolioRoute
-  '/properties': typeof SitePropertiesRouteWithChildren
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
+  '/properties/': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof SiteAboutRoute
@@ -102,11 +102,11 @@ export interface FileRoutesByTo {
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
   '/portfolio': typeof SitePortfolioRoute
-  '/properties': typeof SitePropertiesRouteWithChildren
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
   '/': typeof SiteIndexRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
+  '/properties': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,11 +117,11 @@ export interface FileRoutesById {
   '/_site/investors': typeof SiteInvestorsRoute
   '/_site/list-property': typeof SiteListPropertyRoute
   '/_site/portfolio': typeof SitePortfolioRoute
-  '/_site/properties': typeof SitePropertiesRouteWithChildren
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
   '/_site/': typeof SiteIndexRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
+  '/_site/properties/': typeof SitePropertiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -133,10 +133,10 @@ export interface FileRouteTypes {
     | '/investors'
     | '/list-property'
     | '/portfolio'
-    | '/properties'
     | '/services'
     | '/verify-access'
     | '/properties/$slug'
+    | '/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
@@ -145,11 +145,11 @@ export interface FileRouteTypes {
     | '/investors'
     | '/list-property'
     | '/portfolio'
-    | '/properties'
     | '/services'
     | '/verify-access'
     | '/'
     | '/properties/$slug'
+    | '/properties'
   id:
     | '__root__'
     | '/_site'
@@ -159,11 +159,11 @@ export interface FileRouteTypes {
     | '/_site/investors'
     | '/_site/list-property'
     | '/_site/portfolio'
-    | '/_site/properties'
     | '/_site/services'
     | '/_site/verify-access'
     | '/_site/'
     | '/_site/properties/$slug'
+    | '/_site/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -198,13 +198,6 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof SiteServicesRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/properties': {
-      id: '/_site/properties'
-      path: '/properties'
-      fullPath: '/properties'
-      preLoaderRoute: typeof SitePropertiesRouteImport
       parentRoute: typeof SiteRoute
     }
     '/_site/portfolio': {
@@ -249,27 +242,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteAboutRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_site/properties/': {
+      id: '/_site/properties/'
+      path: '/properties'
+      fullPath: '/properties/'
+      preLoaderRoute: typeof SitePropertiesIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
     '/_site/properties/$slug': {
       id: '/_site/properties/$slug'
-      path: '/$slug'
+      path: '/properties/$slug'
       fullPath: '/properties/$slug'
       preLoaderRoute: typeof SitePropertiesSlugRouteImport
-      parentRoute: typeof SitePropertiesRoute
+      parentRoute: typeof SiteRoute
     }
   }
 }
-
-interface SitePropertiesRouteChildren {
-  SitePropertiesSlugRoute: typeof SitePropertiesSlugRoute
-}
-
-const SitePropertiesRouteChildren: SitePropertiesRouteChildren = {
-  SitePropertiesSlugRoute: SitePropertiesSlugRoute,
-}
-
-const SitePropertiesRouteWithChildren = SitePropertiesRoute._addFileChildren(
-  SitePropertiesRouteChildren,
-)
 
 interface SiteRouteChildren {
   SiteAboutRoute: typeof SiteAboutRoute
@@ -278,10 +266,11 @@ interface SiteRouteChildren {
   SiteInvestorsRoute: typeof SiteInvestorsRoute
   SiteListPropertyRoute: typeof SiteListPropertyRoute
   SitePortfolioRoute: typeof SitePortfolioRoute
-  SitePropertiesRoute: typeof SitePropertiesRouteWithChildren
   SiteServicesRoute: typeof SiteServicesRoute
   SiteVerifyAccessRoute: typeof SiteVerifyAccessRoute
   SiteIndexRoute: typeof SiteIndexRoute
+  SitePropertiesSlugRoute: typeof SitePropertiesSlugRoute
+  SitePropertiesIndexRoute: typeof SitePropertiesIndexRoute
 }
 
 const SiteRouteChildren: SiteRouteChildren = {
@@ -291,10 +280,11 @@ const SiteRouteChildren: SiteRouteChildren = {
   SiteInvestorsRoute: SiteInvestorsRoute,
   SiteListPropertyRoute: SiteListPropertyRoute,
   SitePortfolioRoute: SitePortfolioRoute,
-  SitePropertiesRoute: SitePropertiesRouteWithChildren,
   SiteServicesRoute: SiteServicesRoute,
   SiteVerifyAccessRoute: SiteVerifyAccessRoute,
   SiteIndexRoute: SiteIndexRoute,
+  SitePropertiesSlugRoute: SitePropertiesSlugRoute,
+  SitePropertiesIndexRoute: SitePropertiesIndexRoute,
 }
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
