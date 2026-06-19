@@ -6,7 +6,7 @@ import { PropertyCard } from "@/components/site/PropertyCard";
 
 type PropSearch = { category?: PropertyCategory };
 
-export const Route = createFileRoute("/_site/properties")({
+export const Route = createFileRoute("/_site/properties/")({
   validateSearch: (s: Record<string, unknown>): PropSearch => ({
     category: (s.category as PropertyCategory) || undefined,
   }),
