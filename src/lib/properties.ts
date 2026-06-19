@@ -44,6 +44,24 @@ export interface RoomImage {
   src: string;
 }
 
+export interface NeighborhoodPlace {
+  name: string;
+  type: "shopping" | "dining" | "hospital" | "school" | "transit" | "park" | "landmark";
+  distance: string;
+  note?: string;
+}
+
+export interface PropertyAgent {
+  name: string;
+  title: string;
+  avatar: string;
+  phone: string;
+  email: string;
+  whatsapp?: string;
+  rating?: number;
+  reviews?: number;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -70,6 +88,18 @@ export interface Property {
   tourUrl?: string; // 3D walkthrough
   floorPlanUrl?: string; // PDF (optional)
   amenities?: string[];
+  // Detailed metadata
+  reference?: string; // e.g. NW-KGL-001
+  furnishing?: "Furnished" | "Semi-Furnished" | "Unfurnished";
+  yearBuilt?: number;
+  floor?: number | string;
+  facing?: string;
+  parking?: number;
+  address?: string;
+  lat?: number;
+  lng?: number;
+  neighborhood?: NeighborhoodPlace[];
+  agent?: PropertyAgent;
 }
 
 export const CATEGORY_META: Record<PropertyCategory, { label: string; plural: string; description: string }> = {
@@ -109,6 +139,33 @@ export const properties: Property[] = [
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     tourUrl: "https://my.matterport.com/show/?m=SxQL3iGyoDo",
     amenities: ["Concierge", "Pool", "Gym", "Smart home", "Private elevator"],
+    reference: "NW-KGL-001",
+    furnishing: "Furnished",
+    yearBuilt: 2022,
+    floor: 15,
+    facing: "North-East",
+    parking: 2,
+    address: "KG 7 Ave, Kigali Heights Tower A",
+    lat: -1.9536,
+    lng: 30.0928,
+    neighborhood: [
+      { name: "Kigali Heights Mall", type: "shopping", distance: "Building", note: "Premium shopping and dining" },
+      { name: "The Hut Restaurant", type: "dining", distance: "50m", note: "Fine dining" },
+      { name: "King Faisal Hospital", type: "hospital", distance: "2.5km" },
+      { name: "Green Hills Academy", type: "school", distance: "3km" },
+      { name: "Kigali Convention Centre", type: "landmark", distance: "800m" },
+      { name: "Nyarutarama Park", type: "park", distance: "1.2km" },
+    ],
+    agent: {
+      name: "Jean Pierre Habimana",
+      title: "Senior Property Consultant",
+      avatar: "https://i.pravatar.cc/160?img=12",
+      phone: "+250793300080",
+      email: "jp.habimana@novaworks.rw",
+      whatsapp: "250793300080",
+      rating: 5,
+      reviews: 48,
+    },
   },
   {
     id: "p2", slug: "nyarutarama-glass-villa",
@@ -215,4 +272,48 @@ export function getProperty(slug: string) {
 export function listByCategory(category?: PropertyCategory) {
   if (!category) return properties;
   return properties.filter((p) => p.category === category);
+}
+
+/** Fill in sensible defaults for the detail page so every property looks complete. */
+export function getEnrichedProperty(slug: string): Property | undefined {
+  const p = getProperty(slug);
+  if (!p) return undefined;
+  const districtCenters: Record<string, [number, number]> = {
+    Gasabo: [-1.9396, 30.1057],
+    Kicukiro: [-1.9886, 30.1057],
+    Nyarugenge: [-1.9536, 30.0606],
+  };
+  const [lat, lng] = districtCenters[p.district] ?? [-1.9441, 30.0619];
+  const defaultAgent: PropertyAgent = {
+    name: "Diane Uwase",
+    title: "Property Consultant",
+    avatar: "https://i.pravatar.cc/160?img=47",
+    phone: "+250793300080",
+    email: "diane.uwase@novaworks.rw",
+    whatsapp: "250793300080",
+    rating: 5,
+    reviews: 24,
+  };
+  const defaultNeighborhood: NeighborhoodPlace[] = [
+    { name: `${p.location} Market`, type: "shopping", distance: "600m", note: "Daily essentials" },
+    { name: `${p.location} Bistro`, type: "dining", distance: "300m", note: "Cafés & dining" },
+    { name: "King Faisal Hospital", type: "hospital", distance: "2.5km" },
+    { name: "Green Hills Academy", type: "school", distance: "3km" },
+    { name: "Kigali Convention Centre", type: "landmark", distance: "1.5km" },
+    { name: `${p.district} Park`, type: "park", distance: "900m" },
+  ];
+  return {
+    ...p,
+    reference: p.reference ?? `NW-${p.id.toUpperCase()}`,
+    furnishing: p.furnishing ?? (p.category === "land" ? undefined : "Furnished"),
+    yearBuilt: p.yearBuilt ?? 2022,
+    floor: p.floor ?? (p.category === "land" ? undefined : 3),
+    facing: p.facing ?? "North-East",
+    parking: p.parking ?? (p.category === "land" ? 0 : 2),
+    address: p.address ?? `${p.location}, ${p.district}`,
+    lat: p.lat ?? lat,
+    lng: p.lng ?? lng,
+    neighborhood: p.neighborhood ?? defaultNeighborhood,
+    agent: p.agent ?? defaultAgent,
+  };
 }
