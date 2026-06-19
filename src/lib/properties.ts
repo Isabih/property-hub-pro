@@ -1,0 +1,176 @@
+export type PropertyCategory =
+  | "apartment"
+  | "luxury-apartment"
+  | "villa"
+  | "building"
+  | "office"
+  | "land"
+  | "studio"
+  | "commercial";
+
+export type PropertyStatus = "available" | "sold" | "rented" | "maintenance";
+export type PropertyListing = "rent" | "sale";
+
+export interface Property {
+  id: string;
+  slug: string;
+  title: string;
+  category: PropertyCategory;
+  listing: PropertyListing;
+  status: PropertyStatus;
+  luxury: boolean;
+  featured?: boolean;
+  price: number;
+  currency: "USD" | "RWF";
+  priceUnit?: "month" | "total";
+  location: string;
+  district: string;
+  beds?: number;
+  baths?: number;
+  area: number;
+  description: string;
+  image: string;
+  gallery?: { label: string; src: string }[];
+  videoUrl?: string;
+  amenities?: string[];
+}
+
+export const CATEGORY_META: Record<PropertyCategory, { label: string; plural: string; description: string }> = {
+  apartment: { label: "Apartment", plural: "Apartments", description: "Modern apartments in prime locations" },
+  "luxury-apartment": { label: "Luxury Apartment", plural: "Luxury Apartments", description: "Penthouses & premium residences" },
+  villa: { label: "Villa", plural: "Villas", description: "Private villas with exclusive amenities" },
+  building: { label: "Building", plural: "Buildings", description: "Full buildings & developments" },
+  office: { label: "Office", plural: "Offices", description: "Corporate spaces & headquarters" },
+  land: { label: "Land / Plot", plural: "Lands / Plots", description: "Investment land & development plots" },
+  studio: { label: "Studio", plural: "Studios", description: "Compact, refined studio living" },
+  commercial: { label: "Commercial", plural: "Commercial", description: "Retail & mixed-use commercial assets" },
+};
+
+const u = (id: string, w = 1600) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+export const properties: Property[] = [
+  {
+    id: "p1", slug: "kigali-heights-luxury-penthouse",
+    title: "Kigali Heights Luxury Penthouse",
+    category: "luxury-apartment", listing: "sale", status: "available", luxury: true, featured: true,
+    price: 850000, currency: "USD",
+    location: "Kimihurura", district: "Gasabo",
+    beds: 4, baths: 3, area: 320,
+    description: "An architectural triumph perched above Kigali. Floor-to-ceiling glass, private rooftop terrace and concierge-grade finishes.",
+    image: u("photo-1600596542815-ffad4c1539a9"),
+    gallery: [
+      { label: "Main", src: u("photo-1600596542815-ffad4c1539a9") },
+      { label: "Living Room", src: u("photo-1600585154340-be6161a56a0c") },
+      { label: "Kitchen", src: u("photo-1556909114-f6e7ad7d3136") },
+      { label: "Bedroom", src: u("photo-1600210492486-724fe5c67fb0") },
+      { label: "Bathroom", src: u("photo-1552321554-5fefe8c9ef14") },
+    ],
+    amenities: ["Concierge", "Pool", "Gym", "Smart home", "Private elevator"],
+  },
+  {
+    id: "p2", slug: "nyarutarama-glass-villa",
+    title: "Nyarutarama Glass Villa",
+    category: "villa", listing: "sale", status: "available", luxury: true, featured: true,
+    price: 1250000, currency: "USD",
+    location: "Nyarutarama", district: "Gasabo",
+    beds: 6, baths: 5, area: 580,
+    description: "Sculptural minimalist villa wrapped in walnut and travertine, overlooking the golf estate.",
+    image: u("photo-1613490493576-7fde63acd811"),
+    gallery: [
+      { label: "Exterior", src: u("photo-1613490493576-7fde63acd811") },
+      { label: "Pool", src: u("photo-1600585154526-990dced4db0d") },
+      { label: "Living", src: u("photo-1600607687939-ce8a6c25118c") },
+      { label: "Kitchen", src: u("photo-1556909114-f6e7ad7d3136") },
+    ],
+    amenities: ["Infinity pool", "Cinema", "Wine cellar", "Garden", "Staff quarters"],
+  },
+  {
+    id: "p3", slug: "kacyiru-skyline-residence",
+    title: "Kacyiru Skyline Residence",
+    category: "apartment", listing: "rent", status: "available", luxury: false, featured: true,
+    price: 2400, currency: "USD", priceUnit: "month",
+    location: "Kacyiru", district: "Gasabo",
+    beds: 3, baths: 2, area: 145,
+    description: "Sun-drenched corner apartment with balcony views across the Kigali skyline.",
+    image: u("photo-1502672260266-1c1ef2d93688"),
+    gallery: [
+      { label: "Living Room", src: u("photo-1502672260266-1c1ef2d93688") },
+      { label: "Kitchen", src: u("photo-1556909114-f6e7ad7d3136") },
+      { label: "Bedroom", src: u("photo-1505693416388-ac5ce068fe85") },
+    ],
+  },
+  {
+    id: "p4", slug: "remera-corporate-tower",
+    title: "Remera Corporate Tower — Floor 12",
+    category: "office", listing: "rent", status: "available", luxury: false,
+    price: 6800, currency: "USD", priceUnit: "month",
+    location: "Remera", district: "Gasabo", area: 410,
+    description: "Premium A-grade office floor with panoramic city views, raised flooring and turnkey fit-out.",
+    image: u("photo-1497366216548-37526070297c"),
+  },
+  {
+    id: "p5", slug: "rebero-hillside-plot",
+    title: "Rebero Hillside Investment Plot",
+    category: "land", listing: "sale", status: "available", luxury: false,
+    price: 320000, currency: "USD",
+    location: "Rebero", district: "Kicukiro", area: 2400,
+    description: "Elevated 2,400 m² plot with permit-ready layout for a private residence or boutique development.",
+    image: u("photo-1500382017468-9049fed747ef"),
+  },
+  {
+    id: "p6", slug: "gishushu-design-studio",
+    title: "Gishushu Design Studio",
+    category: "studio", listing: "rent", status: "available", luxury: false,
+    price: 850, currency: "USD", priceUnit: "month",
+    location: "Gishushu", district: "Gasabo",
+    beds: 1, baths: 1, area: 48,
+    description: "Compact, light-filled studio with built-in joinery — perfect for creative professionals.",
+    image: u("photo-1522708323590-d24dbb6b0267"),
+  },
+  {
+    id: "p7", slug: "kimihurura-private-residence",
+    title: "Kimihurura Private Residence",
+    category: "villa", listing: "rent", status: "rented", luxury: true,
+    price: 8500, currency: "USD", priceUnit: "month",
+    location: "Kimihurura", district: "Gasabo",
+    beds: 5, baths: 4, area: 420,
+    description: "Discreet luxury family villa with mature gardens and full staff accommodation.",
+    image: u("photo-1564013799919-ab600027ffc6"),
+  },
+  {
+    id: "p8", slug: "downtown-mixed-use-building",
+    title: "Downtown Mixed-Use Building",
+    category: "building", listing: "sale", status: "available", luxury: false,
+    price: 4200000, currency: "USD",
+    location: "Nyarugenge", district: "Nyarugenge", area: 2800,
+    description: "Income-producing mixed-use asset: ground-floor retail, four upper floors of residential.",
+    image: u("photo-1486406146926-c627a92ad1ab"),
+  },
+  {
+    id: "p9", slug: "kimihurura-garden-apartment",
+    title: "Kimihurura Garden Apartment",
+    category: "apartment", listing: "sale", status: "available", luxury: false, featured: true,
+    price: 285000, currency: "USD",
+    location: "Kimihurura", district: "Gasabo",
+    beds: 2, baths: 2, area: 110,
+    description: "Ground-floor garden apartment with private terrace and shared pool.",
+    image: u("photo-1567496898669-ee935f5f647a"),
+  },
+];
+
+export function formatPrice(p: Property) {
+  const v = new Intl.NumberFormat("en-US").format(p.price);
+  const sym = p.currency === "USD" ? "$" : "RWF ";
+  const suffix = p.priceUnit === "month" ? " / mo" : "";
+  return `${sym}${v}${suffix}`;
+}
+
+export function getProperty(slug: string) {
+  return properties.find((p) => p.slug === slug);
+}
+
+export function listByCategory(category?: PropertyCategory) {
+  if (!category) return properties;
+  return properties.filter((p) => p.category === category);
+}
