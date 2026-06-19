@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Bed, Bath, Maximize2, MapPin, Crown, Heart, Share2, Phone, Mail, Check, ArrowLeft, Play } from "lucide-react";
-import { getProperty, formatPrice, CATEGORY_META, properties, type Property } from "@/lib/properties";
+import { Bed, Bath, Maximize2, MapPin, Crown, Heart, Share2, Phone, Mail, Check, ArrowLeft, Play, Image as ImageIcon, Box, FileText, Lock } from "lucide-react";
+import { getProperty, formatPrice, CATEGORY_META, properties, ROOM_META, type Property, type RoomCategory, type RoomImage } from "@/lib/properties";
 import { PropertyCard } from "@/components/site/PropertyCard";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
@@ -30,8 +30,15 @@ export const Route = createFileRoute("/_site/properties/$slug")({
 
 function PropertyDetail() {
   const { property: p } = Route.useLoaderData() as { property: Property };
-  const gallery: { label: string; src: string }[] = p.gallery ?? [{ label: "Main", src: p.image }];
+  const roomGallery: RoomImage[] = p.roomGallery
+    ?? (p.gallery?.map((g) => ({ room: "other" as RoomCategory, label: g.label, src: g.src })))
+    ?? [{ room: "main", src: p.image }];
+  const rooms = Array.from(new Set(roomGallery.map((g) => g.room)));
+  const [activeRoom, setActiveRoom] = useState<RoomCategory | "all">("all");
   const [active, setActive] = useState(0);
+  const [mediaTab, setMediaTab] = useState<"photos" | "video" | "tour" | "floorplan">("photos");
+  const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
+  const current = filtered[Math.min(active, filtered.length - 1)] ?? roomGallery[0];
   const related = properties.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
 
   return (
@@ -45,7 +52,7 @@ function PropertyDetail() {
 
           <div className="grid lg:grid-cols-[1fr_320px] gap-3 mb-6">
             <div className="relative aspect-[16/10] rounded-2xl overflow-hidden">
-              <img src={gallery[active].src} alt={gallery[active].label} className="w-full h-full object-cover" />
+              <img src={current.src} alt={current.label ?? ROOM_META[current.room].label} className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 flex gap-2">
                 {p.luxury && (
                   <span className="inline-flex items-center gap-1 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-md">
@@ -56,26 +63,77 @@ function PropertyDetail() {
                   {p.status}
                 </span>
               </div>
-              {p.videoUrl && (
-                <button className="absolute bottom-4 right-4 inline-flex items-center gap-2 bg-white/90 text-noir-deep px-4 py-2 rounded-md text-sm font-medium">
-                  <Play className="w-3.5 h-3.5 fill-current" /> Play Tour
-                </button>
-              )}
+              <div className="absolute bottom-4 left-4 text-[11px] uppercase tracking-wider text-white/90 bg-noir-deep/60 px-2 py-1 rounded">
+                {ROOM_META[current.room].label}
+              </div>
             </div>
             <div className="grid grid-cols-3 lg:grid-cols-1 gap-3 max-h-[500px] overflow-auto pr-1">
-              {gallery.map((g: { label: string; src: string }, i: number) => (
+              {filtered.map((g, i) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
                   className={`relative aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden group ${active === i ? "ring-2 ring-gold" : "opacity-70 hover:opacity-100"}`}
                 >
-                  <img src={g.src} alt={g.label} className="w-full h-full object-cover" />
+                  <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/80 to-transparent" />
-                  <div className="absolute bottom-1 left-2 text-[10px] uppercase tracking-wider text-white">{g.label}</div>
+                  <div className="absolute bottom-1 left-2 text-[10px] uppercase tracking-wider text-white">{ROOM_META[g.room].label}</div>
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Media tabs */}
+          <div className="mt-2 flex flex-wrap gap-2 items-center">
+            <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
+            {p.videoUrl && <MediaTab active={mediaTab === "video"} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />}
+            {p.tourUrl && <MediaTab active={mediaTab === "tour"} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />}
+            {p.floorPlanUrl && <MediaTab active={mediaTab === "floorplan"} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />}
+          </div>
+
+          {mediaTab === "photos" && rooms.length > 1 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              <RoomChip active={activeRoom === "all"} onClick={() => { setActiveRoom("all"); setActive(0); }}>All ({roomGallery.length})</RoomChip>
+              {rooms.map((r) => (
+                <RoomChip key={r} active={activeRoom === r} onClick={() => { setActiveRoom(r); setActive(0); }}>
+                  {ROOM_META[r].label} ({roomGallery.filter((g) => g.room === r).length})
+                </RoomChip>
+              ))}
+            </div>
+          )}
+
+          {mediaTab === "video" && p.videoUrl && (
+            <div className="mt-6 aspect-video rounded-2xl overflow-hidden bg-noir">
+              <iframe src={p.videoUrl} className="w-full h-full" allowFullScreen title="Property video" />
+            </div>
+          )}
+          {mediaTab === "tour" && p.tourUrl && (
+            <div className="mt-6 aspect-video rounded-2xl overflow-hidden bg-noir">
+              <iframe src={p.tourUrl} className="w-full h-full" allowFullScreen title="3D tour" />
+            </div>
+          )}
+          {mediaTab === "floorplan" && p.floorPlanUrl && (
+            <div className="mt-6 rounded-2xl overflow-hidden border border-white/10 bg-noir">
+              <iframe src={p.floorPlanUrl} className="w-full h-[600px]" title="Floor plan" />
+              <div className="p-3 text-right">
+                <a href={p.floorPlanUrl} target="_blank" rel="noreferrer" className="text-sm text-gold inline-flex items-center gap-1">
+                  <FileText className="w-4 h-4" /> Download PDF
+                </a>
+              </div>
+            </div>
+          )}
+
+          {p.luxury && (
+            <div className="mt-6 flex items-start gap-3 bg-gold/10 border border-gold/30 rounded-xl p-4 text-sm">
+              <Lock className="w-4 h-4 text-gold mt-0.5" />
+              <div className="flex-1">
+                <div className="text-foreground font-medium">Exclusive Luxury Listing</div>
+                <div className="text-muted-foreground">Full media & pricing require verified-member access.</div>
+              </div>
+              <Link to="/verify-access" search={{ slug: p.slug }} className="text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-4 py-2 rounded-md">
+                Request Access
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -194,5 +252,35 @@ function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.Reac
       <div className="mt-2 font-display text-2xl text-foreground">{value}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
     </div>
+  );
+}
+
+function RoomChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`text-xs uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors ${
+        active
+          ? "bg-gold text-noir-deep border-gold"
+          : "border-white/15 text-white/70 hover:text-white hover:border-gold/50"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function MediaTab({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-2 text-sm px-4 py-2 rounded-md border transition-colors ${
+        active
+          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep border-gold"
+          : "border-white/15 text-white/70 hover:text-white hover:border-gold/50"
+      }`}
+    >
+      {icon} {label}
+    </button>
   );
 }
