@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SiteRouteImport } from './routes/_site'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
@@ -22,6 +23,11 @@ import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
@@ -84,6 +90,7 @@ const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/auth': typeof AuthRoute
   '/about': typeof SiteAboutRoute
   '/blog': typeof SiteBlogRoute
   '/contact': typeof SiteContactRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/properties/': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/auth': typeof AuthRoute
   '/about': typeof SiteAboutRoute
   '/blog': typeof SiteBlogRoute
   '/contact': typeof SiteContactRoute
@@ -111,6 +119,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_site': typeof SiteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/_site/about': typeof SiteAboutRoute
   '/_site/blog': typeof SiteBlogRoute
   '/_site/contact': typeof SiteContactRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/about'
     | '/blog'
     | '/contact'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth'
     | '/about'
     | '/blog'
     | '/contact'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_site'
+    | '/auth'
     | '/_site/about'
     | '/_site/blog'
     | '/_site/contact'
@@ -168,10 +180,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   SiteRoute: typeof SiteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_site': {
       id: '/_site'
       path: ''
@@ -291,6 +311,7 @@ const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   SiteRoute: SiteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
