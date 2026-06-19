@@ -1,12 +1,19 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Bed, Bath, Maximize2, MapPin, Crown, Heart, Share2, Phone, Mail, Check, ArrowLeft, Play, Image as ImageIcon, Box, FileText, Lock } from "lucide-react";
-import { getProperty, formatPrice, CATEGORY_META, properties, ROOM_META, type Property, type RoomCategory, type RoomImage } from "@/lib/properties";
+import {
+  Bed, Bath, Maximize2, Car, MapPin, Crown, Heart, Share2, Phone, Mail, MessageCircle,
+  Check, ArrowLeft, Play, Image as ImageIcon, Box, FileText, Lock, Star, Printer,
+  Bell, Download, ShoppingBag, Utensils, Hospital, School, Train, Trees, Landmark, ExternalLink,
+} from "lucide-react";
+import {
+  getEnrichedProperty, formatPrice, CATEGORY_META, properties, ROOM_META,
+  type Property, type RoomCategory, type RoomImage, type NeighborhoodPlace,
+} from "@/lib/properties";
 import { PropertyCard } from "@/components/site/PropertyCard";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: ({ params }) => {
-    const property = getProperty(params.slug);
+    const property = getEnrichedProperty(params.slug);
     if (!property) throw notFound();
     return { property };
   },
@@ -35,197 +42,246 @@ function PropertyDetail() {
     ?? [{ room: "main", src: p.image }];
   const rooms = Array.from(new Set(roomGallery.map((g) => g.room)));
   const [activeRoom, setActiveRoom] = useState<RoomCategory | "all">("all");
-  const [active, setActive] = useState(0);
   const [mediaTab, setMediaTab] = useState<"photos" | "video" | "tour" | "floorplan">("photos");
   const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
-  const current = filtered[Math.min(active, filtered.length - 1)] ?? roomGallery[0];
   const related = properties.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
+  const heroMain = roomGallery[0];
+  const heroSide = roomGallery.slice(1, 5);
+  const extraCount = Math.max(0, roomGallery.length - 5);
 
   return (
-    <div>
-      {/* Hero gallery */}
-      <section className="bg-noir-deep pt-8 pb-16">
+    <div className="bg-background">
+      {/* Hero collage */}
+      <section className="bg-noir-deep pt-6">
         <div className="container-luxe">
-          <Link to="/properties" className="inline-flex items-center gap-2 text-white/60 hover:text-gold text-sm mb-6">
+          <Link to="/properties" className="inline-flex items-center gap-2 text-white/60 hover:text-gold text-sm mb-4">
             <ArrowLeft className="w-4 h-4" /> Back to properties
           </Link>
 
-          <div className="grid lg:grid-cols-[1fr_320px] gap-3 mb-6">
-            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden">
-              <img src={current.src} alt={current.label ?? ROOM_META[current.room].label} className="w-full h-full object-cover" />
+          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[480px] rounded-2xl overflow-hidden">
+            <div className="col-span-2 row-span-2 relative">
+              <img src={heroMain.src} alt={heroMain.label ?? ROOM_META[heroMain.room].label} className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 flex gap-2">
                 {p.luxury && (
                   <span className="inline-flex items-center gap-1 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-md">
                     <Crown className="w-3 h-3" /> Luxury
                   </span>
                 )}
-                <span className="bg-emerald-500 text-white text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-md capitalize">
-                  {p.status}
-                </span>
-              </div>
-              <div className="absolute bottom-4 left-4 text-[11px] uppercase tracking-wider text-white/90 bg-noir-deep/60 px-2 py-1 rounded">
-                {ROOM_META[current.room].label}
               </div>
             </div>
-            <div className="grid grid-cols-3 lg:grid-cols-1 gap-3 max-h-[500px] overflow-auto pr-1">
-              {filtered.map((g, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  className={`relative aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden group ${active === i ? "ring-2 ring-gold" : "opacity-70 hover:opacity-100"}`}
-                >
-                  <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/80 to-transparent" />
-                  <div className="absolute bottom-1 left-2 text-[10px] uppercase tracking-wider text-white">{ROOM_META[g.room].label}</div>
-                </button>
-              ))}
-            </div>
+            {heroSide.map((g, i) => (
+              <div key={i} className="relative">
+                <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
+                {i === heroSide.length - 1 && extraCount > 0 && (
+                  <div className="absolute inset-0 bg-noir-deep/55 flex items-center justify-center text-white">
+                    <Maximize2 className="w-5 h-5 mr-1" /> +{extraCount} more
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
-          {/* Media tabs */}
-          <div className="mt-2 flex flex-wrap gap-2 items-center">
-            <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
-            {p.videoUrl && <MediaTab active={mediaTab === "video"} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />}
-            {p.tourUrl && <MediaTab active={mediaTab === "tour"} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />}
-            {p.floorPlanUrl && <MediaTab active={mediaTab === "floorplan"} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />}
+          {/* Title + price band */}
+          <div className="relative -mb-12 mt-8">
+            <div className="bg-card text-foreground rounded-2xl shadow-2xl p-7 grid lg:grid-cols-[1fr_auto] gap-6 items-start border border-border">
+              <div>
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  {p.luxury && <Pill icon={<Crown className="w-3 h-3" />} className="bg-gold/15 text-gold">Luxury</Pill>}
+                  <Pill className="bg-muted text-foreground">{CATEGORY_META[p.category].label}</Pill>
+                  <Pill className="bg-emerald-500/15 text-emerald-600 capitalize">{p.status}</Pill>
+                </div>
+                <h1 className="font-display text-3xl md:text-4xl">{p.title}</h1>
+                <div className="mt-2 flex items-center gap-1.5 text-muted-foreground text-sm">
+                  <MapPin className="w-4 h-4 text-gold" /> {p.address}, {p.district}
+                </div>
+              </div>
+              <div className="lg:text-right">
+                <div className="font-display text-3xl">{formatPrice(p)}</div>
+                <div className="text-xs text-muted-foreground">{p.priceUnit === "month" ? "Monthly" : "Sale Price"}</div>
+                <div className="mt-4 flex lg:justify-end gap-2">
+                  <IconBtn><Heart className="w-4 h-4" /></IconBtn>
+                  <IconBtn><Share2 className="w-4 h-4" /></IconBtn>
+                  <IconBtn><Printer className="w-4 h-4" /></IconBtn>
+                  <a href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`} className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-sm font-medium px-5 py-2 rounded-md">
+                    <Mail className="w-4 h-4" /> Inquire Now
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-
-          {mediaTab === "photos" && rooms.length > 1 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              <RoomChip active={activeRoom === "all"} onClick={() => { setActiveRoom("all"); setActive(0); }}>All ({roomGallery.length})</RoomChip>
-              {rooms.map((r) => (
-                <RoomChip key={r} active={activeRoom === r} onClick={() => { setActiveRoom(r); setActive(0); }}>
-                  {ROOM_META[r].label} ({roomGallery.filter((g) => g.room === r).length})
-                </RoomChip>
-              ))}
-            </div>
-          )}
-
-          {mediaTab === "video" && p.videoUrl && (
-            <div className="mt-6 aspect-video rounded-2xl overflow-hidden bg-noir">
-              <iframe src={p.videoUrl} className="w-full h-full" allowFullScreen title="Property video" />
-            </div>
-          )}
-          {mediaTab === "tour" && p.tourUrl && (
-            <div className="mt-6 aspect-video rounded-2xl overflow-hidden bg-noir">
-              <iframe src={p.tourUrl} className="w-full h-full" allowFullScreen title="3D tour" />
-            </div>
-          )}
-          {mediaTab === "floorplan" && p.floorPlanUrl && (
-            <div className="mt-6 rounded-2xl overflow-hidden border border-white/10 bg-noir">
-              <iframe src={p.floorPlanUrl} className="w-full h-[600px]" title="Floor plan" />
-              <div className="p-3 text-right">
-                <a href={p.floorPlanUrl} target="_blank" rel="noreferrer" className="text-sm text-gold inline-flex items-center gap-1">
-                  <FileText className="w-4 h-4" /> Download PDF
-                </a>
-              </div>
-            </div>
-          )}
-
-          {p.luxury && (
-            <div className="mt-6 flex items-start gap-3 bg-gold/10 border border-gold/30 rounded-xl p-4 text-sm">
-              <Lock className="w-4 h-4 text-gold mt-0.5" />
-              <div className="flex-1">
-                <div className="text-foreground font-medium">Exclusive Luxury Listing</div>
-                <div className="text-muted-foreground">Full media & pricing require verified-member access.</div>
-              </div>
-              <Link to="/verify-access" search={{ slug: p.slug }} className="text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-4 py-2 rounded-md">
-                Request Access
-              </Link>
-            </div>
-          )}
         </div>
       </section>
 
-      {/* Detail */}
-      <section className="py-12">
-        <div className="container-luxe grid lg:grid-cols-[1fr_380px] gap-12">
-          <div>
-            <div className="text-xs uppercase tracking-[0.2em] text-gold">{CATEGORY_META[p.category].label} · For {p.listing === "rent" ? "Rent" : "Sale"}</div>
-            <h1 className="mt-3 font-display text-4xl md:text-5xl text-foreground">{p.title}</h1>
-            <div className="mt-2 flex items-center gap-1.5 text-muted-foreground">
-              <MapPin className="w-4 h-4 text-gold" /> {p.location}, {p.district} District, Rwanda
-            </div>
-
-            <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
+      <section className="pt-20 pb-8">
+        <div className="container-luxe grid lg:grid-cols-[1fr_380px] gap-10">
+          {/* MAIN */}
+          <div className="space-y-12">
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {p.beds != null && <Stat icon={<Bed className="w-5 h-5" />} value={p.beds} label="Bedrooms" />}
               {p.baths != null && <Stat icon={<Bath className="w-5 h-5" />} value={p.baths} label="Bathrooms" />}
-              <Stat icon={<Maximize2 className="w-5 h-5" />} value={`${p.area}`} label="Square m²" />
+              <Stat icon={<Maximize2 className="w-5 h-5" />} value={p.area} label="Sq. Meters" />
+              {p.parking != null && p.parking > 0 && <Stat icon={<Car className="w-5 h-5" />} value={p.parking} label="Parking" />}
             </div>
 
-            <div className="mt-10">
-              <h2 className="font-display text-2xl mb-3">Overview</h2>
+            {/* Media & Tours */}
+            <Section title="Media & Tours">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1.5 rounded-xl bg-muted">
+                <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
+                <MediaTab active={mediaTab === "video"} disabled={!p.videoUrl} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />
+                <MediaTab active={mediaTab === "tour"} disabled={!p.tourUrl} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />
+                <MediaTab active={mediaTab === "floorplan"} disabled={!p.floorPlanUrl} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />
+              </div>
+
+              {mediaTab === "photos" && (
+                <>
+                  {rooms.length > 1 && (
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <RoomChip active={activeRoom === "all"} onClick={() => setActiveRoom("all")}>All ({roomGallery.length})</RoomChip>
+                      {rooms.map((r) => (
+                        <RoomChip key={r} active={activeRoom === r} onClick={() => setActiveRoom(r)}>
+                          {ROOM_META[r].label} ({roomGallery.filter((g) => g.room === r).length})
+                        </RoomChip>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {filtered.map((g, i) => (
+                      <figure key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden group">
+                        <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <figcaption className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider text-white bg-noir-deep/70 px-2 py-1 rounded">
+                          {ROOM_META[g.room].label}
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </>
+              )}
+              {mediaTab === "video" && p.videoUrl && (
+                <div className="mt-5 aspect-video rounded-xl overflow-hidden bg-noir">
+                  <iframe src={p.videoUrl} className="w-full h-full" allowFullScreen title="Property video" />
+                </div>
+              )}
+              {mediaTab === "tour" && p.tourUrl && (
+                <div className="mt-5 aspect-video rounded-xl overflow-hidden bg-noir">
+                  <iframe src={p.tourUrl} className="w-full h-full" allowFullScreen title="3D tour" />
+                </div>
+              )}
+              {mediaTab === "floorplan" && (
+                <div className="mt-5 rounded-xl border border-border bg-card p-6">
+                  {p.floorPlanUrl ? (
+                    <>
+                      <iframe src={p.floorPlanUrl} className="w-full h-[600px] rounded" title="Floor plan" />
+                      <a href={p.floorPlanUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm text-gold">
+                        <Download className="w-4 h-4" /> Download PDF
+                      </a>
+                    </>
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground text-sm">Floor plan coming soon.</div>
+                  )}
+                </div>
+              )}
+            </Section>
+
+            {/* About */}
+            <Section title="About This Property">
               <p className="text-muted-foreground leading-relaxed">{p.description}</p>
               <p className="text-muted-foreground leading-relaxed mt-3">
-                This residence has been curated by NOVAWORKS for clients who value discretion, design integrity, and locations that hold value. Each detail — from the joinery to the lighting plan — has been considered.
+                This residence has been curated by NOVAWORKS for clients who value discretion, design integrity, and locations that hold long-term value.
               </p>
-            </div>
+            </Section>
 
-            {p.amenities && (
-              <div className="mt-10">
-                <h2 className="font-display text-2xl mb-4">Amenities & Features</h2>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {(p.amenities as string[]).map((a: string) => (
-                    <div key={a} className="flex items-center gap-3 bg-card border border-border p-3 rounded-md">
-                      <div className="w-7 h-7 rounded-md bg-gold/15 text-gold flex items-center justify-center">
+            {/* Property Details */}
+            <Section title="Property Details">
+              <div className="grid md:grid-cols-2 gap-x-10 gap-y-1">
+                <DetailRow label="Property ID" value={p.reference} />
+                <DetailRow label="Category" value={CATEGORY_META[p.category].label} />
+                {p.furnishing && <DetailRow label="Furnishing" value={p.furnishing} />}
+                {p.yearBuilt && <DetailRow label="Year Built" value={p.yearBuilt} />}
+                {p.floor != null && <DetailRow label="Floor" value={p.floor} />}
+                {p.facing && <DetailRow label="Facing" value={p.facing} />}
+                <DetailRow label="Total Area" value={`${p.area} Sqm`} />
+                <DetailRow label="Listing" value={`For ${p.listing === "rent" ? "Rent" : "Sale"}`} />
+              </div>
+            </Section>
+
+            {/* Amenities */}
+            {p.amenities && p.amenities.length > 0 && (
+              <Section title="Amenities & Features">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {p.amenities.map((a) => (
+                    <div key={a} className="flex items-center gap-3 bg-card border border-border p-3 rounded-lg">
+                      <span className="w-7 h-7 rounded-md bg-gold/15 text-gold flex items-center justify-center">
                         <Check className="w-4 h-4" />
-                      </div>
+                      </span>
                       <span className="text-sm">{a}</span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Section>
             )}
 
-            <div className="mt-10">
-              <h2 className="font-display text-2xl mb-4">Location</h2>
-              <div className="aspect-[16/9] rounded-xl bg-muted flex items-center justify-center text-muted-foreground border border-border">
-                <div className="text-center">
-                  <MapPin className="w-8 h-8 text-gold mx-auto" />
-                  <div className="mt-2 text-sm">{p.location}, {p.district}, Kigali</div>
-                  <div className="text-xs">Map preview</div>
+            {/* Neighborhood */}
+            {p.neighborhood && p.neighborhood.length > 0 && (
+              <Section title="Neighborhood">
+                <div className="grid md:grid-cols-2 gap-3">
+                  {p.neighborhood.map((n) => <NeighborCard key={n.name} place={n} />)}
+                </div>
+              </Section>
+            )}
+
+            {/* Location map */}
+            <Section title="Location">
+              <div className="rounded-2xl overflow-hidden border border-border bg-card">
+                <div className="aspect-[16/9] relative">
+                  <iframe
+                    title="Map"
+                    className="absolute inset-0 w-full h-full"
+                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${p.lng! - 0.01}%2C${p.lat! - 0.01}%2C${p.lng! + 0.01}%2C${p.lat! + 0.01}&layer=mapnik&marker=${p.lat}%2C${p.lng}`}
+                    loading="lazy"
+                  />
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin className="w-4 h-4 text-gold" />
+                    <div>
+                      <div className="font-medium">{p.address}</div>
+                      <div className="text-xs text-muted-foreground">{p.location}, {p.district}, Kigali</div>
+                    </div>
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps?q=${p.lat},${p.lng}`}
+                    target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm bg-noir-deep text-white px-4 py-2 rounded-md hover:bg-noir"
+                  >
+                    <ExternalLink className="w-4 h-4" /> Open in Google Maps
+                  </a>
                 </div>
               </div>
-            </div>
+            </Section>
+
+            {p.luxury && (
+              <div className="flex items-start gap-3 bg-gold/10 border border-gold/30 rounded-xl p-4 text-sm">
+                <Lock className="w-4 h-4 text-gold mt-0.5" />
+                <div className="flex-1">
+                  <div className="text-foreground font-medium">Exclusive Luxury Listing</div>
+                  <div className="text-muted-foreground">Full media & pricing require verified-member access.</div>
+                </div>
+                <Link to="/verify-access" search={{ slug: p.slug }} className="text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-4 py-2 rounded-md">
+                  Request Access
+                </Link>
+              </div>
+            )}
           </div>
 
-          {/* Sidebar */}
-          <aside className="lg:sticky lg:top-28 self-start">
-            <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
-              <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Price</div>
-              <div className="mt-1 font-display text-4xl text-foreground">{formatPrice(p)}</div>
-
-              <div className="mt-5 flex items-center gap-3">
-                <img src="https://i.pravatar.cc/120?img=12" alt="Agent" className="w-12 h-12 rounded-full" />
-                <div>
-                  <div className="text-xs text-muted-foreground">Listing Agent</div>
-                  <div className="text-sm font-medium">Diane Uwase</div>
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-2">
-                <a href="tel:+250793300080" className="flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-5 py-3 rounded-md font-medium text-sm">
-                  <Phone className="w-4 h-4" /> Call Agent
-                </a>
-                <a href="mailto:info@novaworks.rw" className="flex items-center justify-center gap-2 bg-noir-deep text-white px-5 py-3 rounded-md font-medium text-sm hover:bg-noir transition-colors">
-                  <Mail className="w-4 h-4" /> Request Viewing
-                </a>
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                  <button className="flex items-center justify-center gap-2 border border-border rounded-md py-2.5 text-sm hover:border-gold/50">
-                    <Heart className="w-4 h-4" /> Save
-                  </button>
-                  <button className="flex items-center justify-center gap-2 border border-border rounded-md py-2.5 text-sm hover:border-gold/50">
-                    <Share2 className="w-4 h-4" /> Share
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-border text-xs text-muted-foreground space-y-1.5">
-                <div className="flex justify-between"><span>Reference</span><span className="text-foreground font-medium">NW-{p.id.toUpperCase()}</span></div>
-                <div className="flex justify-between"><span>Category</span><span className="text-foreground">{CATEGORY_META[p.category].label}</span></div>
-                <div className="flex justify-between"><span>Listing</span><span className="text-foreground capitalize">For {p.listing}</span></div>
-                <div className="flex justify-between"><span>Status</span><span className="text-foreground capitalize">{p.status}</span></div>
-              </div>
+          {/* SIDEBAR */}
+          <aside className="space-y-5 lg:sticky lg:top-28 self-start">
+            {p.agent && <AgentCard agent={p.agent} />}
+            <ScheduleVisitCard />
+            <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+              <button className="inline-flex items-center gap-1.5 hover:text-gold"><Download className="w-3.5 h-3.5" /> Brochure</button>
+              <button className="inline-flex items-center gap-1.5 hover:text-gold"><Bell className="w-3.5 h-3.5" /> Alerts</button>
+              <button className="inline-flex items-center gap-1.5 hover:text-gold"><Printer className="w-3.5 h-3.5" /> Print</button>
             </div>
           </aside>
         </div>
@@ -247,7 +303,7 @@ function PropertyDetail() {
 
 function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-4 text-center">
+    <div className="bg-card border border-border rounded-xl p-5 text-center">
       <div className="w-10 h-10 mx-auto rounded-md bg-gold/10 text-gold flex items-center justify-center">{icon}</div>
       <div className="mt-2 font-display text-2xl text-foreground">{value}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
@@ -262,7 +318,7 @@ function RoomChip({ active, onClick, children }: { active: boolean; onClick: () 
       className={`text-xs uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors ${
         active
           ? "bg-gold text-noir-deep border-gold"
-          : "border-white/15 text-white/70 hover:text-white hover:border-gold/50"
+          : "border-border text-muted-foreground hover:text-foreground hover:border-gold/50"
       }`}
     >
       {children}
@@ -270,17 +326,154 @@ function RoomChip({ active, onClick, children }: { active: boolean; onClick: () 
   );
 }
 
-function MediaTab({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
+function MediaTab({ active, disabled, onClick, icon, label }: { active: boolean; disabled?: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
   return (
     <button
-      onClick={onClick}
-      className={`inline-flex items-center gap-2 text-sm px-4 py-2 rounded-md border transition-colors ${
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      className={`inline-flex items-center justify-center gap-2 text-sm px-4 py-2.5 rounded-lg transition-colors ${
         active
-          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep border-gold"
-          : "border-white/15 text-white/70 hover:text-white hover:border-gold/50"
+          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep shadow"
+          : disabled
+            ? "text-muted-foreground/50 cursor-not-allowed"
+            : "text-foreground hover:bg-background"
       }`}
     >
       {icon} {label}
     </button>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-5">
+        <h2 className="font-display text-2xl">{title}</h2>
+        <span className="h-px flex-1 bg-gradient-to-r from-gold/60 to-transparent" />
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex justify-between border-b border-border py-3 text-sm">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-foreground">{value}</span>
+    </div>
+  );
+}
+
+function Pill({ icon, className = "", children }: { icon?: React.ReactNode; className?: string; children: React.ReactNode }) {
+  return (
+    <span className={`inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md ${className}`}>
+      {icon} {children}
+    </span>
+  );
+}
+
+function IconBtn({ children }: { children: React.ReactNode }) {
+  return (
+    <button className="w-9 h-9 inline-flex items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-gold/50">
+      {children}
+    </button>
+  );
+}
+
+const PLACE_ICON: Record<NeighborhoodPlace["type"], React.ReactNode> = {
+  shopping: <ShoppingBag className="w-4 h-4" />,
+  dining: <Utensils className="w-4 h-4" />,
+  hospital: <Hospital className="w-4 h-4" />,
+  school: <School className="w-4 h-4" />,
+  transit: <Train className="w-4 h-4" />,
+  park: <Trees className="w-4 h-4" />,
+  landmark: <Landmark className="w-4 h-4" />,
+};
+
+function NeighborCard({ place }: { place: NeighborhoodPlace }) {
+  return (
+    <div className="flex items-start gap-3 bg-card border border-border rounded-xl p-4">
+      <div className="w-10 h-10 rounded-lg bg-gold/15 text-gold flex items-center justify-center shrink-0">
+        {PLACE_ICON[place.type]}
+      </div>
+      <div className="min-w-0">
+        <div className="font-medium text-sm">{place.name}</div>
+        <div className="text-xs text-gold mt-0.5">{place.distance}</div>
+        {place.note && <div className="text-xs text-muted-foreground mt-0.5">{place.note}</div>}
+      </div>
+    </div>
+  );
+}
+
+function AgentCard({ agent }: { agent: NonNullable<Property["agent"]> }) {
+  return (
+    <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+      <div className="flex items-center gap-3">
+        <img src={agent.avatar} alt={agent.name} className="w-14 h-14 rounded-full object-cover" />
+        <div>
+          <div className="font-medium">{agent.name}</div>
+          <div className="text-xs text-muted-foreground">{agent.title}</div>
+          {agent.rating && (
+            <div className="flex items-center gap-1 mt-0.5 text-xs">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className={`w-3 h-3 ${i < Math.round(agent.rating!) ? "fill-gold text-gold" : "text-muted-foreground/40"}`} />
+              ))}
+              <span className="text-muted-foreground ml-1">({agent.reviews} reviews)</span>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="mt-5 grid gap-2">
+        <a href={`tel:${agent.phone}`} className="flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-4 py-2.5 rounded-md text-sm font-medium">
+          <Phone className="w-4 h-4" /> Call Now
+        </a>
+        {agent.whatsapp && (
+          <a href={`https://wa.me/${agent.whatsapp}`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 border border-border px-4 py-2.5 rounded-md text-sm font-medium hover:border-gold/60">
+            <MessageCircle className="w-4 h-4" /> WhatsApp
+          </a>
+        )}
+        <a href={`mailto:${agent.email}`} className="flex items-center justify-center gap-2 border border-border px-4 py-2.5 rounded-md text-sm font-medium hover:border-gold/60">
+          <Mail className="w-4 h-4" /> Send Email
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function ScheduleVisitCard() {
+  const [sent, setSent] = useState(false);
+  return (
+    <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+      <h3 className="font-display text-xl mb-4">Schedule a Visit</h3>
+      {sent ? (
+        <div className="text-sm text-muted-foreground py-6 text-center">
+          <Check className="w-6 h-6 text-gold mx-auto" />
+          <div className="mt-2">Request sent — our team will confirm your viewing shortly.</div>
+        </div>
+      ) : (
+        <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-3">
+          <Field label="Full Name"><input required className="input-luxe" placeholder="Your name" /></Field>
+          <Field label="Email"><input required type="email" className="input-luxe" placeholder="your@email.com" /></Field>
+          <Field label="Phone Number"><input required className="input-luxe" placeholder="+250 7XX XXX XXX" /></Field>
+          <Field label="Preferred Date"><input required type="date" className="input-luxe" /></Field>
+          <Field label="Message (Optional)">
+            <textarea rows={3} className="input-luxe" placeholder="Tell us about your requirements…" />
+          </Field>
+          <button className="w-full bg-gradient-to-r from-gold-soft to-gold text-noir-deep font-medium py-2.5 rounded-md">
+            Request Visit
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="block text-xs uppercase tracking-wider text-muted-foreground mb-1">{label}</span>
+      {children}
+    </label>
   );
 }
