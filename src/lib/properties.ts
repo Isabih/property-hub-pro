@@ -44,6 +44,24 @@ export interface RoomImage {
   src: string;
 }
 
+export interface NeighborhoodPlace {
+  name: string;
+  type: "shopping" | "dining" | "hospital" | "school" | "transit" | "park" | "landmark";
+  distance: string;
+  note?: string;
+}
+
+export interface PropertyAgent {
+  name: string;
+  title: string;
+  avatar: string;
+  phone: string;
+  email: string;
+  whatsapp?: string;
+  rating?: number;
+  reviews?: number;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -70,6 +88,18 @@ export interface Property {
   tourUrl?: string; // 3D walkthrough
   floorPlanUrl?: string; // PDF (optional)
   amenities?: string[];
+  // Detailed metadata
+  reference?: string; // e.g. NW-KGL-001
+  furnishing?: "Furnished" | "Semi-Furnished" | "Unfurnished";
+  yearBuilt?: number;
+  floor?: number | string;
+  facing?: string;
+  parking?: number;
+  address?: string;
+  lat?: number;
+  lng?: number;
+  neighborhood?: NeighborhoodPlace[];
+  agent?: PropertyAgent;
 }
 
 export const CATEGORY_META: Record<PropertyCategory, { label: string; plural: string; description: string }> = {
