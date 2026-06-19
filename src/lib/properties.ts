@@ -11,6 +11,39 @@ export type PropertyCategory =
 export type PropertyStatus = "available" | "sold" | "rented" | "maintenance";
 export type PropertyListing = "rent" | "sale";
 
+export type RoomCategory =
+  | "main"
+  | "living-room"
+  | "kitchen"
+  | "bedroom"
+  | "bathroom"
+  | "balcony"
+  | "gym"
+  | "pool"
+  | "garden"
+  | "exterior"
+  | "other";
+
+export const ROOM_META: Record<RoomCategory, { label: string }> = {
+  main: { label: "Main" },
+  "living-room": { label: "Living Room" },
+  kitchen: { label: "Kitchen" },
+  bedroom: { label: "Bedroom" },
+  bathroom: { label: "Bathroom" },
+  balcony: { label: "Balcony" },
+  gym: { label: "Gym" },
+  pool: { label: "Pool" },
+  garden: { label: "Garden" },
+  exterior: { label: "Exterior" },
+  other: { label: "Other" },
+};
+
+export interface RoomImage {
+  room: RoomCategory;
+  label?: string;
+  src: string;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -30,8 +63,12 @@ export interface Property {
   area: number;
   description: string;
   image: string;
+  /** @deprecated use roomGallery */
   gallery?: { label: string; src: string }[];
+  roomGallery?: RoomImage[];
   videoUrl?: string;
+  tourUrl?: string; // 3D walkthrough
+  floorPlanUrl?: string; // PDF (optional)
   amenities?: string[];
 }
 
@@ -59,13 +96,18 @@ export const properties: Property[] = [
     beds: 4, baths: 3, area: 320,
     description: "An architectural triumph perched above Kigali. Floor-to-ceiling glass, private rooftop terrace and concierge-grade finishes.",
     image: u("photo-1600596542815-ffad4c1539a9"),
-    gallery: [
-      { label: "Main", src: u("photo-1600596542815-ffad4c1539a9") },
-      { label: "Living Room", src: u("photo-1600585154340-be6161a56a0c") },
-      { label: "Kitchen", src: u("photo-1556909114-f6e7ad7d3136") },
-      { label: "Bedroom", src: u("photo-1600210492486-724fe5c67fb0") },
-      { label: "Bathroom", src: u("photo-1552321554-5fefe8c9ef14") },
+    roomGallery: [
+      { room: "main", src: u("photo-1600596542815-ffad4c1539a9") },
+      { room: "living-room", src: u("photo-1600585154340-be6161a56a0c") },
+      { room: "living-room", src: u("photo-1600607687939-ce8a6c25118c") },
+      { room: "kitchen", src: u("photo-1556909114-f6e7ad7d3136") },
+      { room: "bedroom", src: u("photo-1600210492486-724fe5c67fb0") },
+      { room: "bathroom", src: u("photo-1552321554-5fefe8c9ef14") },
+      { room: "balcony", src: u("photo-1502672260266-1c1ef2d93688") },
+      { room: "gym", src: u("photo-1571902943202-507ec2618e8f") },
     ],
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    tourUrl: "https://my.matterport.com/show/?m=SxQL3iGyoDo",
     amenities: ["Concierge", "Pool", "Gym", "Smart home", "Private elevator"],
   },
   {

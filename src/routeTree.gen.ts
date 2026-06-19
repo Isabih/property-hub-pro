@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SiteRouteImport } from './routes/_site'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePropertiesRouteImport } from './routes/_site.properties'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
@@ -28,6 +29,11 @@ const SiteRoute = SiteRouteImport.update({
 const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
+  id: '/verify-access',
+  path: '/verify-access',
   getParentRoute: () => SiteRoute,
 } as any)
 const SiteServicesRoute = SiteServicesRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/properties': typeof SitePropertiesRouteWithChildren
   '/services': typeof SiteServicesRoute
+  '/verify-access': typeof SiteVerifyAccessRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
 }
 export interface FileRoutesByTo {
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof SitePortfolioRoute
   '/properties': typeof SitePropertiesRouteWithChildren
   '/services': typeof SiteServicesRoute
+  '/verify-access': typeof SiteVerifyAccessRoute
   '/': typeof SiteIndexRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
 }
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/properties': typeof SitePropertiesRouteWithChildren
   '/_site/services': typeof SiteServicesRoute
+  '/_site/verify-access': typeof SiteVerifyAccessRoute
   '/_site/': typeof SiteIndexRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
 }
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/properties'
     | '/services'
+    | '/verify-access'
     | '/properties/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/properties'
     | '/services'
+    | '/verify-access'
     | '/'
     | '/properties/$slug'
   id:
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/_site/portfolio'
     | '/_site/properties'
     | '/_site/services'
+    | '/_site/verify-access'
     | '/_site/'
     | '/_site/properties/$slug'
   fileRoutesById: FileRoutesById
@@ -172,6 +184,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof SiteIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/verify-access': {
+      id: '/_site/verify-access'
+      path: '/verify-access'
+      fullPath: '/verify-access'
+      preLoaderRoute: typeof SiteVerifyAccessRouteImport
       parentRoute: typeof SiteRoute
     }
     '/_site/services': {
@@ -261,6 +280,7 @@ interface SiteRouteChildren {
   SitePortfolioRoute: typeof SitePortfolioRoute
   SitePropertiesRoute: typeof SitePropertiesRouteWithChildren
   SiteServicesRoute: typeof SiteServicesRoute
+  SiteVerifyAccessRoute: typeof SiteVerifyAccessRoute
   SiteIndexRoute: typeof SiteIndexRoute
 }
 
@@ -273,6 +293,7 @@ const SiteRouteChildren: SiteRouteChildren = {
   SitePortfolioRoute: SitePortfolioRoute,
   SitePropertiesRoute: SitePropertiesRouteWithChildren,
   SiteServicesRoute: SiteServicesRoute,
+  SiteVerifyAccessRoute: SiteVerifyAccessRoute,
   SiteIndexRoute: SiteIndexRoute,
 }
 
@@ -284,13 +305,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
