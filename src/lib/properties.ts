@@ -11,6 +11,39 @@ export type PropertyCategory =
 export type PropertyStatus = "available" | "sold" | "rented" | "maintenance";
 export type PropertyListing = "rent" | "sale";
 
+export type RoomCategory =
+  | "main"
+  | "living-room"
+  | "kitchen"
+  | "bedroom"
+  | "bathroom"
+  | "balcony"
+  | "gym"
+  | "pool"
+  | "garden"
+  | "exterior"
+  | "other";
+
+export const ROOM_META: Record<RoomCategory, { label: string }> = {
+  main: { label: "Main" },
+  "living-room": { label: "Living Room" },
+  kitchen: { label: "Kitchen" },
+  bedroom: { label: "Bedroom" },
+  bathroom: { label: "Bathroom" },
+  balcony: { label: "Balcony" },
+  gym: { label: "Gym" },
+  pool: { label: "Pool" },
+  garden: { label: "Garden" },
+  exterior: { label: "Exterior" },
+  other: { label: "Other" },
+};
+
+export interface RoomImage {
+  room: RoomCategory;
+  label?: string;
+  src: string;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -30,8 +63,12 @@ export interface Property {
   area: number;
   description: string;
   image: string;
+  /** @deprecated use roomGallery */
   gallery?: { label: string; src: string }[];
+  roomGallery?: RoomImage[];
   videoUrl?: string;
+  tourUrl?: string; // 3D walkthrough
+  floorPlanUrl?: string; // PDF (optional)
   amenities?: string[];
 }
 
