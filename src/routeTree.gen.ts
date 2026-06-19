@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
@@ -31,6 +32,11 @@ const AuthRoute = AuthRouteImport.update({
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRoute,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
@@ -90,7 +96,7 @@ const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/about': typeof SiteAboutRoute
   '/blog': typeof SiteBlogRoute
   '/contact': typeof SiteContactRoute
@@ -99,11 +105,11 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/': typeof AuthIndexRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesByTo {
-  '/auth': typeof AuthRoute
   '/about': typeof SiteAboutRoute
   '/blog': typeof SiteBlogRoute
   '/contact': typeof SiteContactRoute
@@ -113,13 +119,14 @@ export interface FileRoutesByTo {
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
   '/': typeof SiteIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_site': typeof SiteRouteWithChildren
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/_site/about': typeof SiteAboutRoute
   '/_site/blog': typeof SiteBlogRoute
   '/_site/contact': typeof SiteContactRoute
@@ -129,6 +136,7 @@ export interface FileRoutesById {
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
   '/_site/': typeof SiteIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
 }
@@ -145,11 +153,11 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/'
     | '/properties/$slug'
     | '/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/auth'
     | '/about'
     | '/blog'
     | '/contact'
@@ -159,6 +167,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/verify-access'
     | '/'
+    | '/auth'
     | '/properties/$slug'
     | '/properties'
   id:
@@ -174,13 +183,14 @@ export interface FileRouteTypes {
     | '/_site/services'
     | '/_site/verify-access'
     | '/_site/'
+    | '/auth/'
     | '/_site/properties/$slug'
     | '/_site/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   SiteRoute: typeof SiteRouteWithChildren
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -198,6 +208,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof SiteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_site/': {
       id: '/_site/'
@@ -309,9 +326,19 @@ const SiteRouteChildren: SiteRouteChildren = {
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthIndexRoute: typeof AuthIndexRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthIndexRoute: AuthIndexRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   SiteRoute: SiteRouteWithChildren,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
