@@ -9,61 +9,278 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SiteRouteImport } from './routes/_site'
+import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as SiteServicesRouteImport } from './routes/_site.services'
+import { Route as SitePropertiesRouteImport } from './routes/_site.properties'
+import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
+import { Route as SiteListPropertyRouteImport } from './routes/_site.list-property'
+import { Route as SiteInvestorsRouteImport } from './routes/_site.investors'
+import { Route as SiteContactRouteImport } from './routes/_site.contact'
+import { Route as SiteBlogRouteImport } from './routes/_site.blog'
+import { Route as SiteAboutRouteImport } from './routes/_site.about'
+import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
 
-const IndexRoute = IndexRouteImport.update({
+const SiteRoute = SiteRouteImport.update({
+  id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteServicesRoute = SiteServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SitePropertiesRoute = SitePropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SitePortfolioRoute = SitePortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteListPropertyRoute = SiteListPropertyRouteImport.update({
+  id: '/list-property',
+  path: '/list-property',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteInvestorsRoute = SiteInvestorsRouteImport.update({
+  id: '/investors',
+  path: '/investors',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteContactRoute = SiteContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteBlogRoute = SiteBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteAboutRoute = SiteAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => SitePropertiesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof SiteIndexRoute
+  '/about': typeof SiteAboutRoute
+  '/blog': typeof SiteBlogRoute
+  '/contact': typeof SiteContactRoute
+  '/investors': typeof SiteInvestorsRoute
+  '/list-property': typeof SiteListPropertyRoute
+  '/portfolio': typeof SitePortfolioRoute
+  '/properties': typeof SitePropertiesRouteWithChildren
+  '/services': typeof SiteServicesRoute
+  '/properties/$slug': typeof SitePropertiesSlugRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/about': typeof SiteAboutRoute
+  '/blog': typeof SiteBlogRoute
+  '/contact': typeof SiteContactRoute
+  '/investors': typeof SiteInvestorsRoute
+  '/list-property': typeof SiteListPropertyRoute
+  '/portfolio': typeof SitePortfolioRoute
+  '/properties': typeof SitePropertiesRouteWithChildren
+  '/services': typeof SiteServicesRoute
+  '/': typeof SiteIndexRoute
+  '/properties/$slug': typeof SitePropertiesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_site': typeof SiteRouteWithChildren
+  '/_site/about': typeof SiteAboutRoute
+  '/_site/blog': typeof SiteBlogRoute
+  '/_site/contact': typeof SiteContactRoute
+  '/_site/investors': typeof SiteInvestorsRoute
+  '/_site/list-property': typeof SiteListPropertyRoute
+  '/_site/portfolio': typeof SitePortfolioRoute
+  '/_site/properties': typeof SitePropertiesRouteWithChildren
+  '/_site/services': typeof SiteServicesRoute
+  '/_site/': typeof SiteIndexRoute
+  '/_site/properties/$slug': typeof SitePropertiesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/contact'
+    | '/investors'
+    | '/list-property'
+    | '/portfolio'
+    | '/properties'
+    | '/services'
+    | '/properties/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/about'
+    | '/blog'
+    | '/contact'
+    | '/investors'
+    | '/list-property'
+    | '/portfolio'
+    | '/properties'
+    | '/services'
+    | '/'
+    | '/properties/$slug'
+  id:
+    | '__root__'
+    | '/_site'
+    | '/_site/about'
+    | '/_site/blog'
+    | '/_site/contact'
+    | '/_site/investors'
+    | '/_site/list-property'
+    | '/_site/portfolio'
+    | '/_site/properties'
+    | '/_site/services'
+    | '/_site/'
+    | '/_site/properties/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  SiteRoute: typeof SiteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_site': {
+      id: '/_site'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof SiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_site/': {
+      id: '/_site/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof SiteIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/services': {
+      id: '/_site/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof SiteServicesRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/properties': {
+      id: '/_site/properties'
+      path: '/properties'
+      fullPath: '/properties'
+      preLoaderRoute: typeof SitePropertiesRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/portfolio': {
+      id: '/_site/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof SitePortfolioRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/list-property': {
+      id: '/_site/list-property'
+      path: '/list-property'
+      fullPath: '/list-property'
+      preLoaderRoute: typeof SiteListPropertyRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/investors': {
+      id: '/_site/investors'
+      path: '/investors'
+      fullPath: '/investors'
+      preLoaderRoute: typeof SiteInvestorsRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/contact': {
+      id: '/_site/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof SiteContactRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/blog': {
+      id: '/_site/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof SiteBlogRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/about': {
+      id: '/_site/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof SiteAboutRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/properties/$slug': {
+      id: '/_site/properties/$slug'
+      path: '/$slug'
+      fullPath: '/properties/$slug'
+      preLoaderRoute: typeof SitePropertiesSlugRouteImport
+      parentRoute: typeof SitePropertiesRoute
     }
   }
 }
 
+interface SitePropertiesRouteChildren {
+  SitePropertiesSlugRoute: typeof SitePropertiesSlugRoute
+}
+
+const SitePropertiesRouteChildren: SitePropertiesRouteChildren = {
+  SitePropertiesSlugRoute: SitePropertiesSlugRoute,
+}
+
+const SitePropertiesRouteWithChildren = SitePropertiesRoute._addFileChildren(
+  SitePropertiesRouteChildren,
+)
+
+interface SiteRouteChildren {
+  SiteAboutRoute: typeof SiteAboutRoute
+  SiteBlogRoute: typeof SiteBlogRoute
+  SiteContactRoute: typeof SiteContactRoute
+  SiteInvestorsRoute: typeof SiteInvestorsRoute
+  SiteListPropertyRoute: typeof SiteListPropertyRoute
+  SitePortfolioRoute: typeof SitePortfolioRoute
+  SitePropertiesRoute: typeof SitePropertiesRouteWithChildren
+  SiteServicesRoute: typeof SiteServicesRoute
+  SiteIndexRoute: typeof SiteIndexRoute
+}
+
+const SiteRouteChildren: SiteRouteChildren = {
+  SiteAboutRoute: SiteAboutRoute,
+  SiteBlogRoute: SiteBlogRoute,
+  SiteContactRoute: SiteContactRoute,
+  SiteInvestorsRoute: SiteInvestorsRoute,
+  SiteListPropertyRoute: SiteListPropertyRoute,
+  SitePortfolioRoute: SitePortfolioRoute,
+  SitePropertiesRoute: SitePropertiesRouteWithChildren,
+  SiteServicesRoute: SiteServicesRoute,
+  SiteIndexRoute: SiteIndexRoute,
+}
+
+const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  SiteRoute: SiteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
