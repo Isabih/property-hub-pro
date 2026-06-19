@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SiteRouteImport } from './routes/_site'
 import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
@@ -42,6 +43,11 @@ const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SiteRoute,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRoute,
 } as any)
 const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
   id: '/verify-access',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/verify': typeof AuthVerifyRoute
   '/auth/': typeof AuthIndexRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/verify': typeof AuthVerifyRoute
   '/': typeof SiteIndexRoute
   '/auth': typeof AuthIndexRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/verify': typeof AuthVerifyRoute
   '/_site/': typeof SiteIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/verify'
     | '/auth/'
     | '/properties/$slug'
     | '/properties/'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/verify'
     | '/'
     | '/auth'
     | '/properties/$slug'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
+    | '/auth/verify'
     | '/_site/'
     | '/auth/'
     | '/_site/properties/$slug'
@@ -222,6 +234,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof SiteIndexRouteImport
       parentRoute: typeof SiteRoute
+    }
+    '/auth/verify': {
+      id: '/auth/verify'
+      path: '/verify'
+      fullPath: '/auth/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_site/verify-access': {
       id: '/_site/verify-access'
@@ -327,10 +346,12 @@ const SiteRouteChildren: SiteRouteChildren = {
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
 interface AuthRouteChildren {
+  AuthVerifyRoute: typeof AuthVerifyRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthVerifyRoute: AuthVerifyRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
 
