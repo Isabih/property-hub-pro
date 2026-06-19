@@ -273,3 +273,47 @@ export function listByCategory(category?: PropertyCategory) {
   if (!category) return properties;
   return properties.filter((p) => p.category === category);
 }
+
+/** Fill in sensible defaults for the detail page so every property looks complete. */
+export function getEnrichedProperty(slug: string): Property | undefined {
+  const p = getProperty(slug);
+  if (!p) return undefined;
+  const districtCenters: Record<string, [number, number]> = {
+    Gasabo: [-1.9396, 30.1057],
+    Kicukiro: [-1.9886, 30.1057],
+    Nyarugenge: [-1.9536, 30.0606],
+  };
+  const [lat, lng] = districtCenters[p.district] ?? [-1.9441, 30.0619];
+  const defaultAgent: PropertyAgent = {
+    name: "Diane Uwase",
+    title: "Property Consultant",
+    avatar: "https://i.pravatar.cc/160?img=47",
+    phone: "+250793300080",
+    email: "diane.uwase@novaworks.rw",
+    whatsapp: "250793300080",
+    rating: 5,
+    reviews: 24,
+  };
+  const defaultNeighborhood: NeighborhoodPlace[] = [
+    { name: `${p.location} Market`, type: "shopping", distance: "600m", note: "Daily essentials" },
+    { name: `${p.location} Bistro`, type: "dining", distance: "300m", note: "Cafés & dining" },
+    { name: "King Faisal Hospital", type: "hospital", distance: "2.5km" },
+    { name: "Green Hills Academy", type: "school", distance: "3km" },
+    { name: "Kigali Convention Centre", type: "landmark", distance: "1.5km" },
+    { name: `${p.district} Park`, type: "park", distance: "900m" },
+  ];
+  return {
+    ...p,
+    reference: p.reference ?? `NW-${p.id.toUpperCase()}`,
+    furnishing: p.furnishing ?? (p.category === "land" ? undefined : "Furnished"),
+    yearBuilt: p.yearBuilt ?? 2022,
+    floor: p.floor ?? (p.category === "land" ? undefined : 3),
+    facing: p.facing ?? "North-East",
+    parking: p.parking ?? (p.category === "land" ? 0 : 2),
+    address: p.address ?? `${p.location}, ${p.district}`,
+    lat: p.lat ?? lat,
+    lng: p.lng ?? lng,
+    neighborhood: p.neighborhood ?? defaultNeighborhood,
+    agent: p.agent ?? defaultAgent,
+  };
+}
