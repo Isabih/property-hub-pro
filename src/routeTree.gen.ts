@@ -26,6 +26,7 @@ import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
+import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
 
@@ -112,6 +113,12 @@ const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
   path: '/properties/$slug',
   getParentRoute: () => SiteRoute,
 } as any)
+const AuthenticatedDashboardOwnerRoute =
+  AuthenticatedDashboardOwnerRouteImport.update({
+    id: '/dashboard/owner',
+    path: '/dashboard/owner',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardBuyerRoute =
   AuthenticatedDashboardBuyerRouteImport.update({
     id: '/dashboard/buyer',
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/auth/': typeof AuthIndexRoute
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
 }
@@ -159,6 +167,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthIndexRoute
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
 }
@@ -181,6 +190,7 @@ export interface FileRoutesById {
   '/auth/': typeof AuthIndexRoute
   '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
 }
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/dashboard/agent'
     | '/dashboard/buyer'
+    | '/dashboard/owner'
     | '/properties/$slug'
     | '/properties/'
   fileRoutesByTo: FileRoutesByTo
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard/agent'
     | '/dashboard/buyer'
+    | '/dashboard/owner'
     | '/properties/$slug'
     | '/properties'
   id:
@@ -241,6 +253,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/_authenticated/dashboard/agent'
     | '/_authenticated/dashboard/buyer'
+    | '/_authenticated/dashboard/owner'
     | '/_site/properties/$slug'
     | '/_site/properties/'
   fileRoutesById: FileRoutesById
@@ -372,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitePropertiesSlugRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_authenticated/dashboard/owner': {
+      id: '/_authenticated/dashboard/owner'
+      path: '/dashboard/owner'
+      fullPath: '/dashboard/owner'
+      preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/buyer': {
       id: '/_authenticated/dashboard/buyer'
       path: '/dashboard/buyer'
@@ -392,11 +412,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
+  AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
   AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
+  AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
