@@ -27,6 +27,7 @@ import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
+import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -117,6 +118,12 @@ const AuthenticatedDashboardBuyerRoute =
     path: '/dashboard/buyer',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardAgentRoute =
+  AuthenticatedDashboardAgentRouteImport.update({
+    id: '/dashboard/agent',
+    path: '/dashboard/agent',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth/': typeof AuthIndexRoute
+  '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
@@ -149,6 +157,7 @@ export interface FileRoutesByTo {
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth': typeof AuthIndexRoute
+  '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
@@ -170,6 +179,7 @@ export interface FileRoutesById {
   '/auth/welcome': typeof AuthWelcomeRoute
   '/_site/': typeof SiteIndexRoute
   '/auth/': typeof AuthIndexRoute
+  '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth/'
+    | '/dashboard/agent'
     | '/dashboard/buyer'
     | '/properties/$slug'
     | '/properties/'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth'
+    | '/dashboard/agent'
     | '/dashboard/buyer'
     | '/properties/$slug'
     | '/properties'
@@ -227,6 +239,7 @@ export interface FileRouteTypes {
     | '/auth/welcome'
     | '/_site/'
     | '/auth/'
+    | '/_authenticated/dashboard/agent'
     | '/_authenticated/dashboard/buyer'
     | '/_site/properties/$slug'
     | '/_site/properties/'
@@ -366,14 +379,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/agent': {
+      id: '/_authenticated/dashboard/agent'
+      path: '/dashboard/agent'
+      fullPath: '/dashboard/agent'
+      preLoaderRoute: typeof AuthenticatedDashboardAgentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
   AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
 }
 
