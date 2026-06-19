@@ -9,8 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
+import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
@@ -21,15 +26,44 @@ import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
+import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
+import { Route as AuthenticatedDashboardItRouteImport } from './routes/_authenticated/dashboard.it'
+import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
+import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
+import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRoute,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SiteRoute,
+} as any)
+const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRoute,
 } as any)
 const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
   id: '/verify-access',
@@ -81,9 +115,40 @@ const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
   path: '/properties/$slug',
   getParentRoute: () => SiteRoute,
 } as any)
+const AuthenticatedDashboardOwnerRoute =
+  AuthenticatedDashboardOwnerRouteImport.update({
+    id: '/dashboard/owner',
+    path: '/dashboard/owner',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItRoute =
+  AuthenticatedDashboardItRouteImport.update({
+    id: '/dashboard/it',
+    path: '/dashboard/it',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardBuyerRoute =
+  AuthenticatedDashboardBuyerRouteImport.update({
+    id: '/dashboard/buyer',
+    path: '/dashboard/buyer',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardAgentRoute =
+  AuthenticatedDashboardAgentRouteImport.update({
+    id: '/dashboard/agent',
+    path: '/dashboard/agent',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardAdminRoute =
+  AuthenticatedDashboardAdminRouteImport.update({
+    id: '/dashboard/admin',
+    path: '/dashboard/admin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/auth': typeof AuthRouteWithChildren
   '/about': typeof SiteAboutRoute
   '/blog': typeof SiteBlogRoute
   '/contact': typeof SiteContactRoute
@@ -92,10 +157,19 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/verify': typeof AuthVerifyRoute
+  '/auth/welcome': typeof AuthWelcomeRoute
+  '/auth/': typeof AuthIndexRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
+  '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
+  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/it': typeof AuthenticatedDashboardItRoute
+  '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof SiteIndexRoute
   '/about': typeof SiteAboutRoute
   '/blog': typeof SiteBlogRoute
   '/contact': typeof SiteContactRoute
@@ -104,13 +178,22 @@ export interface FileRoutesByTo {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
-  '/': typeof SiteIndexRoute
+  '/auth/verify': typeof AuthVerifyRoute
+  '/auth/welcome': typeof AuthWelcomeRoute
+  '/auth': typeof AuthIndexRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
+  '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
+  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/it': typeof AuthenticatedDashboardItRoute
+  '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
   '/_site/about': typeof SiteAboutRoute
   '/_site/blog': typeof SiteBlogRoute
   '/_site/contact': typeof SiteContactRoute
@@ -119,7 +202,15 @@ export interface FileRoutesById {
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/verify': typeof AuthVerifyRoute
+  '/auth/welcome': typeof AuthWelcomeRoute
   '/_site/': typeof SiteIndexRoute
+  '/auth/': typeof AuthIndexRoute
+  '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
+  '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
+  '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/_authenticated/dashboard/it': typeof AuthenticatedDashboardItRoute
+  '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
 }
@@ -127,6 +218,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/about'
     | '/blog'
     | '/contact'
@@ -135,10 +227,19 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/verify'
+    | '/auth/welcome'
+    | '/auth/'
+    | '/dashboard/admin'
+    | '/dashboard/agent'
+    | '/dashboard/buyer'
+    | '/dashboard/it'
+    | '/dashboard/owner'
     | '/properties/$slug'
     | '/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/about'
     | '/blog'
     | '/contact'
@@ -147,12 +248,21 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
-    | '/'
+    | '/auth/verify'
+    | '/auth/welcome'
+    | '/auth'
+    | '/dashboard/admin'
+    | '/dashboard/agent'
+    | '/dashboard/buyer'
+    | '/dashboard/it'
+    | '/dashboard/owner'
     | '/properties/$slug'
     | '/properties'
   id:
     | '__root__'
+    | '/_authenticated'
     | '/_site'
+    | '/auth'
     | '/_site/about'
     | '/_site/blog'
     | '/_site/contact'
@@ -161,17 +271,34 @@ export interface FileRouteTypes {
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
+    | '/auth/verify'
+    | '/auth/welcome'
     | '/_site/'
+    | '/auth/'
+    | '/_authenticated/dashboard/admin'
+    | '/_authenticated/dashboard/agent'
+    | '/_authenticated/dashboard/buyer'
+    | '/_authenticated/dashboard/it'
+    | '/_authenticated/dashboard/owner'
     | '/_site/properties/$slug'
     | '/_site/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_site': {
       id: '/_site'
       path: ''
@@ -179,12 +306,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_site/': {
       id: '/_site/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof SiteIndexRouteImport
       parentRoute: typeof SiteRoute
+    }
+    '/auth/welcome': {
+      id: '/auth/welcome'
+      path: '/welcome'
+      fullPath: '/auth/welcome'
+      preLoaderRoute: typeof AuthWelcomeRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/verify': {
+      id: '/auth/verify'
+      path: '/verify'
+      fullPath: '/auth/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_site/verify-access': {
       id: '/_site/verify-access'
@@ -256,8 +411,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitePropertiesSlugRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_authenticated/dashboard/owner': {
+      id: '/_authenticated/dashboard/owner'
+      path: '/dashboard/owner'
+      fullPath: '/dashboard/owner'
+      preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it': {
+      id: '/_authenticated/dashboard/it'
+      path: '/dashboard/it'
+      fullPath: '/dashboard/it'
+      preLoaderRoute: typeof AuthenticatedDashboardItRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/buyer': {
+      id: '/_authenticated/dashboard/buyer'
+      path: '/dashboard/buyer'
+      fullPath: '/dashboard/buyer'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/agent': {
+      id: '/_authenticated/dashboard/agent'
+      path: '/dashboard/agent'
+      fullPath: '/dashboard/agent'
+      preLoaderRoute: typeof AuthenticatedDashboardAgentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/admin': {
+      id: '/_authenticated/dashboard/admin'
+      path: '/dashboard/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRoute
+  AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
+  AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
+  AuthenticatedDashboardItRoute: typeof AuthenticatedDashboardItRoute
+  AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardAdminRoute: AuthenticatedDashboardAdminRoute,
+  AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
+  AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
+  AuthenticatedDashboardItRoute: AuthenticatedDashboardItRoute,
+  AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface SiteRouteChildren {
   SiteAboutRoute: typeof SiteAboutRoute
@@ -289,8 +498,24 @@ const SiteRouteChildren: SiteRouteChildren = {
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthVerifyRoute: typeof AuthVerifyRoute
+  AuthWelcomeRoute: typeof AuthWelcomeRoute
+  AuthIndexRoute: typeof AuthIndexRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthVerifyRoute: AuthVerifyRoute,
+  AuthWelcomeRoute: AuthWelcomeRoute,
+  AuthIndexRoute: AuthIndexRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Search, Phone, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store } from "lucide-react";
+import { Menu, X, Search, Phone, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store, User as UserIcon, LayoutDashboard, LogOut } from "lucide-react";
 import logo from "@/assets/novaworks-logo.png";
 import { CATEGORY_META, type PropertyCategory } from "@/lib/properties";
+import { useAuth, dashboardPathFor } from "@/lib/use-auth";
 
 const PROPERTY_ICONS: Record<PropertyCategory, any> = {
   apartment: Building2,
@@ -27,6 +28,8 @@ const MAIN_LINKS = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const { user, profile, primaryRole, signOut } = useAuth();
+  const [userMenu, setUserMenu] = useState(false);
   return (
     <header className="sticky top-0 z-50 bg-noir-deep/95 backdrop-blur-md border-b border-white/5">
       <div className="container-luxe flex items-center justify-between py-4">
@@ -96,6 +99,41 @@ export function SiteHeader() {
           <button className="text-white/70 hover:text-gold p-2" aria-label="Search">
             <Search className="w-4 h-4" />
           </button>
+          {user ? (
+            <div className="relative" onMouseLeave={() => setUserMenu(false)}>
+              <button
+                onClick={() => setUserMenu((v) => !v)}
+                className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:text-gold"
+              >
+                <span className="h-6 w-6 rounded-full bg-gold/20 text-gold flex items-center justify-center text-[10px] font-semibold">
+                  {(profile?.full_name ?? user.email ?? "U").trim().charAt(0).toUpperCase()}
+                </span>
+                <span className="hidden xl:inline">{profile?.full_name ?? user.email}</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              {userMenu && (
+                <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border border-white/10 bg-noir-deep shadow-xl py-2 z-50">
+                  <Link
+                    to={dashboardPathFor(primaryRole)}
+                    onClick={() => setUserMenu(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-gold"
+                  >
+                    <LayoutDashboard className="w-4 h-4" /> Dashboard
+                  </Link>
+                  <button
+                    onClick={async () => { setUserMenu(false); await signOut(); }}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-gold"
+                  >
+                    <LogOut className="w-4 h-4" /> Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/auth" className="text-sm text-white/80 hover:text-gold inline-flex items-center gap-1">
+              <UserIcon className="w-4 h-4" /> Sign in
+            </Link>
+          )}
           <Link
             to="/list-property"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-5 py-2.5 rounded-md font-medium text-sm hover:shadow-lg hover:shadow-gold/20 transition-all"
