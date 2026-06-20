@@ -19,6 +19,7 @@ const STATUS_MAP: Record<string, PropertyStatus> = {
   draft: "maintenance",
   sold: "sold",
   rented: "rented",
+  maintenance: "maintenance",
 };
 
 interface DbRow {
@@ -83,7 +84,7 @@ export async function fetchActiveProperties(): Promise<Property[]> {
   const { data, error } = await supabase
     .from("properties")
     .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,property_images(url,position,is_cover)")
-    .eq("status", "active")
+    .in("status", ["active", "sold", "maintenance"])
     .order("created_at", { ascending: false });
   if (error) {
     console.error("[properties] fetchActive:", error.message);

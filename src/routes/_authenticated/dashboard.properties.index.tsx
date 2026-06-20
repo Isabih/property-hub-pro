@@ -52,10 +52,24 @@ function PropertiesList() {
     catch (e: any) { toast.error(e.message); }
   };
 
-  const handleToggle = async (id: string, currentStatus: string) => {
-    const next = currentStatus === "active" ? "draft" : "active";
-    try { await setPropertyStatus(id, next); toast.success(`Property ${next}`); load(); }
-    catch (e: any) { toast.error(e.message); }
+  const handleStatusChange = async (id: string, next: string) => {
+    // Optimistic update so the table reflects instantly.
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, status: next } : r)));
+    try {
+      await setPropertyStatus(id, next);
+      toast.success(`Status updated to ${next}`);
+    } catch (e: any) {
+      toast.error(e.message);
+      load();
+    }
+  };
+
+  const STATUS_STYLES: Record<string, string> = {
+    active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    sold: "bg-rose-50 text-rose-700 border-rose-200",
+    maintenance: "bg-amber-50 text-amber-700 border-amber-200",
+    draft: "bg-noir/5 text-noir/60 border-noir/10",
+    rented: "bg-blue-50 text-blue-700 border-blue-200",
   };
 
   const role = (canManage ? (roles.includes("it") ? "it" : "admin") : (primaryRole as any) ?? "buyer");
@@ -114,12 +128,21 @@ function PropertiesList() {
                       <td className="py-3 pr-4 text-noir/70">{p.city ?? "—"}</td>
                       <td className="py-3 pr-4 font-medium">{p.currency} {Number(p.price).toLocaleString()}</td>
                       <td className="py-3 pr-4">
-                        <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${p.status === "active" ? "bg-emerald-50 text-emerald-700" : "bg-noir/5 text-noir/60"}`}>{p.status}</span>
+                        <select
+                          value={p.status}
+                          onChange={(e) => handleStatusChange(p.id, e.target.value)}
+                          className={`text-xs font-medium px-2 py-1 rounded border outline-none cursor-pointer ${STATUS_STYLES[p.status] ?? STATUS_STYLES.draft}`}
+                        >
+                          <option value="draft">Draft (hidden)</option>
+                          <option value="active">Available · Published</option>
+                          <option value="sold">Sold</option>
+                          <option value="rented">Rented</option>
+                          <option value="maintenance">Maintenance</option>
+                        </select>
                       </td>
                       <td className="py-3 pr-4 text-noir/70">{p.views_count ?? 0}</td>
                       <td className="py-3 flex items-center gap-2">
                         <Link to="/properties/$slug" params={{ slug: p.slug }} className="p-1.5 rounded hover:bg-noir/5" title="View"><Eye className="h-4 w-4" /></Link>
-                        <button onClick={() => handleToggle(p.id, p.status)} className="p-1.5 rounded hover:bg-noir/5" title="Toggle status"><Pencil className="h-4 w-4" /></button>
                         <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded hover:bg-rose-50 text-rose-500" title="Delete"><Trash2 className="h-4 w-4" /></button>
                       </td>
                     </tr>

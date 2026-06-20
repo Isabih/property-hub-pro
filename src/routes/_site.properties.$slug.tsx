@@ -6,7 +6,7 @@ import {
   Bell, Download, ShoppingBag, Utensils, Hospital, School, Train, Trees, Landmark, ExternalLink,
 } from "lucide-react";
 import {
-  getEnrichedProperty, formatPrice, CATEGORY_META, properties, ROOM_META,
+  formatPrice, CATEGORY_META, ROOM_META,
   type Property, type RoomCategory, type RoomImage, type NeighborhoodPlace,
 } from "@/lib/properties";
 import { fetchPropertyBySlug } from "@/lib/properties-public";
@@ -14,8 +14,7 @@ import { PropertyCard } from "@/components/site/PropertyCard";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
-    const dbProperty = await fetchPropertyBySlug(params.slug);
-    const property = dbProperty ?? getEnrichedProperty(params.slug);
+    const property = await fetchPropertyBySlug(params.slug);
     if (!property) throw notFound();
     return { property };
   },
@@ -46,7 +45,7 @@ function PropertyDetail() {
   const [activeRoom, setActiveRoom] = useState<RoomCategory | "all">("all");
   const [mediaTab, setMediaTab] = useState<"photos" | "video" | "tour" | "floorplan">("photos");
   const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
-  const related = properties.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
+  const related: Property[] = [];
   const heroMain = roomGallery[0];
   const heroSide = roomGallery.slice(1, 5);
   const extraCount = Math.max(0, roomGallery.length - 5);
