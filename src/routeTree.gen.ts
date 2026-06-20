@@ -32,6 +32,7 @@ import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
+import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -152,6 +153,12 @@ const AuthenticatedDashboardPropertiesIndexRoute =
     path: '/dashboard/properties/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardPropertiesNewRoute =
+  AuthenticatedDashboardPropertiesNewRouteImport.update({
+    id: '/dashboard/properties/new',
+    path: '/dashboard/properties/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
+  '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -196,6 +204,7 @@ export interface FileRoutesByTo {
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
+  '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/properties': typeof AuthenticatedDashboardPropertiesIndexRoute
 }
 export interface FileRoutesById {
@@ -222,6 +231,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
+  '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/_authenticated/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
 }
 export interface FileRouteTypes {
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/dashboard/owner'
     | '/properties/$slug'
     | '/properties/'
+    | '/dashboard/properties/new'
     | '/dashboard/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/dashboard/owner'
     | '/properties/$slug'
     | '/properties'
+    | '/dashboard/properties/new'
     | '/dashboard/properties'
   id:
     | '__root__'
@@ -294,6 +306,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/owner'
     | '/_site/properties/$slug'
     | '/_site/properties/'
+    | '/_authenticated/dashboard/properties/new'
     | '/_authenticated/dashboard/properties/'
   fileRoutesById: FileRoutesById
 }
@@ -466,6 +479,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardPropertiesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/properties/new': {
+      id: '/_authenticated/dashboard/properties/new'
+      path: '/dashboard/properties/new'
+      fullPath: '/dashboard/properties/new'
+      preLoaderRoute: typeof AuthenticatedDashboardPropertiesNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -475,6 +495,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardItRoute: typeof AuthenticatedDashboardItRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
+  AuthenticatedDashboardPropertiesNewRoute: typeof AuthenticatedDashboardPropertiesNewRoute
   AuthenticatedDashboardPropertiesIndexRoute: typeof AuthenticatedDashboardPropertiesIndexRoute
 }
 
@@ -484,6 +505,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
   AuthenticatedDashboardItRoute: AuthenticatedDashboardItRoute,
   AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
+  AuthenticatedDashboardPropertiesNewRoute:
+    AuthenticatedDashboardPropertiesNewRoute,
   AuthenticatedDashboardPropertiesIndexRoute:
     AuthenticatedDashboardPropertiesIndexRoute,
 }
