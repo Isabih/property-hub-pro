@@ -78,7 +78,7 @@ function PropertiesPage() {
                 <CatChip
                   key={c}
                   active={category === c}
-                  onClick={() => navigate({ search: (prev) => ({ ...prev, category: c }) })}
+                  onClick={() => navigate({ search: (prev: PropSearch) => ({ ...prev, category: c }) })}
                   label={CATEGORY_META[c].plural}
                   icon={<I className="w-3.5 h-3.5" />}
                 />
@@ -86,10 +86,10 @@ function PropertiesPage() {
             })}
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            <CatChip active={!listing && !status} onClick={() => navigate({ search: (p) => ({ ...p, listing: undefined, status: undefined }) })} label="Any status" />
-            <CatChip active={listing === "sale"} onClick={() => navigate({ search: (p) => ({ ...p, listing: "sale", status: undefined }) })} label="For Sale" />
-            <CatChip active={listing === "rent"} onClick={() => navigate({ search: (p) => ({ ...p, listing: "rent", status: undefined }) })} label="For Rent" />
-            <CatChip active={status === "sold"} onClick={() => navigate({ search: (p) => ({ ...p, status: "sold", listing: undefined }) })} label="Sold" />
+            <CatChip active={!listing && !status} onClick={() => navigate({ search: (p: PropSearch) => ({ ...p, listing: undefined, status: undefined }) })} label="Any status" />
+            <CatChip active={listing === "sale"} onClick={() => navigate({ search: (p: PropSearch) => ({ ...p, listing: "sale", status: undefined }) })} label="For Sale" />
+            <CatChip active={listing === "rent"} onClick={() => navigate({ search: (p: PropSearch) => ({ ...p, listing: "rent", status: undefined }) })} label="For Rent" />
+            <CatChip active={status === "sold"} onClick={() => navigate({ search: (p: PropSearch) => ({ ...p, status: "sold", listing: undefined }) })} label="Sold" />
           </div>
         </div>
       </section>
