@@ -13,8 +13,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/owner")({
 
 const NAV = [
   { to: "/dashboard/owner", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/properties", label: "My Properties", icon: Building2, group: "Content" },
-  { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
+  { to: "/dashboard/owner", label: "My Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/inquiries", label: "Inquiries", icon: MessageSquare, group: "Management" },
   { to: "/dashboard/owner", label: "Earnings", icon: DollarSign, group: "Management" },
   { to: "/dashboard/owner", label: "Settings", icon: Settings, group: "System" },
@@ -47,7 +46,6 @@ function OwnerDashboard() {
       nav={NAV}
       actions={[
         { label: "Sync Data", icon: RefreshCw },
-        { label: "Add Property", to: "/dashboard/properties/new", icon: Plus, variant: "primary" },
       ]}
     >
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -60,16 +58,15 @@ function OwnerDashboard() {
       <div className="mt-6 grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2"><AnalyticsChart data={sampleAnalytics(2)} /></div>
         <QuickActions actions={[
-          { label: "Add Property", sublabel: "Create new listing", icon: ListPlus, to: "/dashboard/properties/new", tone: "gold" },
-          { label: "Upload Media", sublabel: "Photos & videos", icon: Upload, to: "/dashboard/properties/new", tone: "blue" },
-          { label: "My Properties", sublabel: "Manage listings", icon: Building2, to: "/dashboard/properties", tone: "violet" },
+          { label: "Inquiries", sublabel: "Buyer interest", icon: MessageSquare, to: "/dashboard/inquiries", tone: "gold" },
+          { label: "Earnings", sublabel: "Track performance", icon: DollarSign, to: "/dashboard/owner", tone: "blue" },
           { label: "Reports", sublabel: "View analytics", icon: BarChart3, to: "/dashboard/owner", tone: "emerald" },
         ]} />
       </div>
 
       <div className="mt-6 grid lg:grid-cols-2 gap-6">
-        <Panel title="My Properties" subtitle="Latest listings" action={<Link to="/dashboard/properties" className="text-sm text-gold">View all</Link>}>
-          <p className="text-sm text-noir/50">{stats.properties === 0 ? "No properties yet. Click 'Add Property' to create your first listing." : `You have ${stats.properties} properties.`}</p>
+        <Panel title="My Properties" subtitle="Listings registered to you by NOVAWORKS">
+          <p className="text-sm text-noir/50">{stats.properties === 0 ? "Properties are onboarded by the NOVAWORKS team. Contact your account manager to list yours." : `You have ${stats.properties} properties in the portfolio.`}</p>
         </Panel>
         <Panel title="Recent Inquiries" subtitle="Buyer interest">
           <p className="text-sm text-noir/50">{stats.inquiries === 0 ? "No inquiries yet." : `${stats.inquiries} active inquiries.`}</p>
