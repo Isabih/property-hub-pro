@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Building2, Plus, LayoutDashboard, Trash2, Eye, Pencil, RefreshCw } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
@@ -12,15 +12,25 @@ export const Route = createFileRoute("/_authenticated/dashboard/properties/")({
 });
 
 const NAV = [
-  { to: "/dashboard/owner", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/properties", label: "My Properties", icon: Building2, group: "Content" },
+  { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/dashboard/properties", label: "All Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
 ];
 
 function PropertiesList() {
-  const { primaryRole } = useAuth();
+  const { primaryRole, roles } = useAuth();
+  const navigate = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const canManage = roles.includes("it") || roles.includes("admin");
+
+  useEffect(() => {
+    if (roles.length && !canManage) {
+      toast.error("Only NOVAWORKS staff can manage properties.");
+      navigate({ to: dashboardPathFor((primaryRole as any) ?? "buyer") });
+    }
+  }, [roles, canManage, primaryRole, navigate]);
 
   const load = async () => {
     setLoading(true);
@@ -48,12 +58,12 @@ function PropertiesList() {
     catch (e: any) { toast.error(e.message); }
   };
 
-  const role = (primaryRole as any) ?? "owner";
+  const role = (canManage ? (roles.includes("it") ? "it" : "admin") : (primaryRole as any) ?? "buyer");
 
   return (
     <DashboardShell
-      title="My Properties"
-      subtitle="Create, edit, and publish your listings"
+      title="All Properties"
+      subtitle="NOVAWORKS-managed listings · IT & admin only"
       role={role}
       nav={[...NAV, { to: dashboardPathFor(role), label: "Back to dashboard", icon: LayoutDashboard, group: "Overview" }]}
       actions={[
@@ -61,15 +71,15 @@ function PropertiesList() {
         { label: "Add Property", to: "/dashboard/properties/new", icon: Plus, variant: "primary" },
       ]}
     >
-      <Panel title={`${rows.length} ${rows.length === 1 ? "property" : "properties"}`} subtitle="Listings you own or are assigned to">
+      <Panel title={`${rows.length} ${rows.length === 1 ? "property" : "properties"}`} subtitle="All listings on the NOVAWORKS platform">
         {loading ? (
           <p className="text-sm text-noir/50">Loading…</p>
         ) : rows.length === 0 ? (
           <div className="text-center py-10">
             <Building2 className="h-10 w-10 mx-auto text-noir/20" />
-            <p className="mt-3 text-sm text-noir/60">You haven't added any properties yet.</p>
+            <p className="mt-3 text-sm text-noir/60">No properties on the platform yet.</p>
             <Link to="/dashboard/properties/new" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-sm font-medium text-noir-deep">
-              <Plus className="h-4 w-4" /> Add your first property
+              <Plus className="h-4 w-4" /> Add first property
             </Link>
           </div>
         ) : (
