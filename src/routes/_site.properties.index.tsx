@@ -5,11 +5,13 @@ import { CATEGORY_META, type Property, type PropertyCategory } from "@/lib/prope
 import { fetchActiveProperties } from "@/lib/properties-public";
 import { PropertyCard } from "@/components/site/PropertyCard";
 
-type PropSearch = { category?: PropertyCategory };
+type PropSearch = { category?: PropertyCategory; listing?: "sale" | "rent"; status?: "available" | "sold" };
 
 export const Route = createFileRoute("/_site/properties/")({
   validateSearch: (s: Record<string, unknown>): PropSearch => ({
     category: (s.category as PropertyCategory) || undefined,
+    listing: s.listing === "sale" || s.listing === "rent" ? s.listing : undefined,
+    status: s.status === "available" || s.status === "sold" ? s.status : undefined,
   }),
   head: () => ({
     meta: [
@@ -26,7 +28,7 @@ const CAT_ICONS: Record<PropertyCategory, any> = {
 };
 
 function PropertiesPage() {
-  const { category } = Route.useSearch() as PropSearch;
+  const { category, listing, status } = Route.useSearch() as PropSearch;
   const navigate = Route.useNavigate();
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -39,6 +41,8 @@ function PropertiesPage() {
 
   const filtered = dbProps.filter((p) => {
     if (category && p.category !== category) return false;
+    if (listing && p.listing !== listing) return false;
+    if (status && p.status !== status) return false;
     if (query && !`${p.title} ${p.location}`.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
   });
@@ -74,12 +78,18 @@ function PropertiesPage() {
                 <CatChip
                   key={c}
                   active={category === c}
-                  onClick={() => navigate({ search: { category: c } })}
+                  onClick={() => navigate({ search: (prev) => ({ ...prev, category: c }) })}
                   label={CATEGORY_META[c].plural}
                   icon={<I className="w-3.5 h-3.5" />}
                 />
               );
             })}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <CatChip active={!listing && !status} onClick={() => navigate({ search: (p) => ({ ...p, listing: undefined, status: undefined }) })} label="Any status" />
+            <CatChip active={listing === "sale"} onClick={() => navigate({ search: (p) => ({ ...p, listing: "sale", status: undefined }) })} label="For Sale" />
+            <CatChip active={listing === "rent"} onClick={() => navigate({ search: (p) => ({ ...p, listing: "rent", status: undefined }) })} label="For Rent" />
+            <CatChip active={status === "sold"} onClick={() => navigate({ search: (p) => ({ ...p, status: "sold", listing: undefined }) })} label="Sold" />
           </div>
         </div>
       </section>
