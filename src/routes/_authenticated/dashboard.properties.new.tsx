@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Building2, Plus, LayoutDashboard, Upload, X, Loader2 } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
-import { createProperty, uploadPropertyImage } from "@/lib/properties-db";
+import { createProperty, uploadPropertyImage, IMAGE_SECTIONS, type ImageSection } from "@/lib/properties-db";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/properties/new")({
@@ -49,6 +49,7 @@ function NewProperty() {
   });
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [sections, setSections] = useState<ImageSection[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
 
@@ -60,12 +61,17 @@ function NewProperty() {
     const arr = Array.from(list).slice(0, 10 - files.length);
     setFiles((prev) => [...prev, ...arr]);
     setPreviews((prev) => [...prev, ...arr.map((f) => URL.createObjectURL(f))]);
+    setSections((prev) => [...prev, ...arr.map(() => "main" as ImageSection)]);
   };
 
   const removeFile = (i: number) => {
     setFiles((p) => p.filter((_, idx) => idx !== i));
     setPreviews((p) => p.filter((_, idx) => idx !== i));
+    setSections((p) => p.filter((_, idx) => idx !== i));
   };
+
+  const setSection = (i: number, s: ImageSection) =>
+    setSections((p) => p.map((cur, idx) => (idx === i ? s : cur)));
 
   const submit = async (status: "draft" | "active") => {
     if (!user) return;
@@ -76,7 +82,7 @@ function NewProperty() {
     setSubmitting(true);
     setUploadProgress(files.map(() => 0));
     try {
-      const uploads = [] as Array<{ url: string; path: string }>;
+      const uploads = [] as Array<{ url: string; path: string; section: ImageSection }>;
       for (let i = 0; i < files.length; i++) {
         const f = files[i];
         // simulated incremental progress while the upload is in flight
@@ -89,7 +95,7 @@ function NewProperty() {
         }, 120);
         try {
           const r = await uploadPropertyImage(user.id, f);
-          uploads.push(r);
+          uploads.push({ ...r, section: sections[i] ?? "main" });
           setUploadProgress((p) => { const n = [...p]; n[i] = 100; return n; });
         } finally {
           clearInterval(tick);
