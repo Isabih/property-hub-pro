@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, SlidersHorizontal, LayoutGrid, List, X, Crown, Building2, Castle, Home, Building, Briefcase, MapPin, Square, Store } from "lucide-react";
-import { properties, CATEGORY_META, type PropertyCategory } from "@/lib/properties";
+import { properties as staticProperties, CATEGORY_META, type Property, type PropertyCategory } from "@/lib/properties";
+import { fetchActiveProperties } from "@/lib/properties-public";
 import { PropertyCard } from "@/components/site/PropertyCard";
 
 type PropSearch = { category?: PropertyCategory };
@@ -29,8 +30,19 @@ function PropertiesPage() {
   const navigate = Route.useNavigate();
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [dbProps, setDbProps] = useState<Property[]>([]);
 
-  const filtered = properties.filter((p) => {
+  useEffect(() => {
+    fetchActiveProperties().then(setDbProps);
+  }, []);
+
+  // DB listings first, then static seed data (dedupe by slug).
+  const merged: Property[] = [
+    ...dbProps,
+    ...staticProperties.filter((s) => !dbProps.some((d) => d.slug === s.slug)),
+  ];
+
+  const filtered = merged.filter((p) => {
     if (category && p.category !== category) return false;
     if (query && !`${p.title} ${p.location}`.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
