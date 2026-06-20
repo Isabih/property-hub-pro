@@ -69,8 +69,14 @@ export async function uploadPropertyImage(userId: string, file: File): Promise<{
   const path = `${userId}/${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage.from("property-media").upload(path, file, { upsert: false });
   if (error) throw error;
-  const { data } = supabase.storage.from("property-media").getPublicUrl(path);
-  return { url: data.publicUrl, path };
+  // Bucket is private; mint a long-lived signed URL so the frontend can render it.
+  const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
+  const { data, error: signErr } = await supabase
+    .storage
+    .from("property-media")
+    .createSignedUrl(path, TEN_YEARS);
+  if (signErr || !data) throw signErr ?? new Error("Failed to sign URL");
+  return { url: data.signedUrl, path };
 }
 
 export async function createProperty(input: {
