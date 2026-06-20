@@ -171,6 +171,7 @@ export type Database = {
           is_cover: boolean
           position: number
           property_id: string
+          section: string
           storage_path: string | null
           url: string
         }
@@ -180,6 +181,7 @@ export type Database = {
           is_cover?: boolean
           position?: number
           property_id: string
+          section?: string
           storage_path?: string | null
           url: string
         }
@@ -189,6 +191,7 @@ export type Database = {
           is_cover?: boolean
           position?: number
           property_id?: string
+          section?: string
           storage_path?: string | null
           url?: string
         }
@@ -303,6 +306,47 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "saved_properties_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staff_notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          property_id: string | null
+          read_at: string | null
+          recipient_id: string
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          property_id?: string | null
+          read_at?: string | null
+          recipient_id: string
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          property_id?: string | null
+          read_at?: string | null
+          recipient_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_notifications_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
