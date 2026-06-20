@@ -13,8 +13,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/agent")({
 
 const NAV = [
   { to: "/dashboard/agent", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/properties", label: "My Listings", icon: Building2, group: "Content" },
-  { to: "/dashboard/properties/new", label: "Add Listing", icon: Plus, group: "Content" },
+  { to: "/dashboard/agent", label: "Assigned Listings", icon: Building2, group: "Content" },
   { to: "/dashboard/inquiries", label: "Leads", icon: Users, group: "Management" },
   { to: "/dashboard/inquiries", label: "Visits", icon: CalendarCheck, group: "Management" },
   { to: "/dashboard/inquiries", label: "Messages", icon: MessageSquare, group: "Management" },
@@ -50,7 +49,6 @@ function AgentDashboard() {
       nav={NAV}
       actions={[
         { label: "Sync Data", icon: RefreshCw },
-        { label: "New Listing", to: "/dashboard/properties/new", icon: Plus, variant: "primary" },
       ]}
     >
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -63,16 +61,16 @@ function AgentDashboard() {
       <div className="mt-6 grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2"><AnalyticsChart data={sampleAnalytics(3)} /></div>
         <QuickActions actions={[
-          { label: "Add Listing", sublabel: "Publish new property", icon: ListPlus, to: "/dashboard/properties/new", tone: "gold" },
-          { label: "Call Lead", sublabel: "Top priority", icon: Phone, to: "/dashboard/agent", tone: "blue" },
-          { label: "My Listings", sublabel: "Manage portfolio", icon: Building2, to: "/dashboard/properties", tone: "violet" },
+          { label: "Call Lead", sublabel: "Top priority", icon: Phone, to: "/dashboard/inquiries", tone: "gold" },
+          { label: "Messages", sublabel: "Respond to buyers", icon: MessageSquare, to: "/dashboard/inquiries", tone: "blue" },
+          { label: "Assigned Listings", sublabel: "Properties you manage", icon: Building2, to: "/dashboard/agent", tone: "violet" },
           { label: "Reports", sublabel: "Performance", icon: BarChart3, to: "/dashboard/agent", tone: "emerald" },
         ]} />
       </div>
 
       <div className="mt-6 grid lg:grid-cols-2 gap-6">
-        <Panel title="My Listings" subtitle="Properties assigned to you" action={<Link to="/dashboard/properties" className="text-sm text-gold">View all</Link>}>
-          <p className="text-sm text-noir/50">{stats.listings === 0 ? "No listings yet." : `${stats.listings} active listings.`}</p>
+        <Panel title="Assigned Listings" subtitle="Properties NOVAWORKS has assigned to you">
+          <p className="text-sm text-noir/50">{stats.listings === 0 ? "No listings assigned yet. The IT team assigns properties to agents." : `${stats.listings} active listings.`}</p>
         </Panel>
         <Panel title="Recent Leads" subtitle="Buyer inquiries">
           <p className="text-sm text-noir/50">{stats.leads === 0 ? "No leads yet." : `${stats.leads} leads to respond to.`}</p>

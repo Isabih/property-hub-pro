@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Building2, Plus, LayoutDashboard, Upload, X, Loader2 } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
@@ -12,15 +12,23 @@ export const Route = createFileRoute("/_authenticated/dashboard/properties/new")
 });
 
 const NAV = [
-  { to: "/dashboard/owner", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/properties", label: "My Properties", icon: Building2, group: "Content" },
+  { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/dashboard/properties", label: "All Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
 ];
 
 function NewProperty() {
-  const { user, primaryRole } = useAuth();
+  const { user, primaryRole, roles } = useAuth();
   const navigate = useNavigate();
-  const role = (primaryRole as any) ?? "owner";
+  const canManage = roles.includes("it") || roles.includes("admin");
+  const role = (canManage ? (roles.includes("it") ? "it" : "admin") : (primaryRole as any) ?? "buyer");
+
+  useEffect(() => {
+    if (roles.length && !canManage) {
+      toast.error("Only NOVAWORKS staff can add properties.");
+      navigate({ to: dashboardPathFor((primaryRole as any) ?? "buyer") });
+    }
+  }, [roles, canManage, primaryRole, navigate]);
 
   const [form, setForm] = useState({
     title: "",
