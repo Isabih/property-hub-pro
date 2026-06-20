@@ -211,6 +211,16 @@ function NewProperty() {
                     <img src={src} alt="" className="h-full w-full object-cover" />
                     {i === 0 && <span className="absolute top-1 left-1 bg-gold text-noir-deep text-[10px] px-1.5 py-0.5 rounded">COVER</span>}
                     <button onClick={() => removeFile(i)} className="absolute top-1 right-1 bg-black/60 text-white rounded p-0.5 opacity-0 group-hover:opacity-100"><X className="h-3 w-3" /></button>
+                    <select
+                      value={sections[i] ?? "main"}
+                      onChange={(e) => setSection(i, e.target.value as ImageSection)}
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute bottom-1 left-1 right-1 text-[10px] bg-black/70 text-white rounded px-1 py-0.5 outline-none border border-white/20"
+                    >
+                      {IMAGE_SECTIONS.map((s) => (
+                        <option key={s.value} value={s.value}>{s.label}</option>
+                      ))}
+                    </select>
                     {submitting && uploadProgress[i] !== undefined && (
                       <div className="absolute inset-x-0 bottom-0 h-1.5 bg-black/40">
                         <div className="h-full bg-gold transition-all duration-150" style={{ width: `${uploadProgress[i]}%` }} />
