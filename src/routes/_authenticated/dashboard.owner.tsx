@@ -15,8 +15,7 @@ const NAV = [
   { to: "/dashboard/owner", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/dashboard/properties", label: "My Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
-  { to: "/dashboard/owner", label: "Inquiries", icon: Users, group: "Management" },
-  { to: "/dashboard/owner", label: "Messages", icon: MessageSquare, group: "Management" },
+  { to: "/dashboard/inquiries", label: "Inquiries", icon: MessageSquare, group: "Management" },
   { to: "/dashboard/owner", label: "Earnings", icon: DollarSign, group: "Management" },
   { to: "/dashboard/owner", label: "Settings", icon: Settings, group: "System" },
 ];
