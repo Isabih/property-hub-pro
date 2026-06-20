@@ -83,7 +83,7 @@ function rowToProperty(r: DbRow): Property {
 function sectionToRoom(section: string | null): import("./properties").RoomCategory {
   switch (section) {
     case "kitchen": return "kitchen";
-    case "living_room": return "living";
+    case "living_room": return "living-room";
     case "bathroom": return "bathroom";
     case "gym": return "gym";
     case "main": return "main";
