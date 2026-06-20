@@ -50,6 +50,7 @@ function NewProperty() {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number[]>([]);
 
   const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -73,11 +74,26 @@ function NewProperty() {
       return;
     }
     setSubmitting(true);
+    setUploadProgress(files.map(() => 0));
     try {
       const uploads = [] as Array<{ url: string; path: string }>;
-      for (const f of files) {
-        const r = await uploadPropertyImage(user.id, f);
-        uploads.push(r);
+      for (let i = 0; i < files.length; i++) {
+        const f = files[i];
+        // simulated incremental progress while the upload is in flight
+        const tick = setInterval(() => {
+          setUploadProgress((p) => {
+            const next = [...p];
+            if (next[i] < 90) next[i] = Math.min(90, next[i] + 7);
+            return next;
+          });
+        }, 120);
+        try {
+          const r = await uploadPropertyImage(user.id, f);
+          uploads.push(r);
+          setUploadProgress((p) => { const n = [...p]; n[i] = 100; return n; });
+        } finally {
+          clearInterval(tick);
+        }
       }
       await createProperty({
         ownerId: user.id,
@@ -189,6 +205,16 @@ function NewProperty() {
                     <img src={src} alt="" className="h-full w-full object-cover" />
                     {i === 0 && <span className="absolute top-1 left-1 bg-gold text-noir-deep text-[10px] px-1.5 py-0.5 rounded">COVER</span>}
                     <button onClick={() => removeFile(i)} className="absolute top-1 right-1 bg-black/60 text-white rounded p-0.5 opacity-0 group-hover:opacity-100"><X className="h-3 w-3" /></button>
+                    {submitting && uploadProgress[i] !== undefined && (
+                      <div className="absolute inset-x-0 bottom-0 h-1.5 bg-black/40">
+                        <div className="h-full bg-gold transition-all duration-150" style={{ width: `${uploadProgress[i]}%` }} />
+                      </div>
+                    )}
+                    {submitting && uploadProgress[i] === 100 && (
+                      <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center">
+                        <span className="text-white text-xs font-medium bg-emerald-600/90 px-2 py-0.5 rounded">✓ Linked</span>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
