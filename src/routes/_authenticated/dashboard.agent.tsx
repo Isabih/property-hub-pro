@@ -15,9 +15,9 @@ const NAV = [
   { to: "/dashboard/agent", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/dashboard/properties", label: "My Listings", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Listing", icon: Plus, group: "Content" },
-  { to: "/dashboard/agent", label: "Leads", icon: Users, group: "Management" },
-  { to: "/dashboard/agent", label: "Visits", icon: CalendarCheck, group: "Management" },
-  { to: "/dashboard/agent", label: "Messages", icon: MessageSquare, group: "Management" },
+  { to: "/dashboard/inquiries", label: "Leads", icon: Users, group: "Management" },
+  { to: "/dashboard/inquiries", label: "Visits", icon: CalendarCheck, group: "Management" },
+  { to: "/dashboard/inquiries", label: "Messages", icon: MessageSquare, group: "Management" },
   { to: "/dashboard/agent", label: "Settings", icon: Settings, group: "System" },
 ];
 
