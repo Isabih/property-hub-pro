@@ -9,11 +9,13 @@ import {
   getEnrichedProperty, formatPrice, CATEGORY_META, properties, ROOM_META,
   type Property, type RoomCategory, type RoomImage, type NeighborhoodPlace,
 } from "@/lib/properties";
+import { fetchPropertyBySlug } from "@/lib/properties-public";
 import { PropertyCard } from "@/components/site/PropertyCard";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
-  loader: ({ params }) => {
-    const property = getEnrichedProperty(params.slug);
+  loader: async ({ params }) => {
+    const dbProperty = await fetchPropertyBySlug(params.slug);
+    const property = dbProperty ?? getEnrichedProperty(params.slug);
     if (!property) throw notFound();
     return { property };
   },
