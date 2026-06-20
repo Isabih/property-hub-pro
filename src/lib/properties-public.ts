@@ -42,7 +42,7 @@ interface DbRow {
   lng: number | null;
   amenities: string[] | null;
   featured: boolean;
-  property_images: { url: string; position: number; is_cover: boolean }[] | null;
+  property_images: { url: string; position: number; is_cover: boolean; section: string | null }[] | null;
 }
 
 function rowToProperty(r: DbRow): Property {
@@ -72,7 +72,7 @@ function rowToProperty(r: DbRow): Property {
     area: r.area_sqm ?? 0,
     description: r.description ?? "",
     image: cover,
-    roomGallery: images.map((img) => ({ room: "other" as const, src: img.url })),
+    roomGallery: images.map((img) => ({ room: sectionToRoom(img.section), src: img.url })),
     amenities: r.amenities ?? [],
     address: r.address ?? undefined,
     lat: r.lat ?? undefined,
@@ -80,10 +80,21 @@ function rowToProperty(r: DbRow): Property {
   };
 }
 
+function sectionToRoom(section: string | null): import("./properties").RoomCategory {
+  switch (section) {
+    case "kitchen": return "kitchen";
+    case "living_room": return "living";
+    case "bathroom": return "bathroom";
+    case "gym": return "gym";
+    case "main": return "main";
+    default: return "other";
+  }
+}
+
 export async function fetchActiveProperties(): Promise<Property[]> {
   const { data, error } = await supabase
     .from("properties")
-    .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,property_images(url,position,is_cover)")
+    .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,property_images(url,position,is_cover,section)")
     .in("status", ["active", "sold", "maintenance"])
     .order("created_at", { ascending: false });
   if (error) {
@@ -96,7 +107,7 @@ export async function fetchActiveProperties(): Promise<Property[]> {
 export async function fetchPropertyBySlug(slug: string): Promise<Property | null> {
   const { data, error } = await supabase
     .from("properties")
-    .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,property_images(url,position,is_cover)")
+    .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,property_images(url,position,is_cover,section)")
     .eq("slug", slug)
     .maybeSingle();
   if (error) {
