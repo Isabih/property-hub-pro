@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/it")({
 const NAV = [
   { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/dashboard/it", label: "Analytics", icon: BarChart3, group: "Overview" },
+  { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/it", label: "Media Library", icon: ImageIcon, group: "Content" },
   { to: "/dashboard/it", label: "Videos", icon: Video, group: "Content" },

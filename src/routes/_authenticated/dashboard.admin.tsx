@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, Plus, RefreshCw, BarChart3, UserPlus, Upload } from "lucide-react";
+import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, Plus, RefreshCw, BarChart3, UserPlus, Upload, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/admin")({
 const NAV = [
   { to: "/dashboard/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/dashboard/admin", label: "Analytics", icon: BarChart3, group: "Overview" },
+  { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
   { to: "/dashboard/admin", label: "Users", icon: Users, group: "Management" },
