@@ -35,7 +35,17 @@ export interface DbPropertyImage {
   storage_path: string | null;
   position: number;
   is_cover: boolean;
+  section: string;
 }
+
+export const IMAGE_SECTIONS = [
+  { value: "main", label: "Main" },
+  { value: "kitchen", label: "Kitchen" },
+  { value: "living_room", label: "Living Room" },
+  { value: "bathroom", label: "Bathroom" },
+  { value: "gym", label: "Gym" },
+] as const;
+export type ImageSection = typeof IMAGE_SECTIONS[number]["value"];
 
 export function slugify(input: string) {
   return input
@@ -97,7 +107,7 @@ export async function createProperty(input: {
   lng: number | null;
   amenities: string[];
   status: "draft" | "active";
-  images: Array<{ url: string; path: string }>;
+  images: Array<{ url: string; path: string; section: ImageSection }>;
 }) {
   const slug = slugify(input.title);
   const { data: prop, error } = await supabase
@@ -133,6 +143,7 @@ export async function createProperty(input: {
       storage_path: img.path,
       position: i,
       is_cover: i === 0,
+      section: img.section,
     }));
     const { error: imgErr } = await supabase.from("property_images").insert(rows);
     if (imgErr) throw imgErr;
