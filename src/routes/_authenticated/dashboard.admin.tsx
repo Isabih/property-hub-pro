@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck } from "lucide-react";
-import { DashboardShell, StatCard, Panel } from "@/components/dashboard/DashboardShell";
+import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, Plus, RefreshCw, BarChart3, UserPlus, Upload } from "lucide-react";
+import { useEffect, useState } from "react";
+import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
+import { supabase } from "@/integrations/supabase/client";
+import { sampleAnalytics } from "@/lib/sample-analytics";
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin")({
   head: () => ({ meta: [{ title: "Admin Dashboard — NOVAWORKS" }] }),
@@ -8,36 +11,66 @@ export const Route = createFileRoute("/_authenticated/dashboard/admin")({
 });
 
 const NAV = [
-  { to: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
-  { to: "/dashboard/admin", label: "Users", icon: Users },
-  { to: "/dashboard/admin", label: "Properties", icon: Building2 },
-  { to: "/dashboard/admin", label: "Verifications", icon: FileCheck },
-  { to: "/dashboard/admin", label: "Revenue", icon: DollarSign },
-  { to: "/dashboard/admin", label: "Activity", icon: Activity },
-  { to: "/dashboard/admin", label: "Settings", icon: Settings },
+  { to: "/dashboard/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/dashboard/admin", label: "Analytics", icon: BarChart3, group: "Overview" },
+  { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
+  { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
+  { to: "/dashboard/admin", label: "Users", icon: Users, group: "Management" },
+  { to: "/dashboard/admin", label: "Verifications", icon: FileCheck, group: "Management" },
+  { to: "/dashboard/admin", label: "Revenue", icon: DollarSign, group: "Management" },
+  { to: "/dashboard/admin", label: "Approvals", icon: ShieldCheck, group: "Management" },
+  { to: "/dashboard/admin", label: "Activity", icon: Activity, group: "System" },
+  { to: "/dashboard/admin", label: "Settings", icon: Settings, group: "System" },
 ];
 
 function AdminDashboard() {
+  const [stats, setStats] = useState({ users: 0, properties: 0, pending: 0, views: 0 });
+  useEffect(() => {
+    (async () => {
+      const [u, p, d, v] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("properties").select("id", { count: "exact", head: true }).eq("status", "active"),
+        supabase.from("properties").select("id", { count: "exact", head: true }).eq("status", "draft"),
+        supabase.from("property_views").select("id", { count: "exact", head: true }),
+      ]);
+      setStats({ users: u.count ?? 0, properties: p.count ?? 0, pending: d.count ?? 0, views: v.count ?? 0 });
+    })();
+  }, []);
+
   return (
-    <DashboardShell title="Admin Control" role="admin" nav={NAV}>
+    <DashboardShell
+      title="Admin Dashboard"
+      subtitle="Full control over users, content, and revenue"
+      role="admin"
+      nav={NAV}
+      actions={[
+        { label: "Sync Data", icon: RefreshCw },
+        { label: "Add Property", to: "/dashboard/properties/new", icon: Plus, variant: "primary" },
+      ]}
+    >
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total users" value="0" icon={Users} />
-        <StatCard label="Active listings" value="0" icon={Building2} />
-        <StatCard label="Pending approvals" value="0" icon={ShieldCheck} />
-        <StatCard label="Revenue (MTD)" value="$0" icon={DollarSign} />
+        <StatCard icon={Building2} label="Total Properties" sublabel={`${stats.pending} pending`} value={String(stats.properties)} delta={{ value: "+12", positive: true }} />
+        <StatCard icon={Users} label="Active Users" sublabel="Across all roles" value={stats.users.toLocaleString()} delta={{ value: "+8.2%", positive: true }} />
+        <StatCard icon={Activity} label="Total Views" sublabel="This month" value={stats.views.toLocaleString()} delta={{ value: "+24%", positive: true }} />
+        <StatCard icon={DollarSign} label="Revenue (MTD)" sublabel="Commissions" value="$0" delta={{ value: "-0.4%", positive: false }} />
       </div>
+
+      <div className="mt-6 grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2"><AnalyticsChart data={sampleAnalytics(4)} /></div>
+        <QuickActions actions={[
+          { label: "Add Property", sublabel: "Create new listing", icon: Building2, to: "/dashboard/properties/new", tone: "gold" },
+          { label: "Upload Media", sublabel: "Images & videos", icon: Upload, to: "/dashboard/properties/new", tone: "blue" },
+          { label: "Add User", sublabel: "Invite team member", icon: UserPlus, to: "/dashboard/admin", tone: "violet" },
+          { label: "Reports", sublabel: "View analytics", icon: BarChart3, to: "/dashboard/admin", tone: "emerald" },
+        ]} />
+      </div>
+
       <div className="mt-6 grid lg:grid-cols-2 gap-6">
-        <Panel title="Recent users">
-          <p className="text-sm text-noir/60">Newly registered buyers, agents, and owners.</p>
+        <Panel title="Pending Approvals" subtitle="Draft listings awaiting review">
+          <p className="text-sm text-noir/50">{stats.pending} listings in draft status.</p>
         </Panel>
-        <Panel title="Pending property approvals">
-          <p className="text-sm text-noir/60">Listings waiting for review before going live.</p>
-        </Panel>
-        <Panel title="Verification requests">
-          <p className="text-sm text-noir/60">Identity and luxury-access verifications.</p>
-        </Panel>
-        <Panel title="Revenue & commissions">
-          <p className="text-sm text-noir/60">Monthly commission summary, top performers, and payouts.</p>
+        <Panel title="Revenue & Commissions" subtitle="Monthly summary">
+          <p className="text-sm text-noir/50">Payments module not yet connected.</p>
         </Panel>
       </div>
     </DashboardShell>

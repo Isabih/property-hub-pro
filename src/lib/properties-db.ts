@@ -1,0 +1,146 @@
+import { supabase } from "@/integrations/supabase/client";
+
+export interface DbProperty {
+  id: string;
+  owner_id: string;
+  agent_id: string | null;
+  slug: string;
+  title: string;
+  description: string | null;
+  property_type: string;
+  listing_type: string;
+  status: string;
+  price: number;
+  currency: string;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  area_sqm: number | null;
+  address: string | null;
+  city: string | null;
+  district: string | null;
+  country: string | null;
+  lat: number | null;
+  lng: number | null;
+  amenities: string[] | null;
+  featured: boolean;
+  views_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DbPropertyImage {
+  id: string;
+  property_id: string;
+  url: string;
+  storage_path: string | null;
+  position: number;
+  is_cover: boolean;
+}
+
+export function slugify(input: string) {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80) + "-" + Math.random().toString(36).slice(2, 7);
+}
+
+export async function fetchMyProperties() {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*, property_images(*)")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function fetchAllProperties() {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*, property_images(*)")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function uploadPropertyImage(userId: string, file: File): Promise<{ url: string; path: string }> {
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const path = `${userId}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from("property-media").upload(path, file, { upsert: false });
+  if (error) throw error;
+  const { data } = supabase.storage.from("property-media").getPublicUrl(path);
+  return { url: data.publicUrl, path };
+}
+
+export async function createProperty(input: {
+  ownerId: string;
+  title: string;
+  description: string;
+  property_type: string;
+  listing_type: string;
+  price: number;
+  currency: string;
+  bedrooms: number;
+  bathrooms: number;
+  area_sqm: number | null;
+  address: string;
+  city: string;
+  district: string;
+  lat: number | null;
+  lng: number | null;
+  amenities: string[];
+  status: "draft" | "active";
+  images: Array<{ url: string; path: string }>;
+}) {
+  const slug = slugify(input.title);
+  const { data: prop, error } = await supabase
+    .from("properties")
+    .insert({
+      owner_id: input.ownerId,
+      slug,
+      title: input.title,
+      description: input.description,
+      property_type: input.property_type,
+      listing_type: input.listing_type,
+      price: input.price,
+      currency: input.currency,
+      bedrooms: input.bedrooms,
+      bathrooms: input.bathrooms,
+      area_sqm: input.area_sqm,
+      address: input.address,
+      city: input.city,
+      district: input.district,
+      lat: input.lat,
+      lng: input.lng,
+      amenities: input.amenities,
+      status: input.status,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+
+  if (input.images.length) {
+    const rows = input.images.map((img, i) => ({
+      property_id: prop.id,
+      url: img.url,
+      storage_path: img.path,
+      position: i,
+      is_cover: i === 0,
+    }));
+    const { error: imgErr } = await supabase.from("property_images").insert(rows);
+    if (imgErr) throw imgErr;
+  }
+
+  return prop;
+}
+
+export async function deleteProperty(id: string) {
+  const { error } = await supabase.from("properties").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function setPropertyStatus(id: string, status: string) {
+  const { error } = await supabase.from("properties").update({ status }).eq("id", id);
+  if (error) throw error;
+}
