@@ -45,7 +45,7 @@ function PropertyDetail() {
   const [activeRoom, setActiveRoom] = useState<RoomCategory | "all">("all");
   const [mediaTab, setMediaTab] = useState<"photos" | "video" | "tour" | "floorplan">("photos");
   const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
-  const related = properties.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
+  const related: Property[] = [];
   const heroMain = roomGallery[0];
   const heroSide = roomGallery.slice(1, 5);
   const extraCount = Math.max(0, roomGallery.length - 5);
