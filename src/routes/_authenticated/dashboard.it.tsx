@@ -1,13 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, UserPlus, Bell } from "lucide-react";
+import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, UserPlus, Bell, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { sampleAnalytics } from "@/lib/sample-analytics";
+import { RoleGate } from "@/components/dashboard/RoleGate";
 
 export const Route = createFileRoute("/_authenticated/dashboard/it")({
   head: () => ({ meta: [{ title: "IT Dashboard — NOVAWORKS" }] }),
-  component: ITDashboard,
+  component: () => (
+    <RoleGate allow={["it"]}>
+      <ITDashboard />
+    </RoleGate>
+  ),
 });
 
 const NAV = [
@@ -15,6 +20,7 @@ const NAV = [
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
+  { to: "/dashboard/it/media-verify", label: "Media Verification", icon: ShieldCheck, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
   { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
