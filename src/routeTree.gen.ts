@@ -36,6 +36,7 @@ import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
 import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
+import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
@@ -182,6 +183,12 @@ const AuthenticatedDashboardPropertiesNewRoute =
     path: '/dashboard/properties/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItUsersRoute =
+  AuthenticatedDashboardItUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 const AuthenticatedDashboardItSettingsRoute =
   AuthenticatedDashboardItSettingsRouteImport.update({
     id: '/settings',
@@ -219,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -247,6 +255,7 @@ export interface FileRoutesByTo {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/properties': typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -279,6 +288,7 @@ export interface FileRoutesById {
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/_authenticated/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/_authenticated/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/it/settings'
+    | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries/'
     | '/dashboard/properties/'
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/it/settings'
+    | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries'
     | '/dashboard/properties'
@@ -369,6 +381,7 @@ export interface FileRouteTypes {
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/it/settings'
+    | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
     | '/_authenticated/dashboard/inquiries/'
     | '/_authenticated/dashboard/properties/'
@@ -572,6 +585,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardPropertiesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/users': {
+      id: '/_authenticated/dashboard/it/users'
+      path: '/users'
+      fullPath: '/dashboard/it/users'
+      preLoaderRoute: typeof AuthenticatedDashboardItUsersRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
     '/_authenticated/dashboard/it/settings': {
       id: '/_authenticated/dashboard/it/settings'
       path: '/settings'
@@ -591,6 +611,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardItRouteChildren {
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
+  AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
   AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
 }
 
@@ -598,6 +619,7 @@ const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildr
   {
     AuthenticatedDashboardItSettingsRoute:
       AuthenticatedDashboardItSettingsRoute,
+    AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
     AuthenticatedDashboardItStaffNewRoute:
       AuthenticatedDashboardItStaffNewRoute,
   }
