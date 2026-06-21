@@ -139,7 +139,7 @@ export const updateServiceRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string; status?: Status; admin_response?: string }) => d)
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = {};
+    const patch: { status?: Status; admin_response?: string; responded_at?: string; responded_by?: string } = {};
     if (data.status) patch.status = data.status;
     if (data.admin_response !== undefined) {
       patch.admin_response = data.admin_response;
