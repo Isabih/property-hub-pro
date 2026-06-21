@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, UserPlus, Bell, ShieldCheck } from "lucide-react";
+import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, UserPlus, Bell, ShieldCheck, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +21,7 @@ const NAV = [
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
   { to: "/dashboard/it/media-verify", label: "Media Verification", icon: ShieldCheck, group: "Content" },
+  { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
   { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },

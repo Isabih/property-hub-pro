@@ -70,6 +70,11 @@ export type Database = {
           sender_name: string
           signature: string
           site_url: string
+          sr_confirm_body: string
+          sr_confirm_subject: string
+          sr_normal_label: string
+          sr_reply_subject: string
+          sr_urgent_label: string
           updated_at: string
           updated_by: string | null
         }
@@ -81,6 +86,11 @@ export type Database = {
           sender_name?: string
           signature?: string
           site_url?: string
+          sr_confirm_body?: string
+          sr_confirm_subject?: string
+          sr_normal_label?: string
+          sr_reply_subject?: string
+          sr_urgent_label?: string
           updated_at?: string
           updated_by?: string | null
         }
@@ -92,6 +102,11 @@ export type Database = {
           sender_name?: string
           signature?: string
           site_url?: string
+          sr_confirm_body?: string
+          sr_confirm_subject?: string
+          sr_normal_label?: string
+          sr_reply_subject?: string
+          sr_urgent_label?: string
           updated_at?: string
           updated_by?: string | null
         }
@@ -641,6 +656,7 @@ export type Database = {
       service_requests: {
         Row: {
           admin_response: string | null
+          assigned_to: string | null
           category: Database["public"]["Enums"]["service_request_category"]
           created_at: string
           customer_id: string
@@ -656,6 +672,7 @@ export type Database = {
         }
         Insert: {
           admin_response?: string | null
+          assigned_to?: string | null
           category?: Database["public"]["Enums"]["service_request_category"]
           created_at?: string
           customer_id: string
@@ -671,6 +688,7 @@ export type Database = {
         }
         Update: {
           admin_response?: string | null
+          assigned_to?: string | null
           category?: Database["public"]["Enums"]["service_request_category"]
           created_at?: string
           customer_id?: string

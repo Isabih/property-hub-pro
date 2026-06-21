@@ -18,6 +18,11 @@ export const updateAppSettings = createServerFn({ method: "POST" })
     signature: string;
     brand_color: string;
     site_url: string;
+    sr_confirm_subject?: string;
+    sr_confirm_body?: string;
+    sr_urgent_label?: string;
+    sr_normal_label?: string;
+    sr_reply_subject?: string;
   }) => d)
   .handler(async ({ data, context }) => {
     const { data: isIT } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "it" });
