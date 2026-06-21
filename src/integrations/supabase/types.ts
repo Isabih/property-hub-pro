@@ -14,6 +14,137 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          brand_color: string
+          from_email: string
+          id: boolean
+          reply_to: string | null
+          sender_name: string
+          signature: string
+          site_url: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          brand_color?: string
+          from_email?: string
+          id?: boolean
+          reply_to?: string | null
+          sender_name?: string
+          signature?: string
+          site_url?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          brand_color?: string
+          from_email?: string
+          id?: boolean
+          reply_to?: string | null
+          sender_name?: string
+          signature?: string
+          site_url?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          agent_id: string | null
+          amount_paid: number | null
+          apartment_no: string | null
+          created_at: string
+          created_by: string | null
+          email: string
+          email_verified: boolean
+          full_name: string
+          id: string
+          payment_method: string | null
+          payment_status: string
+          phone: string
+          property_id: string | null
+          stay_end: string | null
+          stay_start: string | null
+          updated_at: string
+        }
+        Insert: {
+          agent_id?: string | null
+          amount_paid?: number | null
+          apartment_no?: string | null
+          created_at?: string
+          created_by?: string | null
+          email: string
+          email_verified?: boolean
+          full_name: string
+          id?: string
+          payment_method?: string | null
+          payment_status?: string
+          phone: string
+          property_id?: string | null
+          stay_end?: string | null
+          stay_start?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string | null
+          amount_paid?: number | null
+          apartment_no?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          email_verified?: boolean
+          full_name?: string
+          id?: string
+          payment_method?: string | null
+          payment_status?: string
+          phone?: string
+          property_id?: string | null
+          stay_end?: string | null
+          stay_start?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_log: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          kind: string
+          status: string
+          subject: string
+          to_email: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind: string
+          status?: string
+          subject: string
+          to_email: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          status?: string
+          subject?: string
+          to_email?: string
+        }
+        Relationships: []
+      }
       email_verifications: {
         Row: {
           attempts: number
@@ -99,6 +230,7 @@ export type Database = {
           lat: number | null
           listing_type: string
           lng: number | null
+          notify_subscribers: boolean
           owner_id: string
           price: number
           property_type: string
@@ -126,6 +258,7 @@ export type Database = {
           lat?: number | null
           listing_type?: string
           lng?: number | null
+          notify_subscribers?: boolean
           owner_id: string
           price?: number
           property_type?: string
@@ -153,6 +286,7 @@ export type Database = {
           lat?: number | null
           listing_type?: string
           lng?: number | null
+          notify_subscribers?: boolean
           owner_id?: string
           price?: number
           property_type?: string
@@ -353,6 +487,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          notify: boolean
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          notify?: boolean
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          notify?: boolean
+          verified?: boolean
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
