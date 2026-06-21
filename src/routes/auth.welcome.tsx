@@ -10,6 +10,17 @@ export const Route = createFileRoute("/auth/welcome")({
   component: WelcomeAnimation,
 });
 
+function canOpenRequestedPath(path: string, roles: string[]) {
+  if (!path.startsWith("/") || path.startsWith("//")) return false;
+  if (path.startsWith("/dashboard/buyer")) return roles.includes("buyer") || roles.includes("admin");
+  if (path.startsWith("/dashboard/it")) return roles.includes("it") || roles.includes("admin");
+  if (path.startsWith("/dashboard/admin")) return roles.includes("admin");
+  if (path.startsWith("/dashboard/receptionist")) return roles.includes("receptionist") || roles.includes("it") || roles.includes("admin");
+  if (path.startsWith("/dashboard/agent")) return roles.includes("agent") || roles.includes("it") || roles.includes("admin");
+  if (path.startsWith("/dashboard/owner")) return roles.includes("owner") || roles.includes("it") || roles.includes("admin");
+  return true;
+}
+
 function WelcomeAnimation() {
   const navigate = useNavigate();
   const { to } = Route.useSearch();
@@ -38,7 +49,7 @@ function WelcomeAnimation() {
     // Wait until roles have actually loaded — otherwise primaryRole is null
     // and we'd wrongly default to /dashboard/buyer.
     if (roles.length === 0) return;
-    const dest = to && to.startsWith("/") ? to : dashboardPathFor(primaryRole);
+    const dest = to && canOpenRequestedPath(to, roles) ? to : dashboardPathFor(primaryRole);
     navigate({ to: dest });
   }, [progress, loading, user, roles, primaryRole, to, navigate]);
 
