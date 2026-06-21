@@ -38,6 +38,7 @@ import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './rout
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
+import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
@@ -196,6 +197,12 @@ const AuthenticatedDashboardItSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
+const AuthenticatedDashboardItPasswordResetsRoute =
+  AuthenticatedDashboardItPasswordResetsRouteImport.update({
+    id: '/password-resets',
+    path: '/password-resets',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 const AuthenticatedDashboardItLuxuryRoute =
   AuthenticatedDashboardItLuxuryRouteImport.update({
     id: '/luxury',
@@ -233,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
@@ -263,6 +271,7 @@ export interface FileRoutesByTo {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
@@ -297,6 +306,7 @@ export interface FileRoutesById {
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/it/luxury'
+    | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/it/luxury'
+    | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
@@ -393,6 +405,7 @@ export interface FileRouteTypes {
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/it/luxury'
+    | '/_authenticated/dashboard/it/password-resets'
     | '/_authenticated/dashboard/it/settings'
     | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
@@ -612,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/it/password-resets': {
+      id: '/_authenticated/dashboard/it/password-resets'
+      path: '/password-resets'
+      fullPath: '/dashboard/it/password-resets'
+      preLoaderRoute: typeof AuthenticatedDashboardItPasswordResetsRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
     '/_authenticated/dashboard/it/luxury': {
       id: '/_authenticated/dashboard/it/luxury'
       path: '/luxury'
@@ -631,6 +651,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardItRouteChildren {
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
+  AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
   AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
@@ -639,6 +660,8 @@ interface AuthenticatedDashboardItRouteChildren {
 const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildren =
   {
     AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
+    AuthenticatedDashboardItPasswordResetsRoute:
+      AuthenticatedDashboardItPasswordResetsRoute,
     AuthenticatedDashboardItSettingsRoute:
       AuthenticatedDashboardItSettingsRoute,
     AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
