@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { RoleGate } from "@/components/dashboard/RoleGate";
 import { Building2, Users, MessageSquare, TrendingUp, LayoutDashboard, Plus, Settings, CalendarCheck, RefreshCw, Phone, ListPlus, BarChart3 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
@@ -8,7 +9,7 @@ import { sampleAnalytics } from "@/lib/sample-analytics";
 
 export const Route = createFileRoute("/_authenticated/dashboard/agent")({
   head: () => ({ meta: [{ title: "Agent Dashboard — NOVAWORKS" }] }),
-  component: AgentDashboard,
+  component: () => (<RoleGate allow={["agent"]}><AgentDashboard /></RoleGate>),
 });
 
 const NAV = [

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { RoleGate } from "@/components/dashboard/RoleGate";
 import { Building2, DollarSign, Eye, Users, LayoutDashboard, Plus, Settings, MessageSquare, RefreshCw, Upload, BarChart3, ListPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
@@ -8,7 +9,7 @@ import { sampleAnalytics } from "@/lib/sample-analytics";
 
 export const Route = createFileRoute("/_authenticated/dashboard/owner")({
   head: () => ({ meta: [{ title: "Owner Dashboard — NOVAWORKS" }] }),
-  component: OwnerDashboard,
+  component: () => (<RoleGate allow={["owner"]}><OwnerDashboard /></RoleGate>),
 });
 
 const NAV = [
