@@ -5,6 +5,8 @@ import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
 import { createProperty, uploadPropertyImage, IMAGE_SECTIONS, type ImageSection } from "@/lib/properties-db";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { notifySubscribersOfProperty } from "@/lib/email.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/properties/new")({
   head: () => ({ meta: [{ title: "Add Property — NOVAWORKS" }] }),
@@ -52,6 +54,8 @@ function NewProperty() {
   const [sections, setSections] = useState<ImageSection[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
+  const [notifySubs, setNotifySubs] = useState(false);
+  const notifyFn = useServerFn(notifySubscribersOfProperty);
 
   const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -101,7 +105,7 @@ function NewProperty() {
           clearInterval(tick);
         }
       }
-      await createProperty({
+      const prop = await createProperty({
         ownerId: user.id,
         title: form.title.trim(),
         description: form.description.trim(),
@@ -119,9 +123,15 @@ function NewProperty() {
         lng: form.lng ? Number(form.lng) : null,
         amenities: form.amenities.split(",").map((s) => s.trim()).filter(Boolean),
         status,
+        notify_subscribers: notifySubs,
         images: uploads,
       });
       toast.success(status === "active" ? "Property published" : "Draft saved");
+      if (status === "active" && notifySubs && prop) {
+        notifyFn({ data: { propertyId: (prop as any).id } })
+          .then((r: any) => toast.success(`Notified ${r.sent ?? 0} subscriber(s)`))
+          .catch((e) => toast.error("Subscriber notify failed: " + (e.message ?? "error")));
+      }
       navigate({ to: "/dashboard/properties" });
     } catch (e: any) {
       toast.error(e.message ?? "Failed to save property");
