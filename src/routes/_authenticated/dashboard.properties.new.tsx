@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { Building2, Plus, LayoutDashboard, Upload, X, Loader2 } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
-import { createProperty, uploadPropertyImage, uploadPropertyFile, IMAGE_SECTIONS, type ImageSection } from "@/lib/properties-db";
+import { createProperty, uploadPropertyFile, IMAGE_SECTIONS, type ImageSection } from "@/lib/properties-db";
+import { uploadPropertyMedia, type UploadProvider } from "@/lib/r2-upload";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { notifySubscribersOfProperty } from "@/lib/email.functions";
@@ -63,8 +64,11 @@ function NewProperty() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [sections, setSections] = useState<ImageSection[]>([]);
   const [blueprint, setBlueprint] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoProgress, setVideoProgress] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
+  const [uploadProviders, setUploadProviders] = useState<(UploadProvider | null)[]>([]);
   const [notifySubs, setNotifySubs] = useState(false);
   const notifyFn = useServerFn(notifySubscribersOfProperty);
   const loadStaff = useServerFn(listStaffForAssignment);
@@ -90,7 +94,15 @@ function NewProperty() {
     const arr = Array.from(list).slice(0, 10 - files.length);
     setFiles((prev) => [...prev, ...arr]);
     setPreviews((prev) => [...prev, ...arr.map((f) => URL.createObjectURL(f))]);
-    setSections((prev) => [...prev, ...arr.map(() => "other" as ImageSection)]);
+    setSections((prev) => {
+      const hasMain = prev.includes("main");
+      const next = [...prev];
+      arr.forEach(() => {
+        if (!hasMain && !next.includes("main")) next.push("main");
+        else next.push("other");
+      });
+      return next;
+    });
   };
 
   const removeFile = (i: number) => {
@@ -114,30 +126,28 @@ function NewProperty() {
     }
     setSubmitting(true);
     setUploadProgress(files.map(() => 0));
+    setUploadProviders(files.map(() => null));
     try {
-      const uploads = [] as Array<{ url: string; path: string; section: ImageSection }>;
+      const uploads = [] as Array<{ url: string; path: string; section: ImageSection; provider: UploadProvider }>;
       for (let i = 0; i < files.length; i++) {
         const f = files[i];
-        // simulated incremental progress while the upload is in flight
-        const tick = setInterval(() => {
-          setUploadProgress((p) => {
-            const next = [...p];
-            if (next[i] < 90) next[i] = Math.min(90, next[i] + 7);
-            return next;
-          });
-        }, 120);
-        try {
-          const r = await uploadPropertyImage(user.id, f);
-          uploads.push({ ...r, section: sections[i] ?? "other" });
-          setUploadProgress((p) => { const n = [...p]; n[i] = 100; return n; });
-        } finally {
-          clearInterval(tick);
-        }
+        const section = sections[i] ?? "other";
+        const r = await uploadPropertyMedia(user.id, f, section, (pct) => {
+          setUploadProgress((p) => { const n = [...p]; n[i] = pct; return n; });
+        });
+        setUploadProviders((p) => { const n = [...p]; n[i] = r.provider; return n; });
+        uploads.push({ url: r.url, path: r.path, section, provider: r.provider });
       }
       let blueprintUrl: string | null = null;
       if (blueprint) {
         const r = await uploadPropertyFile(user.id, blueprint, "blueprints");
         blueprintUrl = r.url;
+      }
+      let videoUrl: string | null = form.video_url.trim() || null;
+      if (videoFile) {
+        setVideoProgress(0);
+        const r = await uploadPropertyMedia(user.id, videoFile, "video", (pct) => setVideoProgress(pct));
+        videoUrl = r.url;
       }
       const unitCount = Math.max(1, Number(form.unit_count) || 1);
       const prefix = (form.unit_code_prefix.trim() || defaultPrefixFromTitle(form.title)).toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6) || "APT";
@@ -161,7 +171,7 @@ function NewProperty() {
         amenities: form.amenities.split(",").map((s) => s.trim()).filter(Boolean),
         status,
         notify_subscribers: notifySubs,
-        video_url: form.video_url.trim() || null,
+        video_url: videoUrl,
         tour_3d_url: form.tour_3d_url.trim() || null,
         blueprint_url: blueprintUrl,
         unit_count: unitCount,
@@ -283,6 +293,19 @@ function NewProperty() {
           <Panel title="Video, 3D tour & blueprint" subtitle="Optional rich media — shown next to the gallery">
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label="Video URL (YouTube / Vimeo / mp4)" full><input className="input-luxe" value={form.video_url} onChange={update("video_url")} placeholder="https://youtu.be/..." /></Field>
+              <Field label="…or upload a video file (mp4 / webm) to Cloudflare R2" full>
+                <input className="input-luxe" type="file" accept="video/*" onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)} />
+                {videoFile && (
+                  <div className="mt-2">
+                    <div className="text-xs text-noir/60">{videoFile.name} · {(videoFile.size/1024/1024).toFixed(1)} MB</div>
+                    {videoProgress !== null && (
+                      <div className="mt-1 h-1.5 bg-noir/10 rounded overflow-hidden">
+                        <div className="h-full bg-gold transition-all duration-150" style={{ width: `${videoProgress}%` }} />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Field>
               <Field label="3D tour URL (Matterport, Kuula, etc.)" full><input className="input-luxe" value={form.tour_3d_url} onChange={update("tour_3d_url")} placeholder="https://..." /></Field>
               <Field label="Blueprint / footprint (PDF)" full>
                 <input className="input-luxe" type="file" accept="application/pdf" onChange={(e) => setBlueprint(e.target.files?.[0] ?? null)} />
@@ -324,13 +347,24 @@ function NewProperty() {
                     )}
                     {submitting && uploadProgress[i] === 100 && (
                       <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center">
-                        <span className="text-white text-xs font-medium bg-emerald-600/90 px-2 py-0.5 rounded">✓ Linked</span>
+                        <span className="text-white text-xs font-medium bg-emerald-600/90 px-2 py-0.5 rounded">
+                          ✓ {uploadProviders[i] === "r2" ? "R2" : uploadProviders[i] === "lovable" ? "Cloud (fallback)" : "Linked"}
+                        </span>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
             )}
+          </Panel>
+
+          <Panel title="Storage" subtitle="Where uploads go">
+            <p className="text-sm text-noir/70">
+              Images and videos upload directly to your Cloudflare R2 bucket
+              <code className="mx-1 px-1 rounded bg-noir/5">novaworks-media</code>
+              and are served from <code className="px-1 rounded bg-noir/5">media.novaworks.rw</code>.
+              If R2 is unreachable, uploads automatically fall back to Lovable Cloud Storage so publishing never blocks.
+            </p>
           </Panel>
 
           <Panel title="Tips" subtitle="Listings with photos perform 5× better">

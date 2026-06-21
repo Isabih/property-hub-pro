@@ -493,6 +493,7 @@ export type Database = {
           is_cover: boolean
           position: number
           property_id: string
+          provider: string
           section: string
           storage_path: string | null
           url: string
@@ -503,6 +504,7 @@ export type Database = {
           is_cover?: boolean
           position?: number
           property_id: string
+          provider?: string
           section?: string
           storage_path?: string | null
           url: string
@@ -513,6 +515,7 @@ export type Database = {
           is_cover?: boolean
           position?: number
           property_id?: string
+          provider?: string
           section?: string
           storage_path?: string | null
           url?: string
