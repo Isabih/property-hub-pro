@@ -58,7 +58,7 @@ export const verifyPropertyMedia = createServerFn({ method: "POST" })
 
     const { data: images, error: iErr } = await supabase
       .from("property_images")
-      .select("property_id, url, section, sort_order")
+      .select("property_id, url, section")
       .in("property_id", propIds);
     if (iErr) throw iErr;
 
