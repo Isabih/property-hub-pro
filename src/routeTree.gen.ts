@@ -37,6 +37,7 @@ import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './rou
 import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
+import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -187,6 +188,12 @@ const AuthenticatedDashboardItSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
+const AuthenticatedDashboardItStaffNewRoute =
+  AuthenticatedDashboardItStaffNewRouteImport.update({
+    id: '/staff/new',
+    path: '/staff/new',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
+  '/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof SiteIndexRoute
@@ -242,6 +250,7 @@ export interface FileRoutesByTo {
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/properties': typeof AuthenticatedDashboardPropertiesIndexRoute
+  '/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -273,6 +282,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/_authenticated/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/_authenticated/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
+  '/_authenticated/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new'
     | '/dashboard/inquiries/'
     | '/dashboard/properties/'
+    | '/dashboard/it/staff/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -330,6 +341,7 @@ export interface FileRouteTypes {
     | '/dashboard/properties/new'
     | '/dashboard/inquiries'
     | '/dashboard/properties'
+    | '/dashboard/it/staff/new'
   id:
     | '__root__'
     | '/_authenticated'
@@ -360,6 +372,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/properties/new'
     | '/_authenticated/dashboard/inquiries/'
     | '/_authenticated/dashboard/properties/'
+    | '/_authenticated/dashboard/it/staff/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -566,17 +579,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/it/staff/new': {
+      id: '/_authenticated/dashboard/it/staff/new'
+      path: '/staff/new'
+      fullPath: '/dashboard/it/staff/new'
+      preLoaderRoute: typeof AuthenticatedDashboardItStaffNewRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
   }
 }
 
 interface AuthenticatedDashboardItRouteChildren {
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
+  AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
 }
 
 const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildren =
   {
     AuthenticatedDashboardItSettingsRoute:
       AuthenticatedDashboardItSettingsRoute,
+    AuthenticatedDashboardItStaffNewRoute:
+      AuthenticatedDashboardItStaffNewRoute,
   }
 
 const AuthenticatedDashboardItRouteWithChildren =
