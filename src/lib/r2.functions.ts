@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AwsClient } from "aws4fetch";
 
-const BUCKET = "novaworks-media";
+const BUCKET = process.env.R2_BUCKET || "upload";
 
 export const signR2Upload = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
