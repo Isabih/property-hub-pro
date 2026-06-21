@@ -16,6 +16,7 @@ import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
 import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
+import { Route as AuthPasswordResetRouteImport } from './routes/auth.password-reset'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
@@ -74,6 +75,11 @@ const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
 const AuthVerifyRoute = AuthVerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPasswordResetRoute = AuthPasswordResetRouteImport.update({
+  id: '/password-reset',
+  path: '/password-reset',
   getParentRoute: () => AuthRoute,
 } as any)
 const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth/': typeof AuthIndexRoute
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth': typeof AuthIndexRoute
@@ -301,6 +309,7 @@ export interface FileRoutesById {
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/_site/': typeof SiteIndexRoute
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth/'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
+    | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
     | '/_site/'
@@ -481,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/verify'
       fullPath: '/auth/verify'
       preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/password-reset': {
+      id: '/auth/password-reset'
+      path: '/password-reset'
+      fullPath: '/auth/password-reset'
+      preLoaderRoute: typeof AuthPasswordResetRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_site/verify-access': {
@@ -760,12 +779,14 @@ const SiteRouteChildren: SiteRouteChildren = {
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
 interface AuthRouteChildren {
+  AuthPasswordResetRoute: typeof AuthPasswordResetRoute
   AuthVerifyRoute: typeof AuthVerifyRoute
   AuthWelcomeRoute: typeof AuthWelcomeRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthPasswordResetRoute: AuthPasswordResetRoute,
   AuthVerifyRoute: AuthVerifyRoute,
   AuthWelcomeRoute: AuthWelcomeRoute,
   AuthIndexRoute: AuthIndexRoute,
