@@ -96,7 +96,7 @@ export const verifyCustomerOtp = createServerFn({ method: "POST" })
   .inputValidator((d: { customerId: string; code: string }) => d)
   .handler(async ({ data }) => {
     const sb = adminClient();
-    const { data: c } = await sb.from("customers").select("*, properties(title, apartment_no:title)").eq("id", data.customerId).maybeSingle();
+    const { data: c } = await sb.from("customers").select("*, properties(title)").eq("id", data.customerId).maybeSingle();
     if (!c) throw new Error("Customer not found");
     if (c.email_verified) return { ok: true, alreadyVerified: true };
     if (!c.otp_hash || !c.otp_expires_at) throw new Error("No active code. Please resend.");
