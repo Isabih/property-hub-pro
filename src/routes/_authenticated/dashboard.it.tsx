@@ -12,20 +12,15 @@ export const Route = createFileRoute("/_authenticated/dashboard/it")({
 
 const NAV = [
   { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/it", label: "Analytics", icon: BarChart3, group: "Overview" },
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
-  { to: "/dashboard/it", label: "Media Library", icon: ImageIcon, group: "Content" },
-  { to: "/dashboard/it", label: "Videos", icon: Video, group: "Content" },
-  { to: "/dashboard/it", label: "Categories", icon: Tag, group: "Content" },
-  { to: "/dashboard/it", label: "Website Content", icon: FileText, group: "Content" },
-  { to: "/dashboard/it", label: "Popups", icon: Bell, group: "Content" },
+  { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
-  { to: "/dashboard/it", label: "Users", icon: Users, group: "Management" },
-  { to: "/dashboard/it", label: "Verifications", icon: FileCheck, group: "Management" },
-  { to: "/dashboard/it", label: "Messages", icon: Bell, group: "Management" },
-  { to: "/dashboard/it", label: "System Health", icon: Server, group: "System" },
-  { to: "/dashboard/it", label: "Audit Log", icon: Activity, group: "System" },
+  { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
+  { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
+  { to: "/dashboard/it/luxury", label: "Luxury Access", icon: FileCheck, group: "Management" },
+  { to: "/dashboard/it/password-resets", label: "Password Resets", icon: Server, group: "Management" },
+  { to: "/dashboard/it", label: "System Health", icon: Activity, group: "System" },
   { to: "/dashboard/it/settings", label: "Email Settings", icon: Settings, group: "System" },
 ];
 
