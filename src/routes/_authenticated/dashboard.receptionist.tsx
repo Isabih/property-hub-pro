@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { RoleGate } from "@/components/dashboard/RoleGate";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { LayoutDashboard, UserPlus, Users, CheckCircle2, Loader2, X } from "lucide-react";
@@ -10,7 +11,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/receptionist")({
   head: () => ({ meta: [{ title: "Receptionist Dashboard — NOVAWORKS" }] }),
-  component: ReceptionistDashboard,
+  component: () => (<RoleGate allow={["receptionist"]}><ReceptionistDashboard /></RoleGate>),
 });
 
 const NAV = [

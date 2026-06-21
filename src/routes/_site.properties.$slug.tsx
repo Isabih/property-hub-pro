@@ -11,6 +11,7 @@ import {
 } from "@/lib/properties";
 import { fetchPropertyBySlug } from "@/lib/properties-public";
 import { PropertyCard } from "@/components/site/PropertyCard";
+import { VideoPlayer } from "@/components/site/VideoPlayer";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
@@ -159,8 +160,8 @@ function PropertyDetail() {
                 </>
               )}
               {mediaTab === "video" && p.videoUrl && (
-                <div className="mt-5 aspect-video rounded-xl overflow-hidden bg-noir">
-                  <iframe src={p.videoUrl} className="w-full h-full" allowFullScreen title="Property video" />
+                <div className="mt-5">
+                  <VideoPlayer url={p.videoUrl} title={p.title} />
                 </div>
               )}
               {mediaTab === "tour" && p.tourUrl && (
