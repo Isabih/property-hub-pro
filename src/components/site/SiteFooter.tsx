@@ -1,8 +1,42 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Phone, Mail, MapPin, ArrowRight } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Phone, Mail, MapPin, ArrowRight, X } from "lucide-react";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { subscribeAndSendOtp, verifySubscriberOtp } from "@/lib/email.functions";
+import { toast } from "sonner";
 import logo from "@/assets/novaworks-logo.png";
 
 export function SiteFooter() {
+  const sub = useServerFn(subscribeAndSendOtp);
+  const verify = useServerFn(verifySubscriberOtp);
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [otp, setOtp] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [footerEmail, setFooterEmail] = useState("");
+
+  const submit = async (e: React.FormEvent, mailValue: string, fullName?: string) => {
+    e.preventDefault();
+    if (!mailValue) return;
+    setBusy(true);
+    try {
+      const r = await sub({ data: { email: mailValue, full_name: fullName } });
+      setPendingId(r.id); toast.success("Code sent — check your inbox");
+    } catch (err: any) { toast.error(err.message ?? "Failed"); }
+    finally { setBusy(false); }
+  };
+  const submitOtp = async () => {
+    if (!pendingId || otp.length !== 6) return toast.error("Enter the 6-digit code");
+    setBusy(true);
+    try {
+      await verify({ data: { id: pendingId, code: otp } });
+      toast.success("Subscribed!"); setPendingId(null); setOtp(""); setEmail(""); setFooterEmail(""); setFirstName(""); setLastName("");
+    } catch (err: any) { toast.error(err.message ?? "Failed"); }
+    finally { setBusy(false); }
+  };
+
   return (
     <>
       {/* CTA strip */}
@@ -49,14 +83,14 @@ export function SiteFooter() {
             <p className="text-sm text-noir-deep/70 mt-1">
               Subscribe to our newsletter and be the first to know about new properties, investment opportunities, and market insights.
             </p>
-            <form className="mt-5 grid gap-3">
+            <form className="mt-5 grid gap-3" onSubmit={(e) => submit(e, email, `${firstName} ${lastName}`.trim())}>
               <div className="grid sm:grid-cols-2 gap-3">
-                <input className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="First Name" />
-                <input className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="Last Name" />
+                <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="First Name" />
+                <input value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="Last Name" />
               </div>
-              <input type="email" className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="Email Address" />
-              <button type="submit" className="bg-noir-deep text-white rounded-md px-6 py-3 text-sm font-medium hover:bg-noir transition-colors flex items-center justify-center gap-2">
-                Subscribe Now <ArrowRight className="w-4 h-4" />
+              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="Email Address" />
+              <button type="submit" disabled={busy} className="bg-noir-deep text-white rounded-md px-6 py-3 text-sm font-medium hover:bg-noir transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+                {busy ? "Sending…" : "Subscribe Now"} <ArrowRight className="w-4 h-4" />
               </button>
               <p className="text-xs text-center text-noir-deep/60">By subscribing, you agree to our <a className="underline">Privacy Policy</a></p>
             </form>
@@ -79,9 +113,9 @@ export function SiteFooter() {
             </p>
             <div className="mt-6">
               <div className="text-xs uppercase tracking-wider text-white/40 mb-2">Subscribe to our newsletter</div>
-              <form className="flex">
-                <input type="email" placeholder="Enter your email" className="flex-1 bg-white/5 border border-white/10 rounded-l-md px-4 py-3 text-sm placeholder:text-white/30 outline-none focus:border-gold/50" />
-                <button className="bg-gold text-noir-deep px-4 rounded-r-md hover:bg-gold-soft transition-colors">
+              <form className="flex" onSubmit={(e) => submit(e, footerEmail)}>
+                <input value={footerEmail} onChange={(e) => setFooterEmail(e.target.value)} type="email" placeholder="Enter your email" className="flex-1 bg-white/5 border border-white/10 rounded-l-md px-4 py-3 text-sm placeholder:text-white/30 outline-none focus:border-gold/50" />
+                <button type="submit" disabled={busy} className="bg-gold text-noir-deep px-4 rounded-r-md hover:bg-gold-soft transition-colors disabled:opacity-60">
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
@@ -157,6 +191,18 @@ export function SiteFooter() {
           </div>
         </div>
       </footer>
+
+      {pendingId && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-sm w-full p-6 relative text-noir-deep">
+            <button onClick={() => setPendingId(null)} className="absolute top-3 right-3"><X className="h-4 w-4" /></button>
+            <h3 className="font-display text-xl">Verify your email</h3>
+            <p className="text-sm text-noir-deep/60 mt-1">Enter the 6-digit code we just sent. It expires in 5 minutes.</p>
+            <input className="mt-4 w-full bg-noir-deep/5 rounded-md px-4 py-3 text-center text-2xl tracking-[10px] font-mono" maxLength={6} value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} placeholder="000000" />
+            <button onClick={submitOtp} disabled={busy} className="mt-4 w-full bg-noir-deep text-white rounded-md px-6 py-3 text-sm font-medium disabled:opacity-60">{busy ? "Verifying…" : "Verify"}</button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
