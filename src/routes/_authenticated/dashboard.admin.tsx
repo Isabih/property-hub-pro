@@ -15,7 +15,7 @@ const NAV = [
   { to: "/dashboard/admin", label: "Analytics", icon: BarChart3, group: "Overview" },
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
-  { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
+  { to: "/dashboard/admin/staff/new", label: "Add Owner / Agent / Receptionist", icon: UserPlus, group: "Management" },
   { to: "/dashboard/admin", label: "Users", icon: Users, group: "Management" },
   { to: "/dashboard/admin", label: "Verifications", icon: FileCheck, group: "Management" },
   { to: "/dashboard/admin", label: "Revenue", icon: DollarSign, group: "Management" },
@@ -46,7 +46,7 @@ function AdminDashboard() {
       nav={NAV}
       actions={[
         { label: "Sync Data", icon: RefreshCw },
-        { label: "Add Property", to: "/dashboard/properties/new", icon: Plus, variant: "primary" },
+        { label: "Add Staff", to: "/dashboard/admin/staff/new", icon: UserPlus, variant: "primary" },
       ]}
     >
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -59,9 +59,9 @@ function AdminDashboard() {
       <div className="mt-6 grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2"><AnalyticsChart data={sampleAnalytics(4)} /></div>
         <QuickActions actions={[
-          { label: "Add Property", sublabel: "Create new listing", icon: Building2, to: "/dashboard/properties/new", tone: "gold" },
-          { label: "Upload Media", sublabel: "Images & videos", icon: Upload, to: "/dashboard/properties/new", tone: "blue" },
-          { label: "Add User", sublabel: "Invite team member", icon: UserPlus, to: "/dashboard/admin", tone: "violet" },
+          { label: "Add Owner", sublabel: "Register property owner", icon: UserPlus, to: "/dashboard/admin/staff/new", tone: "gold" },
+          { label: "Add Agent", sublabel: "Register sales agent", icon: UserPlus, to: "/dashboard/admin/staff/new", tone: "blue" },
+          { label: "Add Receptionist", sublabel: "Front-desk staff", icon: UserPlus, to: "/dashboard/admin/staff/new", tone: "violet" },
           { label: "Reports", sublabel: "View analytics", icon: BarChart3, to: "/dashboard/admin", tone: "emerald" },
         ]} />
       </div>
