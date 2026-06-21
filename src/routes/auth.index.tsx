@@ -51,9 +51,11 @@ function AuthPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate({ to: "/auth/welcome", search: { to: dashboardPathFor(primaryRole) } });
+      // Don't pre-compute destination here — roles may not be loaded yet,
+      // which would default buyer. /auth/welcome waits for roles and routes correctly.
+      navigate({ to: "/auth/welcome", search: {} });
     }
-  }, [user, authLoading, primaryRole, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

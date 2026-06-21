@@ -13,7 +13,7 @@ export const Route = createFileRoute("/auth/welcome")({
 function WelcomeAnimation() {
   const navigate = useNavigate();
   const { to } = Route.useSearch();
-  const { user, profile, primaryRole, loading } = useAuth();
+  const { user, profile, primaryRole, roles, loading } = useAuth();
   const [progress, setProgress] = useState(0);
 
   // animate progress 0 → 100 over ~2.4s
@@ -31,13 +31,16 @@ function WelcomeAnimation() {
   // After progress complete + auth ready, redirect
   useEffect(() => {
     if (progress < 100 || loading) return;
-    const dest = to && to.startsWith("/") ? to : dashboardPathFor(primaryRole);
     if (!user) {
       navigate({ to: "/auth" });
-    } else {
-      navigate({ to: dest });
+      return;
     }
-  }, [progress, loading, user, primaryRole, to, navigate]);
+    // Wait until roles have actually loaded — otherwise primaryRole is null
+    // and we'd wrongly default to /dashboard/buyer.
+    if (roles.length === 0) return;
+    const dest = to && to.startsWith("/") ? to : dashboardPathFor(primaryRole);
+    navigate({ to: dest });
+  }, [progress, loading, user, roles, primaryRole, to, navigate]);
 
   const firstName = (profile?.full_name ?? user?.email ?? "").split(" ")[0] || "back";
 
