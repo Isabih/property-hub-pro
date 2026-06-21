@@ -25,10 +25,11 @@ const ROLE_LABEL: Record<AppRole, string> = {
   owner: "Owner Dashboard",
   admin: "Admin Dashboard",
   it: "IT Dashboard",
+  receptionist: "Receptionist Dashboard",
 };
 
-const ALL_ROLES: AppRole[] = ["it", "admin", "owner", "agent", "buyer"];
-const SHORT: Record<AppRole, string> = { it: "IT", admin: "Admin", owner: "Owner", agent: "Agent", buyer: "Customer" };
+const ALL_ROLES: AppRole[] = ["it", "admin", "receptionist", "owner", "agent", "buyer"];
+const SHORT: Record<AppRole, string> = { it: "IT", admin: "Admin", receptionist: "Reception", owner: "Owner", agent: "Agent", buyer: "Customer" };
 
 export function DashboardShell({
   title,

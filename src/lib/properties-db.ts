@@ -107,6 +107,7 @@ export async function createProperty(input: {
   lng: number | null;
   amenities: string[];
   status: "draft" | "active";
+  notify_subscribers?: boolean;
   images: Array<{ url: string; path: string; section: ImageSection }>;
 }) {
   const slug = slugify(input.title);
@@ -131,6 +132,7 @@ export async function createProperty(input: {
       lng: input.lng,
       amenities: input.amenities,
       status: input.status,
+      notify_subscribers: input.notify_subscribers ?? false,
     })
     .select()
     .single();

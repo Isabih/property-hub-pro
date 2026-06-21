@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "buyer" | "agent" | "owner" | "admin" | "it";
+export type AppRole = "buyer" | "agent" | "owner" | "admin" | "it" | "receptionist";
 
 export interface AuthProfile {
   id: string;
@@ -25,7 +25,7 @@ interface AuthState {
 
 const Ctx = createContext<AuthState | undefined>(undefined);
 
-const ROLE_PRIORITY: AppRole[] = ["admin", "it", "owner", "agent", "buyer"];
+const ROLE_PRIORITY: AppRole[] = ["admin", "it", "receptionist", "owner", "agent", "buyer"];
 
 function pickPrimary(roles: AppRole[]): AppRole | null {
   for (const r of ROLE_PRIORITY) if (roles.includes(r)) return r;
@@ -101,6 +101,8 @@ export function dashboardPathFor(role: AppRole | null): string {
       return "/dashboard/admin";
     case "it":
       return "/dashboard/it";
+    case "receptionist":
+      return "/dashboard/receptionist";
     case "owner":
       return "/dashboard/owner";
     case "agent":
