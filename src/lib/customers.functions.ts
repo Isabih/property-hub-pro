@@ -58,16 +58,22 @@ export const createCustomer = createServerFn({ method: "POST" })
 export const listStaffForAssignment = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { data: rows, error } = await context.supabase
       .from("user_roles")
-      .select("user_id, role, profiles!inner(id,full_name,email)")
+      .select("user_id, role")
       .in("role", ["agent", "owner"]);
     if (error) throw error;
-    return (data ?? []).map((r: any) => ({
-      id: r.profiles.id,
-      name: r.profiles.full_name ?? r.profiles.email,
-      role: r.role,
-    }));
+    const ids = Array.from(new Set((rows ?? []).map((r) => r.user_id)));
+    if (!ids.length) return [];
+    const { data: profiles } = await context.supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .in("id", ids);
+    const byId = new Map((profiles ?? []).map((p) => [p.id, p]));
+    return (rows ?? []).map((r) => {
+      const p: any = byId.get(r.user_id);
+      return { id: r.user_id, name: p?.full_name ?? p?.email ?? "Unknown", role: r.role as string };
+    });
   });
 
 export const listPropertiesForBooking = createServerFn({ method: "GET" })
