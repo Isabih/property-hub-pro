@@ -11,6 +11,7 @@ import {
 } from "@/lib/properties";
 import { fetchPropertyBySlug } from "@/lib/properties-public";
 import { PropertyCard } from "@/components/site/PropertyCard";
+import { VideoPlayer } from "@/components/site/VideoPlayer";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
