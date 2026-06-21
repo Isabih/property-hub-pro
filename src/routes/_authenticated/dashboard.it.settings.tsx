@@ -33,6 +33,11 @@ function ITSettings() {
     signature: "",
     brand_color: "#0f766e",
     site_url: "",
+    sr_confirm_subject: "",
+    sr_confirm_body: "",
+    sr_urgent_label: "",
+    sr_normal_label: "",
+    sr_reply_subject: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -55,6 +60,11 @@ function ITSettings() {
         signature: s.signature ?? "",
         brand_color: s.brand_color ?? "#0f766e",
         site_url: s.site_url ?? "",
+        sr_confirm_subject: s.sr_confirm_subject ?? "",
+        sr_confirm_body: s.sr_confirm_body ?? "",
+        sr_urgent_label: s.sr_urgent_label ?? "",
+        sr_normal_label: s.sr_normal_label ?? "",
+        sr_reply_subject: s.sr_reply_subject ?? "",
       });
     }).finally(() => setLoading(false));
   }, [get]);
