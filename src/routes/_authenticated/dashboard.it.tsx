@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, Upload, BarChart3, UserPlus, Image as ImageIcon, Video, Tag, FileText, Bell } from "lucide-react";
+import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, UserPlus, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,20 +12,15 @@ export const Route = createFileRoute("/_authenticated/dashboard/it")({
 
 const NAV = [
   { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/it", label: "Analytics", icon: BarChart3, group: "Overview" },
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
-  { to: "/dashboard/it", label: "Media Library", icon: ImageIcon, group: "Content" },
-  { to: "/dashboard/it", label: "Videos", icon: Video, group: "Content" },
-  { to: "/dashboard/it", label: "Categories", icon: Tag, group: "Content" },
-  { to: "/dashboard/it", label: "Website Content", icon: FileText, group: "Content" },
-  { to: "/dashboard/it", label: "Popups", icon: Bell, group: "Content" },
+  { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
-  { to: "/dashboard/it", label: "Users", icon: Users, group: "Management" },
-  { to: "/dashboard/it", label: "Verifications", icon: FileCheck, group: "Management" },
-  { to: "/dashboard/it", label: "Messages", icon: Bell, group: "Management" },
-  { to: "/dashboard/it", label: "System Health", icon: Server, group: "System" },
-  { to: "/dashboard/it", label: "Audit Log", icon: Activity, group: "System" },
+  { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
+  { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
+  { to: "/dashboard/it/luxury", label: "Luxury Access", icon: FileCheck, group: "Management" },
+  { to: "/dashboard/it/password-resets", label: "Password Resets", icon: Server, group: "Management" },
+  { to: "/dashboard/it", label: "System Health", icon: Activity, group: "System" },
   { to: "/dashboard/it/settings", label: "Email Settings", icon: Settings, group: "System" },
 ];
 
@@ -64,9 +59,9 @@ function ITDashboard() {
         <div className="lg:col-span-2"><AnalyticsChart data={sampleAnalytics(5)} /></div>
         <QuickActions actions={[
           { label: "Add Property", sublabel: "Create new listing", icon: Building2, to: "/dashboard/properties/new", tone: "gold" },
-          { label: "Upload Media", sublabel: "Images & videos", icon: Upload, to: "/dashboard/properties/new", tone: "blue" },
-          { label: "Add User", sublabel: "Invite team member", icon: UserPlus, to: "/dashboard/it", tone: "violet" },
-          { label: "Reports", sublabel: "View analytics", icon: BarChart3, to: "/dashboard/it", tone: "emerald" },
+          { label: "Add Staff", sublabel: "Owners, agents, reception", icon: UserPlus, to: "/dashboard/it/staff/new", tone: "blue" },
+          { label: "Luxury Requests", sublabel: "Approve access", icon: FileCheck, to: "/dashboard/it/luxury", tone: "violet" },
+          { label: "Password Resets", sublabel: "Approve & issue OTP", icon: Server, to: "/dashboard/it/password-resets", tone: "emerald" },
         ]} />
       </div>
 

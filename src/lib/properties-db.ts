@@ -39,11 +39,11 @@ export interface DbPropertyImage {
 }
 
 export const IMAGE_SECTIONS = [
-  { value: "main", label: "Main" },
   { value: "kitchen", label: "Kitchen" },
   { value: "living_room", label: "Living Room" },
+  { value: "bedroom", label: "Bedroom" },
   { value: "bathroom", label: "Bathroom" },
-  { value: "gym", label: "Gym" },
+  { value: "other", label: "Other" },
 ] as const;
 export type ImageSection = typeof IMAGE_SECTIONS[number]["value"];
 
@@ -91,6 +91,7 @@ export async function uploadPropertyImage(userId: string, file: File): Promise<{
 
 export async function createProperty(input: {
   ownerId: string;
+  agentId?: string | null;
   title: string;
   description: string;
   property_type: string;
@@ -108,6 +109,12 @@ export async function createProperty(input: {
   amenities: string[];
   status: "draft" | "active";
   notify_subscribers?: boolean;
+  video_url?: string | null;
+  tour_3d_url?: string | null;
+  blueprint_url?: string | null;
+  unit_count?: number;
+  unit_code_prefix?: string | null;
+  is_luxury?: boolean;
   images: Array<{ url: string; path: string; section: ImageSection }>;
 }) {
   const slug = slugify(input.title);
@@ -115,6 +122,7 @@ export async function createProperty(input: {
     .from("properties")
     .insert({
       owner_id: input.ownerId,
+      agent_id: input.agentId ?? null,
       slug,
       title: input.title,
       description: input.description,
@@ -133,6 +141,12 @@ export async function createProperty(input: {
       amenities: input.amenities,
       status: input.status,
       notify_subscribers: input.notify_subscribers ?? false,
+      video_url: input.video_url ?? null,
+      tour_3d_url: input.tour_3d_url ?? null,
+      blueprint_url: input.blueprint_url ?? null,
+      unit_count: input.unit_count ?? 1,
+      unit_code_prefix: input.unit_code_prefix ?? null,
+      is_luxury: input.is_luxury ?? false,
     })
     .select()
     .single();
@@ -152,6 +166,18 @@ export async function createProperty(input: {
   }
 
   return prop;
+}
+
+/** Upload a single arbitrary file (blueprint PDF, etc) to property-media and return signed URL. */
+export async function uploadPropertyFile(userId: string, file: File, subdir = "files"): Promise<{ url: string; path: string }> {
+  const ext = file.name.split(".").pop() ?? "bin";
+  const path = `${userId}/${subdir}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from("property-media").upload(path, file, { upsert: false });
+  if (error) throw error;
+  const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
+  const { data, error: signErr } = await supabase.storage.from("property-media").createSignedUrl(path, TEN_YEARS);
+  if (signErr || !data) throw signErr ?? new Error("Failed to sign URL");
+  return { url: data.signedUrl, path };
 }
 
 export async function deleteProperty(id: string) {

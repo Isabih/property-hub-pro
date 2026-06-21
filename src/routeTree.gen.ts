@@ -16,9 +16,11 @@ import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
 import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
+import { Route as AuthPasswordResetRouteImport } from './routes/auth.password-reset'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
+import { Route as SiteLuxuryAccessRouteImport } from './routes/_site.luxury-access'
 import { Route as SiteListPropertyRouteImport } from './routes/_site.list-property'
 import { Route as SiteInvestorsRouteImport } from './routes/_site.investors'
 import { Route as SiteContactRouteImport } from './routes/_site.contact'
@@ -36,7 +38,11 @@ import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
 import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
+import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
+import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
+import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
+import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -71,6 +77,11 @@ const AuthVerifyRoute = AuthVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthPasswordResetRoute = AuthPasswordResetRouteImport.update({
+  id: '/password-reset',
+  path: '/password-reset',
+  getParentRoute: () => AuthRoute,
+} as any)
 const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
   id: '/verify-access',
   path: '/verify-access',
@@ -84,6 +95,11 @@ const SiteServicesRoute = SiteServicesRouteImport.update({
 const SitePortfolioRoute = SitePortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteLuxuryAccessRoute = SiteLuxuryAccessRouteImport.update({
+  id: '/luxury-access',
+  path: '/luxury-access',
   getParentRoute: () => SiteRoute,
 } as any)
 const SiteListPropertyRoute = SiteListPropertyRouteImport.update({
@@ -181,10 +197,34 @@ const AuthenticatedDashboardPropertiesNewRoute =
     path: '/dashboard/properties/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItUsersRoute =
+  AuthenticatedDashboardItUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 const AuthenticatedDashboardItSettingsRoute =
   AuthenticatedDashboardItSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
+const AuthenticatedDashboardItPasswordResetsRoute =
+  AuthenticatedDashboardItPasswordResetsRouteImport.update({
+    id: '/password-resets',
+    path: '/password-resets',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
+const AuthenticatedDashboardItLuxuryRoute =
+  AuthenticatedDashboardItLuxuryRouteImport.update({
+    id: '/luxury',
+    path: '/luxury',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
+const AuthenticatedDashboardItStaffNewRoute =
+  AuthenticatedDashboardItStaffNewRouteImport.update({
+    id: '/staff/new',
+    path: '/staff/new',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
 
@@ -196,9 +236,11 @@ export interface FileRoutesByFullPath {
   '/contact': typeof SiteContactRoute
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
+  '/luxury-access': typeof SiteLuxuryAccessRoute
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth/': typeof AuthIndexRoute
@@ -211,10 +253,14 @@ export interface FileRoutesByFullPath {
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
+  '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
+  '/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof SiteIndexRoute
@@ -223,9 +269,11 @@ export interface FileRoutesByTo {
   '/contact': typeof SiteContactRoute
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
+  '/luxury-access': typeof SiteLuxuryAccessRoute
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth': typeof AuthIndexRoute
@@ -238,10 +286,14 @@ export interface FileRoutesByTo {
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
+  '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/properties': typeof AuthenticatedDashboardPropertiesIndexRoute
+  '/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -253,9 +305,11 @@ export interface FileRoutesById {
   '/_site/contact': typeof SiteContactRoute
   '/_site/investors': typeof SiteInvestorsRoute
   '/_site/list-property': typeof SiteListPropertyRoute
+  '/_site/luxury-access': typeof SiteLuxuryAccessRoute
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
+  '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/_site/': typeof SiteIndexRoute
@@ -269,10 +323,14 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
+  '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/_authenticated/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/_authenticated/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
+  '/_authenticated/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -284,9 +342,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/investors'
     | '/list-property'
+    | '/luxury-access'
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth/'
@@ -299,10 +359,14 @@ export interface FileRouteTypes {
     | '/dashboard/receptionist'
     | '/properties/$slug'
     | '/properties/'
+    | '/dashboard/it/luxury'
+    | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
+    | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries/'
     | '/dashboard/properties/'
+    | '/dashboard/it/staff/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -311,9 +375,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/investors'
     | '/list-property'
+    | '/luxury-access'
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth'
@@ -326,10 +392,14 @@ export interface FileRouteTypes {
     | '/dashboard/receptionist'
     | '/properties/$slug'
     | '/properties'
+    | '/dashboard/it/luxury'
+    | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
+    | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries'
     | '/dashboard/properties'
+    | '/dashboard/it/staff/new'
   id:
     | '__root__'
     | '/_authenticated'
@@ -340,9 +410,11 @@ export interface FileRouteTypes {
     | '/_site/contact'
     | '/_site/investors'
     | '/_site/list-property'
+    | '/_site/luxury-access'
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
+    | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
     | '/_site/'
@@ -356,10 +428,14 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/receptionist'
     | '/_site/properties/$slug'
     | '/_site/properties/'
+    | '/_authenticated/dashboard/it/luxury'
+    | '/_authenticated/dashboard/it/password-resets'
     | '/_authenticated/dashboard/it/settings'
+    | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
     | '/_authenticated/dashboard/inquiries/'
     | '/_authenticated/dashboard/properties/'
+    | '/_authenticated/dashboard/it/staff/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -419,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthVerifyRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/auth/password-reset': {
+      id: '/auth/password-reset'
+      path: '/password-reset'
+      fullPath: '/auth/password-reset'
+      preLoaderRoute: typeof AuthPasswordResetRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_site/verify-access': {
       id: '/_site/verify-access'
       path: '/verify-access'
@@ -438,6 +521,13 @@ declare module '@tanstack/react-router' {
       path: '/portfolio'
       fullPath: '/portfolio'
       preLoaderRoute: typeof SitePortfolioRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/luxury-access': {
+      id: '/_site/luxury-access'
+      path: '/luxury-access'
+      fullPath: '/luxury-access'
+      preLoaderRoute: typeof SiteLuxuryAccessRouteImport
       parentRoute: typeof SiteRoute
     }
     '/_site/list-property': {
@@ -559,6 +649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardPropertiesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/users': {
+      id: '/_authenticated/dashboard/it/users'
+      path: '/users'
+      fullPath: '/dashboard/it/users'
+      preLoaderRoute: typeof AuthenticatedDashboardItUsersRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
     '/_authenticated/dashboard/it/settings': {
       id: '/_authenticated/dashboard/it/settings'
       path: '/settings'
@@ -566,17 +663,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/it/password-resets': {
+      id: '/_authenticated/dashboard/it/password-resets'
+      path: '/password-resets'
+      fullPath: '/dashboard/it/password-resets'
+      preLoaderRoute: typeof AuthenticatedDashboardItPasswordResetsRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
+    '/_authenticated/dashboard/it/luxury': {
+      id: '/_authenticated/dashboard/it/luxury'
+      path: '/luxury'
+      fullPath: '/dashboard/it/luxury'
+      preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
+    '/_authenticated/dashboard/it/staff/new': {
+      id: '/_authenticated/dashboard/it/staff/new'
+      path: '/staff/new'
+      fullPath: '/dashboard/it/staff/new'
+      preLoaderRoute: typeof AuthenticatedDashboardItStaffNewRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
   }
 }
 
 interface AuthenticatedDashboardItRouteChildren {
+  AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
+  AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
+  AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
+  AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
 }
 
 const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildren =
   {
+    AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
+    AuthenticatedDashboardItPasswordResetsRoute:
+      AuthenticatedDashboardItPasswordResetsRoute,
     AuthenticatedDashboardItSettingsRoute:
       AuthenticatedDashboardItSettingsRoute,
+    AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
+    AuthenticatedDashboardItStaffNewRoute:
+      AuthenticatedDashboardItStaffNewRoute,
   }
 
 const AuthenticatedDashboardItRouteWithChildren =
@@ -624,6 +752,7 @@ interface SiteRouteChildren {
   SiteContactRoute: typeof SiteContactRoute
   SiteInvestorsRoute: typeof SiteInvestorsRoute
   SiteListPropertyRoute: typeof SiteListPropertyRoute
+  SiteLuxuryAccessRoute: typeof SiteLuxuryAccessRoute
   SitePortfolioRoute: typeof SitePortfolioRoute
   SiteServicesRoute: typeof SiteServicesRoute
   SiteVerifyAccessRoute: typeof SiteVerifyAccessRoute
@@ -638,6 +767,7 @@ const SiteRouteChildren: SiteRouteChildren = {
   SiteContactRoute: SiteContactRoute,
   SiteInvestorsRoute: SiteInvestorsRoute,
   SiteListPropertyRoute: SiteListPropertyRoute,
+  SiteLuxuryAccessRoute: SiteLuxuryAccessRoute,
   SitePortfolioRoute: SitePortfolioRoute,
   SiteServicesRoute: SiteServicesRoute,
   SiteVerifyAccessRoute: SiteVerifyAccessRoute,
@@ -649,12 +779,14 @@ const SiteRouteChildren: SiteRouteChildren = {
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
 interface AuthRouteChildren {
+  AuthPasswordResetRoute: typeof AuthPasswordResetRoute
   AuthVerifyRoute: typeof AuthVerifyRoute
   AuthWelcomeRoute: typeof AuthWelcomeRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthPasswordResetRoute: AuthPasswordResetRoute,
   AuthVerifyRoute: AuthVerifyRoute,
   AuthWelcomeRoute: AuthWelcomeRoute,
   AuthIndexRoute: AuthIndexRoute,

@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { Building2, Plus, LayoutDashboard, Upload, X, Loader2 } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
-import { createProperty, uploadPropertyImage, IMAGE_SECTIONS, type ImageSection } from "@/lib/properties-db";
+import { createProperty, uploadPropertyImage, uploadPropertyFile, IMAGE_SECTIONS, type ImageSection } from "@/lib/properties-db";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { notifySubscribersOfProperty } from "@/lib/email.functions";
+import { listStaffForAssignment } from "@/lib/customers.functions";
+import { generateApartmentsForProperty, defaultPrefixFromTitle } from "@/lib/apartments.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/properties/new")({
   head: () => ({ meta: [{ title: "Add Property — NOVAWORKS" }] }),
@@ -22,12 +24,13 @@ const NAV = [
 function NewProperty() {
   const { user, primaryRole, roles } = useAuth();
   const navigate = useNavigate();
-  const canManage = roles.includes("it") || roles.includes("admin");
-  const role = (canManage ? (roles.includes("it") ? "it" : "admin") : (primaryRole as any) ?? "buyer");
+  // Per spec: only IT may add properties
+  const canManage = roles.includes("it");
+  const role = (canManage ? "it" : (primaryRole as any) ?? "buyer");
 
   useEffect(() => {
     if (roles.length && !canManage) {
-      toast.error("Only NOVAWORKS staff can add properties.");
+      toast.error("Only IT can add properties.");
       navigate({ to: dashboardPathFor((primaryRole as any) ?? "buyer") });
     }
   }, [roles, canManage, primaryRole, navigate]);
@@ -48,24 +51,46 @@ function NewProperty() {
     lat: "",
     lng: "",
     amenities: "",
+    owner_id: "",
+    agent_id: "", // empty = Novaworks Agent default
+    video_url: "",
+    tour_3d_url: "",
+    unit_count: "1",
+    unit_code_prefix: "",
+    is_luxury: false,
   });
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [sections, setSections] = useState<ImageSection[]>([]);
+  const [blueprint, setBlueprint] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
   const [notifySubs, setNotifySubs] = useState(false);
   const notifyFn = useServerFn(notifySubscribersOfProperty);
+  const loadStaff = useServerFn(listStaffForAssignment);
+  const genUnits = useServerFn(generateApartmentsForProperty);
+  const [owners, setOwners] = useState<any[]>([]);
+  const [agents, setAgents] = useState<any[]>([]);
 
-  const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-    setForm((f) => ({ ...f, [k]: e.target.value }));
+  useEffect(() => {
+    if (!canManage) return;
+    loadStaff().then((rows: any[]) => {
+      setOwners(rows.filter((r) => r.role === "owner"));
+      setAgents(rows.filter((r) => r.role === "agent"));
+    });
+  }, [canManage]);
+
+  const update = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const v: any = (e.target as any).type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
+    setForm((f) => ({ ...f, [k]: v }));
+  };
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
     const arr = Array.from(list).slice(0, 10 - files.length);
     setFiles((prev) => [...prev, ...arr]);
     setPreviews((prev) => [...prev, ...arr.map((f) => URL.createObjectURL(f))]);
-    setSections((prev) => [...prev, ...arr.map(() => "main" as ImageSection)]);
+    setSections((prev) => [...prev, ...arr.map(() => "other" as ImageSection)]);
   };
 
   const removeFile = (i: number) => {
@@ -81,6 +106,10 @@ function NewProperty() {
     if (!user) return;
     if (!form.title.trim() || !form.price) {
       toast.error("Title and price are required");
+      return;
+    }
+    if (!form.owner_id) {
+      toast.error("Please select an owner — it is required.");
       return;
     }
     setSubmitting(true);
@@ -99,14 +128,22 @@ function NewProperty() {
         }, 120);
         try {
           const r = await uploadPropertyImage(user.id, f);
-          uploads.push({ ...r, section: sections[i] ?? "main" });
+          uploads.push({ ...r, section: sections[i] ?? "other" });
           setUploadProgress((p) => { const n = [...p]; n[i] = 100; return n; });
         } finally {
           clearInterval(tick);
         }
       }
+      let blueprintUrl: string | null = null;
+      if (blueprint) {
+        const r = await uploadPropertyFile(user.id, blueprint, "blueprints");
+        blueprintUrl = r.url;
+      }
+      const unitCount = Math.max(1, Number(form.unit_count) || 1);
+      const prefix = (form.unit_code_prefix.trim() || defaultPrefixFromTitle(form.title)).toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6) || "APT";
       const prop = await createProperty({
-        ownerId: user.id,
+        ownerId: form.owner_id,
+        agentId: form.agent_id || null, // null = Novaworks Agent default
         title: form.title.trim(),
         description: form.description.trim(),
         property_type: form.property_type,
@@ -124,8 +161,18 @@ function NewProperty() {
         amenities: form.amenities.split(",").map((s) => s.trim()).filter(Boolean),
         status,
         notify_subscribers: notifySubs,
+        video_url: form.video_url.trim() || null,
+        tour_3d_url: form.tour_3d_url.trim() || null,
+        blueprint_url: blueprintUrl,
+        unit_count: unitCount,
+        unit_code_prefix: prefix,
+        is_luxury: form.is_luxury,
         images: uploads,
       });
+      if (prop && unitCount > 1) {
+        try { await genUnits({ data: { property_id: (prop as any).id, count: unitCount, prefix } }); }
+        catch (e: any) { toast.error("Property saved but apartments failed: " + (e.message ?? "error")); }
+      }
       toast.success(status === "active" ? "Property published" : "Draft saved");
       if (status === "active" && notifySubs && prop) {
         notifyFn({ data: { propertyId: (prop as any).id } })
@@ -153,6 +200,24 @@ function NewProperty() {
     >
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
+          <Panel title="Assignment" subtitle="Owner is required. Agent defaults to 'Novaworks Agent' if left blank.">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Owner (required)">
+                <select className="input-luxe" value={form.owner_id} onChange={update("owner_id")}>
+                  <option value="">— Select owner —</option>
+                  {owners.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
+                </select>
+              </Field>
+              <Field label="Agent (optional)">
+                <select className="input-luxe" value={form.agent_id} onChange={update("agent_id")}>
+                  <option value="">Novaworks Agent (default)</option>
+                  {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </select>
+              </Field>
+            </div>
+            {owners.length === 0 && <p className="text-xs text-rose-600 mt-2">No owners registered yet. Ask Admin to add one in <strong>Add Staff</strong>.</p>}
+          </Panel>
+
           <Panel title="Basics" subtitle="Title, description, and type">
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label="Title" full>
@@ -202,6 +267,27 @@ function NewProperty() {
               <Field label="District"><input className="input-luxe" value={form.district} onChange={update("district")} /></Field>
               <Field label="Latitude"><input className="input-luxe" value={form.lat} onChange={update("lat")} placeholder="-1.9536" /></Field>
               <Field label="Longitude"><input className="input-luxe" value={form.lng} onChange={update("lng")} placeholder="30.0606" /></Field>
+            </div>
+          </Panel>
+
+          <Panel title="Apartments / units" subtitle="If this is a multi-unit building, set the apartment count and prefix. Codes generate automatically like KHLP-001…KHLP-NNN.">
+            <div className="grid sm:grid-cols-3 gap-4">
+              <Field label="Number of apartments"><input className="input-luxe" type="number" min={1} value={form.unit_count} onChange={update("unit_count")} /></Field>
+              <Field label="Code prefix"><input className="input-luxe" value={form.unit_code_prefix} onChange={update("unit_code_prefix")} placeholder={defaultPrefixFromTitle(form.title || "APT")} /></Field>
+              <Field label="Luxury listing">
+                <label className="flex items-center gap-2 h-[42px]"><input type="checkbox" checked={form.is_luxury} onChange={update("is_luxury")} /> Requires luxury access</label>
+              </Field>
+            </div>
+          </Panel>
+
+          <Panel title="Video, 3D tour & blueprint" subtitle="Optional rich media — shown next to the gallery">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Video URL (YouTube / Vimeo / mp4)" full><input className="input-luxe" value={form.video_url} onChange={update("video_url")} placeholder="https://youtu.be/..." /></Field>
+              <Field label="3D tour URL (Matterport, Kuula, etc.)" full><input className="input-luxe" value={form.tour_3d_url} onChange={update("tour_3d_url")} placeholder="https://..." /></Field>
+              <Field label="Blueprint / footprint (PDF)" full>
+                <input className="input-luxe" type="file" accept="application/pdf" onChange={(e) => setBlueprint(e.target.files?.[0] ?? null)} />
+                {blueprint && <div className="text-xs text-noir/60 mt-1">{blueprint.name}</div>}
+              </Field>
             </div>
           </Panel>
         </div>

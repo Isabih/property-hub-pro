@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { ShieldCheck, MailCheck, Crown, Check, ArrowRight, Lock } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { verifyLuxuryToken } from "@/lib/luxury.functions";
 
-const searchSchema = z.object({ slug: z.string().optional() });
+const searchSchema = z.object({ slug: z.string().optional(), token: z.string().optional() });
 
 export const Route = createFileRoute("/_site/verify-access")({
   validateSearch: (s) => searchSchema.parse(s),
@@ -27,9 +29,44 @@ const BENEFITS = [
 ];
 
 function VerifyAccess() {
-  const { slug } = Route.useSearch();
+  const { slug, token } = Route.useSearch();
   const [step, setStep] = useState<"form" | "sent">("form");
   const [email, setEmail] = useState("");
+  const [tokenState, setTokenState] = useState<"none" | "checking" | "valid" | "invalid">(token ? "checking" : "none");
+  const checkToken = useServerFn(verifyLuxuryToken);
+
+  useEffect(() => {
+    if (!token) return;
+    checkToken({ data: { token } }).then((r: any) => {
+      if (r.valid) {
+        try { localStorage.setItem("nw_luxury_token", token); } catch {}
+        setTokenState("valid");
+      } else {
+        setTokenState("invalid");
+      }
+    }).catch(() => setTokenState("invalid"));
+  }, [token]);
+
+  if (token) {
+    return (
+      <div className="bg-noir-deep min-h-[calc(100vh-80px)] py-20 flex items-center">
+        <div className="container-luxe max-w-xl mx-auto bg-white rounded-2xl p-10 text-center">
+          {tokenState === "checking" && <p>Verifying your access link…</p>}
+          {tokenState === "valid" && (<>
+            <div className="w-14 h-14 rounded-full bg-gold/15 text-gold flex items-center justify-center mx-auto"><Crown className="w-7 h-7" /></div>
+            <h2 className="mt-4 font-display text-2xl">Luxury access unlocked</h2>
+            <p className="mt-2 text-sm text-noir/60">You can now browse the full luxury collection.</p>
+            <Link to="/properties" className="mt-6 inline-flex items-center gap-2 text-sm text-gold font-medium">Browse listings <ArrowRight className="w-4 h-4" /></Link>
+          </>)}
+          {tokenState === "invalid" && (<>
+            <h2 className="font-display text-2xl">This link is no longer valid</h2>
+            <p className="mt-2 text-sm text-noir/60">It may have expired or been revoked. Request access again below.</p>
+            <Link to="/luxury-access" className="mt-6 inline-block text-gold font-medium">Request access →</Link>
+          </>)}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-noir-deep min-h-[calc(100vh-80px)] py-20">

@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      apartments: {
+        Row: {
+          bedrooms: number | null
+          code: string
+          created_at: string
+          floor: number | null
+          id: string
+          name: string | null
+          notes: string | null
+          property_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          bedrooms?: number | null
+          code: string
+          created_at?: string
+          floor?: number | null
+          id?: string
+          name?: string | null
+          notes?: string | null
+          property_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          bedrooms?: number | null
+          code?: string
+          created_at?: string
+          floor?: number | null
+          id?: string
+          name?: string | null
+          notes?: string | null
+          property_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apartments_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_settings: {
         Row: {
           brand_color: string
@@ -190,8 +237,120 @@ export type Database = {
         }
         Relationships: []
       }
+      luxury_access_requests: {
+        Row: {
+          access_token: string | null
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          email: string
+          email_verified: boolean
+          expires_at: string | null
+          full_name: string
+          id: string
+          otp_attempts: number
+          otp_expires_at: string | null
+          otp_hash: string | null
+          phone: string | null
+          reason: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          access_token?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          email: string
+          email_verified?: boolean
+          expires_at?: string | null
+          full_name: string
+          id?: string
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
+          phone?: string | null
+          reason?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          email?: string
+          email_verified?: boolean
+          expires_at?: string | null
+          full_name?: string
+          id?: string
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
+          phone?: string | null
+          reason?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      password_reset_requests: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          email: string
+          email_verified: boolean
+          id: string
+          otp_attempts: number
+          otp_expires_at: string | null
+          otp_hash: string | null
+          status: string
+          temp_password_expires_at: string | null
+          temp_password_hash: string | null
+          updated_at: string
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          email: string
+          email_verified?: boolean
+          id?: string
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
+          status?: string
+          temp_password_expires_at?: string | null
+          temp_password_hash?: string | null
+          updated_at?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          email?: string
+          email_verified?: boolean
+          id?: string
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
+          status?: string
+          temp_password_expires_at?: string | null
+          temp_password_hash?: string | null
+          updated_at?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          active: boolean
           avatar_url: string | null
           created_at: string
           email: string | null
@@ -201,6 +360,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          active?: boolean
           avatar_url?: string | null
           created_at?: string
           email?: string | null
@@ -210,6 +370,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          active?: boolean
           avatar_url?: string | null
           created_at?: string
           email?: string | null
@@ -228,6 +389,7 @@ export type Database = {
           area_sqm: number | null
           bathrooms: number | null
           bedrooms: number | null
+          blueprint_url: string | null
           city: string | null
           country: string | null
           created_at: string
@@ -236,6 +398,7 @@ export type Database = {
           district: string | null
           featured: boolean
           id: string
+          is_luxury: boolean
           lat: number | null
           listing_type: string
           lng: number | null
@@ -246,7 +409,11 @@ export type Database = {
           slug: string
           status: string
           title: string
+          tour_3d_url: string | null
+          unit_code_prefix: string | null
+          unit_count: number
           updated_at: string
+          video_url: string | null
           views_count: number
         }
         Insert: {
@@ -256,6 +423,7 @@ export type Database = {
           area_sqm?: number | null
           bathrooms?: number | null
           bedrooms?: number | null
+          blueprint_url?: string | null
           city?: string | null
           country?: string | null
           created_at?: string
@@ -264,6 +432,7 @@ export type Database = {
           district?: string | null
           featured?: boolean
           id?: string
+          is_luxury?: boolean
           lat?: number | null
           listing_type?: string
           lng?: number | null
@@ -274,7 +443,11 @@ export type Database = {
           slug: string
           status?: string
           title: string
+          tour_3d_url?: string | null
+          unit_code_prefix?: string | null
+          unit_count?: number
           updated_at?: string
+          video_url?: string | null
           views_count?: number
         }
         Update: {
@@ -284,6 +457,7 @@ export type Database = {
           area_sqm?: number | null
           bathrooms?: number | null
           bedrooms?: number | null
+          blueprint_url?: string | null
           city?: string | null
           country?: string | null
           created_at?: string
@@ -292,6 +466,7 @@ export type Database = {
           district?: string | null
           featured?: boolean
           id?: string
+          is_luxury?: boolean
           lat?: number | null
           listing_type?: string
           lng?: number | null
@@ -302,7 +477,11 @@ export type Database = {
           slug?: string
           status?: string
           title?: string
+          tour_3d_url?: string | null
+          unit_code_prefix?: string | null
+          unit_count?: number
           updated_at?: string
+          video_url?: string | null
           views_count?: number
         }
         Relationships: []
