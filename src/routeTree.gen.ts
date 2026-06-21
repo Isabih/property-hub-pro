@@ -38,6 +38,7 @@ import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './rout
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
+import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
 const AuthRoute = AuthRouteImport.update({
@@ -195,6 +196,12 @@ const AuthenticatedDashboardItSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
+const AuthenticatedDashboardItLuxuryRoute =
+  AuthenticatedDashboardItLuxuryRouteImport.update({
+    id: '/luxury',
+    path: '/luxury',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 const AuthenticatedDashboardItStaffNewRoute =
   AuthenticatedDashboardItStaffNewRouteImport.update({
     id: '/staff/new',
@@ -225,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
+  '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
@@ -254,6 +262,7 @@ export interface FileRoutesByTo {
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
+  '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
@@ -287,6 +296,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
+  '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
@@ -319,6 +329,7 @@ export interface FileRouteTypes {
     | '/dashboard/receptionist'
     | '/properties/$slug'
     | '/properties/'
+    | '/dashboard/it/luxury'
     | '/dashboard/it/settings'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
@@ -348,6 +359,7 @@ export interface FileRouteTypes {
     | '/dashboard/receptionist'
     | '/properties/$slug'
     | '/properties'
+    | '/dashboard/it/luxury'
     | '/dashboard/it/settings'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
@@ -380,6 +392,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/receptionist'
     | '/_site/properties/$slug'
     | '/_site/properties/'
+    | '/_authenticated/dashboard/it/luxury'
     | '/_authenticated/dashboard/it/settings'
     | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
@@ -599,6 +612,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/it/luxury': {
+      id: '/_authenticated/dashboard/it/luxury'
+      path: '/luxury'
+      fullPath: '/dashboard/it/luxury'
+      preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
     '/_authenticated/dashboard/it/staff/new': {
       id: '/_authenticated/dashboard/it/staff/new'
       path: '/staff/new'
@@ -610,6 +630,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardItRouteChildren {
+  AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
   AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
@@ -617,6 +638,7 @@ interface AuthenticatedDashboardItRouteChildren {
 
 const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildren =
   {
+    AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
     AuthenticatedDashboardItSettingsRoute:
       AuthenticatedDashboardItSettingsRoute,
     AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
