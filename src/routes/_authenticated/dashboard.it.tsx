@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, BarChart3, UserPlus, Bell } from "lucide-react";
+import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, UserPlus, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
