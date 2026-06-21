@@ -41,6 +41,7 @@ import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './route
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
+import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
@@ -215,6 +216,12 @@ const AuthenticatedDashboardItPasswordResetsRoute =
     path: '/password-resets',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
+const AuthenticatedDashboardItMediaVerifyRoute =
+  AuthenticatedDashboardItMediaVerifyRouteImport.update({
+    id: '/media-verify',
+    path: '/media-verify',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 const AuthenticatedDashboardItLuxuryRoute =
   AuthenticatedDashboardItLuxuryRouteImport.update({
     id: '/luxury',
@@ -254,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
@@ -287,6 +295,7 @@ export interface FileRoutesByTo {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
@@ -324,6 +333,7 @@ export interface FileRoutesById {
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
+  '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/it/luxury'
+    | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
     | '/dashboard/it/users'
@@ -393,6 +404,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/it/luxury'
+    | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
     | '/dashboard/it/users'
@@ -429,6 +441,7 @@ export interface FileRouteTypes {
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/it/luxury'
+    | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
     | '/_authenticated/dashboard/it/settings'
     | '/_authenticated/dashboard/it/users'
@@ -670,6 +683,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItPasswordResetsRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/it/media-verify': {
+      id: '/_authenticated/dashboard/it/media-verify'
+      path: '/media-verify'
+      fullPath: '/dashboard/it/media-verify'
+      preLoaderRoute: typeof AuthenticatedDashboardItMediaVerifyRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
     '/_authenticated/dashboard/it/luxury': {
       id: '/_authenticated/dashboard/it/luxury'
       path: '/luxury'
@@ -689,6 +709,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardItRouteChildren {
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
+  AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
@@ -698,6 +719,8 @@ interface AuthenticatedDashboardItRouteChildren {
 const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildren =
   {
     AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
+    AuthenticatedDashboardItMediaVerifyRoute:
+      AuthenticatedDashboardItMediaVerifyRoute,
     AuthenticatedDashboardItPasswordResetsRoute:
       AuthenticatedDashboardItPasswordResetsRoute,
     AuthenticatedDashboardItSettingsRoute:
