@@ -39,13 +39,26 @@ export interface DbPropertyImage {
 }
 
 export const IMAGE_SECTIONS = [
+  { value: "main", label: "Main / Cover" },
   { value: "kitchen", label: "Kitchen" },
   { value: "living_room", label: "Living Room" },
   { value: "bedroom", label: "Bedroom" },
   { value: "bathroom", label: "Bathroom" },
+  { value: "gym", label: "Gym" },
   { value: "other", label: "Other" },
 ] as const;
 export type ImageSection = typeof IMAGE_SECTIONS[number]["value"];
+
+/** Canonical section ordering for stored gallery position. */
+export const SECTION_ORDER: ImageSection[] = [
+  "main",
+  "kitchen",
+  "living_room",
+  "bedroom",
+  "bathroom",
+  "gym",
+  "other",
+];
 
 export function slugify(input: string) {
   return input
@@ -115,7 +128,7 @@ export async function createProperty(input: {
   unit_count?: number;
   unit_code_prefix?: string | null;
   is_luxury?: boolean;
-  images: Array<{ url: string; path: string; section: ImageSection }>;
+  images: Array<{ url: string; path: string; section: ImageSection; provider?: "r2" | "lovable" }>;
 }) {
   const slug = slugify(input.title);
   const { data: prop, error } = await supabase
@@ -153,13 +166,18 @@ export async function createProperty(input: {
   if (error) throw error;
 
   if (input.images.length) {
-    const rows = input.images.map((img, i) => ({
+    // Sort by canonical section order so gallery position follows: main, kitchen, living, bedroom, bathroom, gym, other.
+    const ordered = [...input.images].sort(
+      (a, b) => SECTION_ORDER.indexOf(a.section) - SECTION_ORDER.indexOf(b.section),
+    );
+    const rows = ordered.map((img, i) => ({
       property_id: prop.id,
       url: img.url,
       storage_path: img.path,
       position: i,
       is_cover: i === 0,
       section: img.section,
+      provider: img.provider ?? "lovable",
     }));
     const { error: imgErr } = await supabase.from("property_images").insert(rows);
     if (imgErr) throw imgErr;
