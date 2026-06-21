@@ -28,6 +28,7 @@ import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
+import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './routes/_authenticated/dashboard.service-requests'
 import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes/_authenticated/dashboard.receptionist'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
@@ -139,6 +140,12 @@ const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
   path: '/properties/$slug',
   getParentRoute: () => SiteRoute,
 } as any)
+const AuthenticatedDashboardServiceRequestsRoute =
+  AuthenticatedDashboardServiceRequestsRouteImport.update({
+    id: '/dashboard/service-requests',
+    path: '/dashboard/service-requests',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardReceptionistRoute =
   AuthenticatedDashboardReceptionistRouteImport.update({
     id: '/dashboard/receptionist',
@@ -265,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
+  '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
@@ -300,6 +308,7 @@ export interface FileRoutesByTo {
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
+  '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
@@ -339,6 +348,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
+  '/_authenticated/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/owner'
     | '/dashboard/receptionist'
+    | '/dashboard/service-requests'
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/buyer/service-requests'
@@ -412,6 +423,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/owner'
     | '/dashboard/receptionist'
+    | '/dashboard/service-requests'
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/buyer/service-requests'
@@ -450,6 +462,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/receptionist'
+    | '/_authenticated/dashboard/service-requests'
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/buyer/service-requests'
@@ -604,6 +617,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/properties/$slug'
       preLoaderRoute: typeof SitePropertiesSlugRouteImport
       parentRoute: typeof SiteRoute
+    }
+    '/_authenticated/dashboard/service-requests': {
+      id: '/_authenticated/dashboard/service-requests'
+      path: '/dashboard/service-requests'
+      fullPath: '/dashboard/service-requests'
+      preLoaderRoute: typeof AuthenticatedDashboardServiceRequestsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/receptionist': {
       id: '/_authenticated/dashboard/receptionist'
@@ -778,6 +798,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardReceptionistRoute: typeof AuthenticatedDashboardReceptionistRoute
+  AuthenticatedDashboardServiceRequestsRoute: typeof AuthenticatedDashboardServiceRequestsRoute
   AuthenticatedDashboardPropertiesNewRoute: typeof AuthenticatedDashboardPropertiesNewRoute
   AuthenticatedDashboardInquiriesIndexRoute: typeof AuthenticatedDashboardInquiriesIndexRoute
   AuthenticatedDashboardPropertiesIndexRoute: typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -794,6 +815,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
   AuthenticatedDashboardReceptionistRoute:
     AuthenticatedDashboardReceptionistRoute,
+  AuthenticatedDashboardServiceRequestsRoute:
+    AuthenticatedDashboardServiceRequestsRoute,
   AuthenticatedDashboardPropertiesNewRoute:
     AuthenticatedDashboardPropertiesNewRoute,
   AuthenticatedDashboardInquiriesIndexRoute:

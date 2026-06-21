@@ -115,6 +115,22 @@ function ITSettings() {
               </div>
               <p className="text-xs text-noir/50 mt-3">⚠ The From email's domain must be verified in your Resend account, or Resend will reject the send.</p>
             </Panel>
+            <Panel title="Service request templates" subtitle="Customize the confirmation email customers receive and urgency wording">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Field label="Confirmation subject"><input className="input-luxe" value={form.sr_confirm_subject} onChange={(e) => setForm({...form, sr_confirm_subject: e.target.value})} /></Field>
+                <Field label="Reply subject"><input className="input-luxe" value={form.sr_reply_subject} onChange={(e) => setForm({...form, sr_reply_subject: e.target.value})} /></Field>
+                <Field label="Urgent wording"><input className="input-luxe" value={form.sr_urgent_label} onChange={(e) => setForm({...form, sr_urgent_label: e.target.value})} /></Field>
+                <Field label="Normal wording"><input className="input-luxe" value={form.sr_normal_label} onChange={(e) => setForm({...form, sr_normal_label: e.target.value})} /></Field>
+              </div>
+              <div className="mt-4">
+                <Field label="Confirmation body">
+                  <textarea className="input-luxe min-h-40 font-mono text-sm" value={form.sr_confirm_body} onChange={(e) => setForm({...form, sr_confirm_body: e.target.value})} />
+                </Field>
+                <p className="text-xs text-noir/50 mt-2">
+                  Available placeholders: <code>{`{{name}}`}</code> <code>{`{{title}}`}</code> <code>{`{{priority}}`}</code> <code>{`{{urgency_label}}`}</code>
+                </p>
+              </div>
+            </Panel>
           </div>
           <div className="space-y-6">
             <Panel title="Live preview" subtitle="How a recipient sees your email">
