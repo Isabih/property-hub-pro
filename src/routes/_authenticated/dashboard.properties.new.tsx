@@ -293,6 +293,19 @@ function NewProperty() {
           <Panel title="Video, 3D tour & blueprint" subtitle="Optional rich media — shown next to the gallery">
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label="Video URL (YouTube / Vimeo / mp4)" full><input className="input-luxe" value={form.video_url} onChange={update("video_url")} placeholder="https://youtu.be/..." /></Field>
+              <Field label="…or upload a video file (mp4 / webm) to Cloudflare R2" full>
+                <input className="input-luxe" type="file" accept="video/*" onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)} />
+                {videoFile && (
+                  <div className="mt-2">
+                    <div className="text-xs text-noir/60">{videoFile.name} · {(videoFile.size/1024/1024).toFixed(1)} MB</div>
+                    {videoProgress !== null && (
+                      <div className="mt-1 h-1.5 bg-noir/10 rounded overflow-hidden">
+                        <div className="h-full bg-gold transition-all duration-150" style={{ width: `${videoProgress}%` }} />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Field>
               <Field label="3D tour URL (Matterport, Kuula, etc.)" full><input className="input-luxe" value={form.tour_3d_url} onChange={update("tour_3d_url")} placeholder="https://..." /></Field>
               <Field label="Blueprint / footprint (PDF)" full>
                 <input className="input-luxe" type="file" accept="application/pdf" onChange={(e) => setBlueprint(e.target.files?.[0] ?? null)} />
@@ -334,13 +347,24 @@ function NewProperty() {
                     )}
                     {submitting && uploadProgress[i] === 100 && (
                       <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center">
-                        <span className="text-white text-xs font-medium bg-emerald-600/90 px-2 py-0.5 rounded">✓ Linked</span>
+                        <span className="text-white text-xs font-medium bg-emerald-600/90 px-2 py-0.5 rounded">
+                          ✓ {uploadProviders[i] === "r2" ? "R2" : uploadProviders[i] === "lovable" ? "Cloud (fallback)" : "Linked"}
+                        </span>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
             )}
+          </Panel>
+
+          <Panel title="Storage" subtitle="Where uploads go">
+            <p className="text-sm text-noir/70">
+              Images and videos upload directly to your Cloudflare R2 bucket
+              <code className="mx-1 px-1 rounded bg-noir/5">novaworks-media</code>
+              and are served from <code className="px-1 rounded bg-noir/5">media.novaworks.rw</code>.
+              If R2 is unreachable, uploads automatically fall back to Lovable Cloud Storage so publishing never blocks.
+            </p>
           </Panel>
 
           <Panel title="Tips" subtitle="Listings with photos perform 5× better">
