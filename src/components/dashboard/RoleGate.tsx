@@ -17,16 +17,20 @@ export function RoleGate({
 }) {
   const { roles, primaryRole, loading } = useAuth();
   const navigate = useNavigate();
-  // Admin and IT are system roles — they can view every dashboard.
-  const allowed = roles.includes("admin") || roles.includes("it") || allow.some((r) => roles.includes(r));
+  // Admin and IT are system roles, but customer-only pages stay customer-only.
+  const customerOnly = allow.length === 1 && allow[0] === "buyer";
+  const systemOverride = !customerOnly && (roles.includes("admin") || roles.includes("it"));
+  const allowed = systemOverride || allow.some((r) => roles.includes(r));
 
   useEffect(() => {
     if (loading) return;
     if (!allowed) {
-      toast.error("This dashboard isn't available for your role.");
+      if (!roles.includes("admin") && !roles.includes("it")) {
+        toast.error("This dashboard isn't available for your role.");
+      }
       navigate({ to: dashboardPathFor(primaryRole), replace: true });
     }
-  }, [loading, allowed, primaryRole, navigate]);
+  }, [loading, allowed, roles, primaryRole, navigate]);
 
   if (loading || !allowed) {
     return (

@@ -108,7 +108,8 @@ export function dashboardPathFor(role: AppRole | null): string {
     case "agent":
       return "/dashboard/agent";
     case "buyer":
-    default:
       return "/dashboard/buyer";
+    default:
+      return "/auth/welcome";
   }
 }
