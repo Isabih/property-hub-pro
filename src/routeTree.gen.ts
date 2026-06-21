@@ -19,6 +19,7 @@ import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
+import { Route as SiteLuxuryAccessRouteImport } from './routes/_site.luxury-access'
 import { Route as SiteListPropertyRouteImport } from './routes/_site.list-property'
 import { Route as SiteInvestorsRouteImport } from './routes/_site.investors'
 import { Route as SiteContactRouteImport } from './routes/_site.contact'
@@ -88,6 +89,11 @@ const SiteServicesRoute = SiteServicesRouteImport.update({
 const SitePortfolioRoute = SitePortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteLuxuryAccessRoute = SiteLuxuryAccessRouteImport.update({
+  id: '/luxury-access',
+  path: '/luxury-access',
   getParentRoute: () => SiteRoute,
 } as any)
 const SiteListPropertyRoute = SiteListPropertyRouteImport.update({
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof SiteContactRoute
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
+  '/luxury-access': typeof SiteLuxuryAccessRoute
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/contact': typeof SiteContactRoute
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
+  '/luxury-access': typeof SiteLuxuryAccessRoute
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
@@ -289,6 +297,7 @@ export interface FileRoutesById {
   '/_site/contact': typeof SiteContactRoute
   '/_site/investors': typeof SiteInvestorsRoute
   '/_site/list-property': typeof SiteListPropertyRoute
+  '/_site/luxury-access': typeof SiteLuxuryAccessRoute
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
@@ -324,6 +333,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/investors'
     | '/list-property'
+    | '/luxury-access'
     | '/portfolio'
     | '/services'
     | '/verify-access'
@@ -355,6 +365,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/investors'
     | '/list-property'
+    | '/luxury-access'
     | '/portfolio'
     | '/services'
     | '/verify-access'
@@ -388,6 +399,7 @@ export interface FileRouteTypes {
     | '/_site/contact'
     | '/_site/investors'
     | '/_site/list-property'
+    | '/_site/luxury-access'
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
@@ -490,6 +502,13 @@ declare module '@tanstack/react-router' {
       path: '/portfolio'
       fullPath: '/portfolio'
       preLoaderRoute: typeof SitePortfolioRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/luxury-access': {
+      id: '/_site/luxury-access'
+      path: '/luxury-access'
+      fullPath: '/luxury-access'
+      preLoaderRoute: typeof SiteLuxuryAccessRouteImport
       parentRoute: typeof SiteRoute
     }
     '/_site/list-property': {
@@ -714,6 +733,7 @@ interface SiteRouteChildren {
   SiteContactRoute: typeof SiteContactRoute
   SiteInvestorsRoute: typeof SiteInvestorsRoute
   SiteListPropertyRoute: typeof SiteListPropertyRoute
+  SiteLuxuryAccessRoute: typeof SiteLuxuryAccessRoute
   SitePortfolioRoute: typeof SitePortfolioRoute
   SiteServicesRoute: typeof SiteServicesRoute
   SiteVerifyAccessRoute: typeof SiteVerifyAccessRoute
@@ -728,6 +748,7 @@ const SiteRouteChildren: SiteRouteChildren = {
   SiteContactRoute: SiteContactRoute,
   SiteInvestorsRoute: SiteInvestorsRoute,
   SiteListPropertyRoute: SiteListPropertyRoute,
+  SiteLuxuryAccessRoute: SiteLuxuryAccessRoute,
   SitePortfolioRoute: SitePortfolioRoute,
   SiteServicesRoute: SiteServicesRoute,
   SiteVerifyAccessRoute: SiteVerifyAccessRoute,
