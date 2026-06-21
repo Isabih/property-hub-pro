@@ -254,6 +254,16 @@ function NewProperty() {
               <li>Save as draft first to preview.</li>
             </ul>
           </Panel>
+
+          <Panel title="Notify subscribers" subtitle="Email all verified subscribers when this property is published">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" className="mt-1" checked={notifySubs} onChange={(e) => setNotifySubs(e.target.checked)} />
+              <span className="text-sm">
+                <strong className="block">Send a new-property email</strong>
+                <span className="text-noir/60">Sends only when you click <em>Publish</em>. Drafts never notify.</span>
+              </span>
+            </label>
+          </Panel>
         </div>
       </div>
     </DashboardShell>
