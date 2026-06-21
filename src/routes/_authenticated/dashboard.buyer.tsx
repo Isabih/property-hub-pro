@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { RoleGate } from "@/components/dashboard/RoleGate";
-import { Heart, CalendarCheck, MessageSquare, Eye, LayoutDashboard, Search, Settings, Compass, MapPin } from "lucide-react";
+import { Heart, CalendarCheck, MessageSquare, Eye, LayoutDashboard, Search, Settings, Compass, MapPin, AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +18,7 @@ const NAV = [
   { to: "/dashboard/buyer", label: "Saved", icon: Heart, group: "Activity" },
   { to: "/dashboard/buyer", label: "Visits", icon: CalendarCheck, group: "Activity" },
   { to: "/dashboard/buyer", label: "Messages", icon: MessageSquare, group: "Activity" },
+  { to: "/dashboard/buyer/service-requests", label: "Service Requests", icon: AlertCircle, group: "Activity" },
   { to: "/dashboard/buyer", label: "Settings", icon: Settings, group: "System" },
 ];
 

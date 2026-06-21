@@ -638,6 +638,62 @@ export type Database = {
           },
         ]
       }
+      service_requests: {
+        Row: {
+          admin_response: string | null
+          category: Database["public"]["Enums"]["service_request_category"]
+          created_at: string
+          customer_id: string
+          description: string
+          id: string
+          image_urls: string[]
+          priority: Database["public"]["Enums"]["service_request_priority"]
+          responded_at: string | null
+          responded_by: string | null
+          status: Database["public"]["Enums"]["service_request_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          admin_response?: string | null
+          category?: Database["public"]["Enums"]["service_request_category"]
+          created_at?: string
+          customer_id: string
+          description: string
+          id?: string
+          image_urls?: string[]
+          priority?: Database["public"]["Enums"]["service_request_priority"]
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: Database["public"]["Enums"]["service_request_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          admin_response?: string | null
+          category?: Database["public"]["Enums"]["service_request_category"]
+          created_at?: string
+          customer_id?: string
+          description?: string
+          id?: string
+          image_urls?: string[]
+          priority?: Database["public"]["Enums"]["service_request_priority"]
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: Database["public"]["Enums"]["service_request_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       staff_notifications: {
         Row: {
           body: string | null
@@ -751,6 +807,20 @@ export type Database = {
     }
     Enums: {
       app_role: "buyer" | "agent" | "owner" | "admin" | "it" | "receptionist"
+      service_request_category:
+        | "maintenance"
+        | "plumbing"
+        | "electrical"
+        | "cleaning"
+        | "security"
+        | "general"
+        | "other"
+      service_request_priority: "low" | "medium" | "high" | "urgent"
+      service_request_status:
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -879,6 +949,22 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["buyer", "agent", "owner", "admin", "it", "receptionist"],
+      service_request_category: [
+        "maintenance",
+        "plumbing",
+        "electrical",
+        "cleaning",
+        "security",
+        "general",
+        "other",
+      ],
+      service_request_priority: ["low", "medium", "high", "urgent"],
+      service_request_status: [
+        "pending",
+        "in_progress",
+        "completed",
+        "cancelled",
+      ],
     },
   },
 } as const
