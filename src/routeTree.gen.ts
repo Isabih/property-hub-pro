@@ -43,6 +43,7 @@ import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
+import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
 const AuthRoute = AuthRouteImport.update({
@@ -228,6 +229,12 @@ const AuthenticatedDashboardItLuxuryRoute =
     path: '/luxury',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
+const AuthenticatedDashboardBuyerServiceRequestsRoute =
+  AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
+    id: '/service-requests',
+    path: '/service-requests',
+    getParentRoute: () => AuthenticatedDashboardBuyerRoute,
+  } as any)
 const AuthenticatedDashboardItStaffNewRoute =
   AuthenticatedDashboardItStaffNewRouteImport.update({
     id: '/staff/new',
@@ -253,13 +260,14 @@ export interface FileRoutesByFullPath {
   '/auth/': typeof AuthIndexRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
-  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/it': typeof AuthenticatedDashboardItRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
+  '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -287,13 +295,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthIndexRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
-  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/it': typeof AuthenticatedDashboardItRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
+  '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -325,13 +334,14 @@ export interface FileRoutesById {
   '/auth/': typeof AuthIndexRoute
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
-  '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/_authenticated/dashboard/it': typeof AuthenticatedDashboardItRouteWithChildren
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
+  '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/dashboard/receptionist'
     | '/properties/$slug'
     | '/properties/'
+    | '/dashboard/buyer/service-requests'
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/dashboard/receptionist'
     | '/properties/$slug'
     | '/properties'
+    | '/dashboard/buyer/service-requests'
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
@@ -440,6 +452,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/receptionist'
     | '/_site/properties/$slug'
     | '/_site/properties/'
+    | '/_authenticated/dashboard/buyer/service-requests'
     | '/_authenticated/dashboard/it/luxury'
     | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
@@ -697,6 +710,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/buyer/service-requests': {
+      id: '/_authenticated/dashboard/buyer/service-requests'
+      path: '/service-requests'
+      fullPath: '/dashboard/buyer/service-requests'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
+      parentRoute: typeof AuthenticatedDashboardBuyerRoute
+    }
     '/_authenticated/dashboard/it/staff/new': {
       id: '/_authenticated/dashboard/it/staff/new'
       path: '/staff/new'
@@ -706,6 +726,21 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedDashboardBuyerRouteChildren {
+  AuthenticatedDashboardBuyerServiceRequestsRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+}
+
+const AuthenticatedDashboardBuyerRouteChildren: AuthenticatedDashboardBuyerRouteChildren =
+  {
+    AuthenticatedDashboardBuyerServiceRequestsRoute:
+      AuthenticatedDashboardBuyerServiceRequestsRoute,
+  }
+
+const AuthenticatedDashboardBuyerRouteWithChildren =
+  AuthenticatedDashboardBuyerRoute._addFileChildren(
+    AuthenticatedDashboardBuyerRouteChildren,
+  )
 
 interface AuthenticatedDashboardItRouteChildren {
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
@@ -738,7 +773,7 @@ const AuthenticatedDashboardItRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRoute
   AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
-  AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
+  AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRouteWithChildren
   AuthenticatedDashboardItRoute: typeof AuthenticatedDashboardItRouteWithChildren
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
@@ -751,7 +786,8 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardAdminRoute: AuthenticatedDashboardAdminRoute,
   AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
-  AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
+  AuthenticatedDashboardBuyerRoute:
+    AuthenticatedDashboardBuyerRouteWithChildren,
   AuthenticatedDashboardItRoute: AuthenticatedDashboardItRouteWithChildren,
   AuthenticatedDashboardNotificationsRoute:
     AuthenticatedDashboardNotificationsRoute,
