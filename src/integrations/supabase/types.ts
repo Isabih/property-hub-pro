@@ -61,6 +61,9 @@ export type Database = {
           email_verified: boolean
           full_name: string
           id: string
+          otp_attempts: number
+          otp_expires_at: string | null
+          otp_hash: string | null
           payment_method: string | null
           payment_status: string
           phone: string
@@ -79,6 +82,9 @@ export type Database = {
           email_verified?: boolean
           full_name: string
           id?: string
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
           payment_method?: string | null
           payment_status?: string
           phone: string
@@ -97,6 +103,9 @@ export type Database = {
           email_verified?: boolean
           full_name?: string
           id?: string
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
           payment_method?: string | null
           payment_status?: string
           phone?: string
@@ -495,6 +504,9 @@ export type Database = {
           full_name: string | null
           id: string
           notify: boolean
+          otp_attempts: number
+          otp_expires_at: string | null
+          otp_hash: string | null
           verified: boolean
         }
         Insert: {
@@ -503,6 +515,9 @@ export type Database = {
           full_name?: string | null
           id?: string
           notify?: boolean
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
           verified?: boolean
         }
         Update: {
@@ -511,6 +526,9 @@ export type Database = {
           full_name?: string | null
           id?: string
           notify?: boolean
+          otp_attempts?: number
+          otp_expires_at?: string | null
+          otp_hash?: string | null
           verified?: boolean
         }
         Relationships: []
