@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, Upload, BarChart3, UserPlus, Image as ImageIcon, Video, Tag, FileText, Bell } from "lucide-react";
+import { Users, Building2, LayoutDashboard, Activity, Settings, FileCheck, Server, Eye, RefreshCw, Plus, BarChart3, UserPlus, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardShell, StatCard, Panel, AnalyticsChart, QuickActions } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,9 +59,9 @@ function ITDashboard() {
         <div className="lg:col-span-2"><AnalyticsChart data={sampleAnalytics(5)} /></div>
         <QuickActions actions={[
           { label: "Add Property", sublabel: "Create new listing", icon: Building2, to: "/dashboard/properties/new", tone: "gold" },
-          { label: "Upload Media", sublabel: "Images & videos", icon: Upload, to: "/dashboard/properties/new", tone: "blue" },
-          { label: "Add User", sublabel: "Invite team member", icon: UserPlus, to: "/dashboard/it", tone: "violet" },
-          { label: "Reports", sublabel: "View analytics", icon: BarChart3, to: "/dashboard/it", tone: "emerald" },
+          { label: "Add Staff", sublabel: "Owners, agents, reception", icon: UserPlus, to: "/dashboard/it/staff/new", tone: "blue" },
+          { label: "Luxury Requests", sublabel: "Approve access", icon: FileCheck, to: "/dashboard/it/luxury", tone: "violet" },
+          { label: "Password Resets", sublabel: "Approve & issue OTP", icon: Server, to: "/dashboard/it/password-resets", tone: "emerald" },
         ]} />
       </div>
 
