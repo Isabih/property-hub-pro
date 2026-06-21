@@ -51,20 +51,6 @@ export const listMyServiceRequests = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false });
     if (error) throw error;
 
-    // Confirmation email to the customer (uses editable template from app_settings)
-    try {
-      const settings = await loadSettings(context.supabase);
-      const urgencyLabel = data.priority === "urgent"
-        ? (settings.sr_urgent_label ?? "URGENT")
-        : (settings.sr_normal_label ?? "new");
-      const bodyTpl = settings.sr_confirm_body ?? "Hello {{name}},\n\nWe received your {{urgency_label}} request:\n\n\"{{title}}\"";
-      const subject = renderTemplate(settings.sr_confirm_subject ?? "We received your service request",
-        { name: cust.full_name, title, urgency_label: urgencyLabel, priority: data.priority });
-      const text = renderTemplate(bodyTpl,
-        { name: cust.full_name, title, urgency_label: urgencyLabel, priority: data.priority });
-      const html = `<p>${text.replace(/</g, "&lt;").replace(/\n/g, "<br/>")}</p>`;
-      await sendCustomEmail({ data: { to: cust.email, subject, html, kind: "service_confirm" } });
-    } catch { /* never block submission */ }
     return data ?? [];
   });
 
@@ -124,6 +110,21 @@ export const createServiceRequest = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
+
+    // Confirmation email to the customer (editable template from app_settings)
+    try {
+      const settings = await loadSettings(context.supabase);
+      const urgencyLabel = data.priority === "urgent"
+        ? (settings.sr_urgent_label ?? "URGENT")
+        : (settings.sr_normal_label ?? "new");
+      const bodyTpl = settings.sr_confirm_body
+        ?? "Hello {{name}},\n\nWe received your {{urgency_label}} request:\n\n\"{{title}}\"";
+      const vars = { name: cust.full_name, title, urgency_label: urgencyLabel, priority: data.priority };
+      const subject = renderTemplate(settings.sr_confirm_subject ?? "We received your service request", vars);
+      const text = renderTemplate(bodyTpl, vars);
+      const html = `<p>${text.replace(/</g, "&lt;").replace(/\n/g, "<br/>")}</p>`;
+      await sendCustomEmail({ data: { to: cust.email, subject, html, kind: "service_confirm" } });
+    } catch { /* never block submission */ }
 
     // Email staff for urgent only (in-app notifications are created by DB trigger)
     if (data.priority === "urgent") {
