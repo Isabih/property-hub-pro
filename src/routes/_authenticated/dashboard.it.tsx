@@ -20,12 +20,13 @@ const NAV = [
   { to: "/dashboard/it", label: "Categories", icon: Tag, group: "Content" },
   { to: "/dashboard/it", label: "Website Content", icon: FileText, group: "Content" },
   { to: "/dashboard/it", label: "Popups", icon: Bell, group: "Content" },
+  { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it", label: "Users", icon: Users, group: "Management" },
   { to: "/dashboard/it", label: "Verifications", icon: FileCheck, group: "Management" },
   { to: "/dashboard/it", label: "Messages", icon: Bell, group: "Management" },
   { to: "/dashboard/it", label: "System Health", icon: Server, group: "System" },
   { to: "/dashboard/it", label: "Audit Log", icon: Activity, group: "System" },
-  { to: "/dashboard/it", label: "Settings", icon: Settings, group: "System" },
+  { to: "/dashboard/it/settings", label: "Email Settings", icon: Settings, group: "System" },
 ];
 
 function ITDashboard() {
