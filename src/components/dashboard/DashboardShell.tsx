@@ -97,13 +97,13 @@ export function DashboardShell({
             <div className="px-3 mb-2 text-[10px] uppercase tracking-[0.18em] text-white/40">Switch Dashboard</div>
             <div className="grid grid-cols-2 gap-2 px-2">
               {ALL_ROLES.map((r) => {
-                const enabled = roles.includes(r) || roles.includes("admin");
+                const enabled = roles.includes(r) || roles.includes("admin") || roles.includes("it");
                 const target = dashboardPathFor(r);
                 const current = r === role;
                 return (
                   <Link
                     key={r}
-                    to={enabled ? target : "/dashboard/buyer"}
+                    to={enabled ? target : target}
                     onClick={(e) => { if (!enabled) e.preventDefault(); setOpen(false); }}
                     className={`text-center text-xs py-2 rounded-md transition ${
                       current ? "bg-gold text-noir-deep font-medium" : enabled ? "bg-white/5 text-white/70 hover:bg-white/10" : "bg-white/[0.02] text-white/25 cursor-not-allowed"

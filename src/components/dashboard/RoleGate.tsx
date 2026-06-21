@@ -17,7 +17,8 @@ export function RoleGate({
 }) {
   const { roles, primaryRole, loading } = useAuth();
   const navigate = useNavigate();
-  const allowed = roles.includes("admin") || allow.some((r) => roles.includes(r));
+  // Admin and IT are system roles — they can view every dashboard.
+  const allowed = roles.includes("admin") || roles.includes("it") || allow.some((r) => roles.includes(r));
 
   useEffect(() => {
     if (loading) return;
