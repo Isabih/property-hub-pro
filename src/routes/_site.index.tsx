@@ -122,7 +122,7 @@ function HomePage() {
                   </button>
                 ))}
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:1fr_1fr_1fr_1.4fr_auto] gap-4 p-6 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto] gap-4 p-6 items-end">
                 <Field icon={<MapPin className="w-4 h-4" />} label="Location" placeholder="Select location" />
                 <Field icon={<Home className="w-4 h-4" />} label="Property Type" placeholder="Select type" />
                 <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
@@ -381,11 +381,11 @@ function HomePage() {
 
 function Field({ icon, label, placeholder }: { icon: React.ReactNode; label: string; placeholder: string }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5 min-w-0">
       <label className="text-xs text-muted-foreground">{label}</label>
-      <div className="flex items-center gap-2 bg-muted rounded-md px-4 py-3 text-sm">
-        <span className="text-gold">{icon}</span>
-        <span className="text-muted-foreground">{placeholder}</span>
+      <div className="flex items-center gap-2 bg-muted rounded-md px-4 py-3 text-sm min-w-0">
+        <span className="text-gold shrink-0">{icon}</span>
+        <span className="text-muted-foreground truncate">{placeholder}</span>
       </div>
     </div>
   );
