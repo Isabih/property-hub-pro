@@ -10,7 +10,7 @@ export interface UploadResult {
 
 /**
  * Upload a file directly to Cloudflare R2 via a signed PUT URL.
- * Falls back to the Lovable Cloud `property-media` bucket if R2 fails.
+ * Falls back to the internal `property-media` bucket if R2 fails.
  * Reports real upload progress (0-100) via the optional callback.
  */
 export async function uploadPropertyMedia(
@@ -30,11 +30,11 @@ export async function uploadPropertyMedia(
     await xhrPut(uploadUrl, file, contentType, onProgress);
     return { url: publicUrl, path: key, provider: "r2" };
   } catch (err) {
-    console.warn("[upload] R2 failed, falling back to Lovable Cloud:", err);
+    console.warn("[upload] R2 failed, falling back to backup storage:", err);
     onProgress?.(0);
   }
 
-  // 2) Fallback: Lovable Cloud Storage (private bucket + signed URL)
+  // 2) Fallback: backup storage (private bucket + signed URL)
   const fbPath = `${userId}/${subdir}/${id}.${ext}`;
   const { error } = await supabase.storage.from("property-media").upload(fbPath, file, { upsert: false, contentType });
   if (error) throw error;
