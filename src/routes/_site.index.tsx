@@ -53,9 +53,9 @@ function HomePage() {
             alt="Luxury interior"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-noir-deep/75" />
-          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/85 to-noir-deep/55" />
-          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/60 to-noir-deep/70" />
+          <div className="absolute inset-0 bg-noir-deep/85" />
+          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/90 to-noir-deep/75" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/80 to-noir-deep/85" />
         </div>
 
         <div className="container-luxe relative z-10 py-20">
