@@ -33,7 +33,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(false);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -43,11 +43,12 @@ export function SiteHeader() {
     <header
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-out ${
         solid
-          ? "bg-noir-deep border-b border-white/10 shadow-lg shadow-black/20"
-          : "bg-transparent border-b border-transparent"
+          ? "bg-noir-deep/95 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/30"
+          : "bg-gradient-to-b from-black/50 via-black/20 to-transparent border-b border-transparent"
       }`}
+      style={!solid ? { textShadow: "0 1px 3px rgba(0,0,0,0.6)" } : undefined}
     >
       <div className="container-luxe flex items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-3 group">
