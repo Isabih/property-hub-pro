@@ -53,9 +53,9 @@ function HomePage() {
             alt="Luxury interior"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-noir-deep/55" />
-          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/80 to-noir-deep/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/40 to-noir-deep/60" />
+          <div className="absolute inset-0 bg-noir-deep/75" />
+          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/85 to-noir-deep/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/60 to-noir-deep/70" />
         </div>
 
         <div className="container-luxe relative z-10 py-20">
@@ -121,17 +121,17 @@ function HomePage() {
                   </button>
                 ))}
               </div>
-              <div className="grid md:grid-cols-5 gap-4 p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:1fr_1fr_1fr_1.4fr_auto] gap-4 p-6 items-end">
                 <Field icon={<MapPin className="w-4 h-4" />} label="Location" placeholder="Select location" />
                 <Field icon={<Home className="w-4 h-4" />} label="Property Type" placeholder="Select type" />
                 <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1.5 min-w-0">
                   <label className="text-xs text-muted-foreground">Keyword</label>
-                  <input className="bg-muted rounded-md px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold/30" placeholder="Search by name..." />
+                  <input className="bg-muted rounded-md px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold/30 w-full min-w-0" placeholder="Search by name..." />
                 </div>
                 <Link
                   to="/properties"
-                  className="self-end inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep rounded-md px-5 py-3 font-medium hover:shadow-lg hover:shadow-gold/30 transition-all"
+                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep rounded-md px-6 py-3 font-medium hover:shadow-lg hover:shadow-gold/30 transition-all whitespace-nowrap shrink-0"
                 >
                   <Search className="w-4 h-4" /> Search
                 </Link>
