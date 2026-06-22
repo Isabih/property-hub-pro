@@ -124,7 +124,7 @@ function HomePage() {
                   </button>
                 ))}
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)_auto] gap-4 p-6 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_max-content] gap-3 p-6 items-end">
                 <Field icon={<MapPin className="w-4 h-4" />} label="Location" placeholder="Select location" />
                 <Field icon={<Home className="w-4 h-4" />} label="Property Type" placeholder="Select type" />
                 <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
