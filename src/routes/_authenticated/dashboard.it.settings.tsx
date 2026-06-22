@@ -15,6 +15,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/it/settings")({
 
 const NAV = [
   { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/dashboard/it/system-health", label: "System Health", icon: LayoutDashboard, group: "System" },
   { to: "/dashboard/it/settings", label: "Email Settings", icon: Mail, group: "System" },
 ];
 

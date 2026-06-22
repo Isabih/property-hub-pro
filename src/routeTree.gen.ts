@@ -40,6 +40,7 @@ import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './rou
 import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
+import { Route as AuthenticatedDashboardItSystemHealthRouteImport } from './routes/_authenticated/dashboard.it.system-health'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
@@ -212,6 +213,12 @@ const AuthenticatedDashboardItUsersRoute =
     path: '/users',
     getParentRoute: () => AuthenticatedDashboardItRoute,
   } as any)
+const AuthenticatedDashboardItSystemHealthRoute =
+  AuthenticatedDashboardItSystemHealthRouteImport.update({
+    id: '/system-health',
+    path: '/system-health',
+    getParentRoute: () => AuthenticatedDashboardItRoute,
+  } as any)
 const AuthenticatedDashboardItSettingsRoute =
   AuthenticatedDashboardItSettingsRouteImport.update({
     id: '/settings',
@@ -280,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
@@ -316,6 +324,7 @@ export interface FileRoutesByTo {
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries': typeof AuthenticatedDashboardInquiriesIndexRoute
@@ -356,6 +365,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
+  '/_authenticated/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/_authenticated/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
@@ -395,6 +405,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
+    | '/dashboard/it/system-health'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries/'
@@ -431,6 +442,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
     | '/dashboard/it/settings'
+    | '/dashboard/it/system-health'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries'
@@ -470,6 +482,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
     | '/_authenticated/dashboard/it/settings'
+    | '/_authenticated/dashboard/it/system-health'
     | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
     | '/_authenticated/dashboard/inquiries/'
@@ -702,6 +715,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItUsersRouteImport
       parentRoute: typeof AuthenticatedDashboardItRoute
     }
+    '/_authenticated/dashboard/it/system-health': {
+      id: '/_authenticated/dashboard/it/system-health'
+      path: '/system-health'
+      fullPath: '/dashboard/it/system-health'
+      preLoaderRoute: typeof AuthenticatedDashboardItSystemHealthRouteImport
+      parentRoute: typeof AuthenticatedDashboardItRoute
+    }
     '/_authenticated/dashboard/it/settings': {
       id: '/_authenticated/dashboard/it/settings'
       path: '/settings'
@@ -767,6 +787,7 @@ interface AuthenticatedDashboardItRouteChildren {
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
+  AuthenticatedDashboardItSystemHealthRoute: typeof AuthenticatedDashboardItSystemHealthRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
   AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
 }
@@ -780,6 +801,8 @@ const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildr
       AuthenticatedDashboardItPasswordResetsRoute,
     AuthenticatedDashboardItSettingsRoute:
       AuthenticatedDashboardItSettingsRoute,
+    AuthenticatedDashboardItSystemHealthRoute:
+      AuthenticatedDashboardItSystemHealthRoute,
     AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
     AuthenticatedDashboardItStaffNewRoute:
       AuthenticatedDashboardItStaffNewRoute,
