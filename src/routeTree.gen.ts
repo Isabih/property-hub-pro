@@ -42,6 +42,7 @@ import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './route
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSystemHealthRouteImport } from './routes/_authenticated/dashboard.it.system-health'
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
+import { Route as AuthenticatedDashboardItPropertyOfTheDayRouteImport } from './routes/_authenticated/dashboard.it.property-of-the-day'
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
@@ -225,6 +226,12 @@ const AuthenticatedDashboardItSettingsRoute =
     path: '/dashboard/it/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItPropertyOfTheDayRoute =
+  AuthenticatedDashboardItPropertyOfTheDayRouteImport.update({
+    id: '/dashboard/it/property-of-the-day',
+    path: '/dashboard/it/property-of-the-day',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardItPasswordResetsRoute =
   AuthenticatedDashboardItPasswordResetsRouteImport.update({
     id: '/dashboard/it/password-resets',
@@ -285,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
+  '/dashboard/it/property-of-the-day': typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
@@ -322,6 +330,7 @@ export interface FileRoutesByTo {
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
+  '/dashboard/it/property-of-the-day': typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
@@ -363,6 +372,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
+  '/_authenticated/dashboard/it/property-of-the-day': typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
   '/_authenticated/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
@@ -403,6 +413,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
+    | '/dashboard/it/property-of-the-day'
     | '/dashboard/it/settings'
     | '/dashboard/it/system-health'
     | '/dashboard/it/users'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
+    | '/dashboard/it/property-of-the-day'
     | '/dashboard/it/settings'
     | '/dashboard/it/system-health'
     | '/dashboard/it/users'
@@ -480,6 +492,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/it/luxury'
     | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
+    | '/_authenticated/dashboard/it/property-of-the-day'
     | '/_authenticated/dashboard/it/settings'
     | '/_authenticated/dashboard/it/system-health'
     | '/_authenticated/dashboard/it/users'
@@ -729,6 +742,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/property-of-the-day': {
+      id: '/_authenticated/dashboard/it/property-of-the-day'
+      path: '/dashboard/it/property-of-the-day'
+      fullPath: '/dashboard/it/property-of-the-day'
+      preLoaderRoute: typeof AuthenticatedDashboardItPropertyOfTheDayRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/it/password-resets': {
       id: '/_authenticated/dashboard/it/password-resets'
       path: '/dashboard/it/password-resets'
@@ -793,6 +813,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
+  AuthenticatedDashboardItPropertyOfTheDayRoute: typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
   AuthenticatedDashboardItSystemHealthRoute: typeof AuthenticatedDashboardItSystemHealthRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
@@ -820,6 +841,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardItMediaVerifyRoute,
   AuthenticatedDashboardItPasswordResetsRoute:
     AuthenticatedDashboardItPasswordResetsRoute,
+  AuthenticatedDashboardItPropertyOfTheDayRoute:
+    AuthenticatedDashboardItPropertyOfTheDayRoute,
   AuthenticatedDashboardItSettingsRoute: AuthenticatedDashboardItSettingsRoute,
   AuthenticatedDashboardItSystemHealthRoute:
     AuthenticatedDashboardItSystemHealthRoute,
