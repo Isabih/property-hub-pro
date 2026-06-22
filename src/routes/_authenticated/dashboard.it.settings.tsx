@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Settings, LayoutDashboard, Mail, Save, Send } from "lucide-react";
+import { Settings, LayoutDashboard, Mail, Save, Send, Star } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth } from "@/lib/use-auth";
 import { getAppSettings, updateAppSettings } from "@/lib/app-settings.functions";
@@ -17,6 +17,7 @@ const NAV = [
   { to: "/dashboard/it", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/dashboard/it/system-health", label: "System Health", icon: LayoutDashboard, group: "System" },
   { to: "/dashboard/it/settings", label: "Email Settings", icon: Mail, group: "System" },
+  { to: "/dashboard/it/property-of-the-day", label: "Property of the Day", icon: Star, group: "Content" },
 ];
 
 function ITSettings() {

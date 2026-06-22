@@ -1,53 +1,73 @@
-# All Dashboards + Property Registration
+# NovaWorks Site Overhaul Plan
 
-## Scope
-Build out all role dashboards to match the reference (NOVAWORKS sidebar, gold accent, stat cards, analytics chart, quick actions, dashboard switcher at bottom) and wire real property data so Owners/Agents/Admin/IT can register and manage listings.
+This is a large set of related changes. Breaking it into focused work streams so each piece lands cleanly.
 
-**Note on "six dashboards":** we currently have 5 roles (Buyer/Customer, Agent, Owner, Admin, IT). I'll treat the sixth as a **Super Admin** view OR confirm with you — for now I'll build 5 and add a 6th only if you name it. Tell me the 6th role name in your reply and I'll add it in the same pass.
+## 1. Site Header / Navigation
 
-## 1. Shared Dashboard Shell (refactor)
-Replace current `DashboardShell` with a layout matching the screenshot:
-- Left sidebar: NOVAWORKS logo + role label, grouped nav (Overview / Content / Management / System), bottom "Switch Dashboard" grid, user card at bottom.
-- Top bar: global search, notifications bell.
-- Page header: title + subtitle + action buttons (Sync Data, primary CTA per role).
-- Reusable `StatCard` with icon tile, delta chip (green/red), value, label, sublabel.
-- Reusable `AnalyticsChart` (recharts area chart, 7/30/90 day toggle).
-- Reusable `QuickActions` 2×2 grid.
-- Gold/black palette via design tokens (no hardcoded colors).
+- Make `SiteHeader` **always solid dark** (not transparent) so it stays readable on white/light page backgrounds (Contact, Properties list, etc.).
+- Convert nav into a **mega nav bar** matching the reference image:
+  - **Properties** opens a mega panel with featured cards (Apartments / Luxury Apts / Buildings) on the left and link columns (Long-Term Rentals, Short-Stay & Furnished, Corporate Housing, Serviced Apartments, All listings, All buildings) on the right.
+  - Rename **Services → What We Do** (with submenu: Manage, Rent, Sell, Buy).
+  - Rename **About → Who We Are**.
+- Keep Home, Buy, Invest, Portfolio, Blog, Investors, Contact, List Property, search, theme, notifications, profile.
 
-## 2. Real Property Data (backend)
-Migration adding:
-- `properties` (owner_id, agent_id, slug, title, description, type, status [draft/active/sold/archived], price, currency, bedrooms, bathrooms, area_sqm, address, city, district, lat, lng, featured, views_count).
-- `property_images` (property_id, url, position, is_cover).
-- `property_inquiries` (property_id, user_id, message, status, scheduled_at).
-- `saved_properties` (user_id, property_id).
-- `property_views` (property_id, user_id nullable, viewed_at) for analytics.
-- Storage bucket `property-media` (public read, owner write).
-- RLS: public read of active properties; owners manage their own; agents manage assigned; admin/IT manage all (IT no money ops).
-- GRANTs per public-schema rule.
+## 2. Hero Section
 
-## 3. Property Registration Flow
-- `/dashboard/owner/properties/new` and `/dashboard/agent/properties/new`: multi-step form (basics → location with map picker → media upload → review/publish).
-- Server fns: `createProperty`, `updateProperty`, `uploadPropertyImage`, `setPropertyStatus`.
-- Owner/Agent property list with edit/delete/publish.
-- Public `/properties` and `/properties/$slug` switch from static `src/lib/properties.ts` to DB-backed reads via a public server fn.
+- Darken the hero background overlay (stronger gradient) so text/buttons pop more.
+- Fix the **search shortcut card** at the bottom that's being clipped — ensure it sits fully above the fold without being cut off by the section below (add bottom padding to hero or `z-index`/translate fix).
+- **Watch Story** button: clicking it opens a fullscreen/inline video that plays as background (modal player using existing `VideoPlayer`). Admin can configure the video URL via app settings.
+- Stylize "PREMIUM PROPERTIES / YEARS EXPERIENCE / PROPERTY MANAGED" labels to match the elegant serif/uppercase styling in the reference.
 
-## 4. Per-Role Dashboards (real queries)
-- **Buyer/Customer**: saved properties, my inquiries, scheduled visits, recommendations.
-- **Agent**: assigned listings, leads/inquiries, scheduled visits, conversion stats.
-- **Owner**: my properties, views/inquiries chart, earnings (placeholder until payments), quick "Add Property".
-- **Admin**: totals across system, users, revenue, approvals queue, full management.
-- **IT**: same shell as admin but no money widgets — system health, user/role management, media library, content management, analytics.
+## 3. Property of the Day
 
-## 5. Dashboard Switcher
-Bottom-of-sidebar grid lets users with multiple roles jump between dashboards. For users with one role, shows only their dashboard (others greyed/hidden).
+- New homepage section "Luxury Living Redefined" featuring one **Property of the Day** chosen by IT/Admin (sticky until replaced).
+- DB: add `property_of_the_day` table (single row) with `property_id`, `updated_at`, `updated_by`. RLS + GRANTs. Public SELECT allowed.
+- New server functions: `getPropertyOfTheDay`, `setPropertyOfTheDay` (auth-protected, IT/admin only).
+- Homepage renders the selected property with hero image, beds/baths/sqm, amenities, "View Details" CTA — matching the reference layout.
+- Dashboard: new page `/dashboard/it/property-of-the-day` to pick the property from existing listings.
 
-## Technical notes
-- Server fns under `src/lib/properties.functions.ts` with `requireSupabaseAuth`; public reads via server publishable client.
-- Image uploads through `supabase.storage` from the browser (RLS on bucket).
-- Map picker reuses existing Leaflet setup from property detail page.
-- Migration follows CREATE → GRANT → RLS → POLICY order.
+## 4. Dashboard — Featured/New Media Selection
 
-## What I need from you
-1. **Name of the 6th dashboard** (or confirm 5 is correct).
-2. OK to seed the new `properties` table by migrating the current static listings in `src/lib/properties.ts` so the site doesn't go empty?
+- New dashboard page where IT can **select which images/videos appear as "new" / featured** on the homepage instead of always defaulting to the same set.
+- DB: `featured_media` table (id, media_url, media_type, position, active). RLS + GRANTs.
+- Homepage "new" section reads from this table; dashboard page lets IT upload/select and reorder.
+
+## 5. Contact Page
+
+- Add **CEO card** at top with photo, name, title, and motivational quote — in an elegant "professional frame" (gold border, soft shadow, serif title).
+- Add **3 team member cards** below with photos, names, roles — same framed style.
+- Keep the existing form + map + departments below.
+
+## 6. Auth Page Side Image
+
+- Darken the side image overlay on the login/auth page (stronger gradient) for better text contrast.
+
+## Technical Details
+
+**Files to create:**
+- `supabase/migrations/<ts>_property_of_day_and_featured_media.sql` — two tables, RLS, GRANTs
+- `src/lib/property-of-day.functions.ts` — get/set server fns
+- `src/lib/featured-media.functions.ts` — list/add/remove/reorder server fns
+- `src/components/site/MegaNav.tsx` — mega nav panels
+- `src/components/site/PropertyOfTheDay.tsx` — homepage section
+- `src/components/site/CeoCard.tsx`, `src/components/site/TeamMember.tsx`
+- `src/components/site/WatchStoryModal.tsx` — video modal
+- `src/routes/_authenticated/dashboard.it.property-of-the-day.tsx`
+- `src/routes/_authenticated/dashboard.it.featured-media.tsx`
+
+**Files to edit:**
+- `src/components/site/SiteHeader.tsx` — solid bg, mega nav, rename items
+- `src/routes/_site.index.tsx` — darker hero, fix search card clipping, integrate Property of the Day, Watch Story modal, restyle stats
+- `src/routes/_site.contact.tsx` — CEO + team cards at top
+- `src/routes/_site.services.tsx` — rename copy to "What We Do" with Manage/Rent/Sell/Buy sections
+- `src/routes/_site.about.tsx` — rename copy to "Who We Are"
+- `src/routes/auth.tsx` — darker side image overlay
+- `src/routes/_authenticated/dashboard.it.settings.tsx` — add new sidebar links
+
+## Open Questions
+
+1. **CEO + team details**: I don't have photos, names, titles, or the CEO's motivational quote. Should I use placeholder names/avatars for now (so you can edit them later via dashboard), or do you want to provide the real content first?
+2. **Watch Story video URL**: any video URL to default to, or should it just show "Coming soon" until admin uploads one?
+3. **Featured "new" media on homepage**: which existing section on the homepage should this control? (the property cards grid, or a separate "New on NovaWorks" strip?)
+
+I can start building the navigation, hero fixes, auth darkening, and Property of the Day immediately while you answer the above for the CEO/team and video pieces. Proceed?

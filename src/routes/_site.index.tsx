@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Play, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star } from "lucide-react";
+import { ArrowRight, Play, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown } from "lucide-react";
 import { properties, CATEGORY_META, type PropertyCategory } from "@/lib/properties";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
+import { WatchStoryModal } from "@/components/site/WatchStoryModal";
 
 export const Route = createFileRoute("/_site/")({
   head: () => ({
@@ -29,20 +33,29 @@ const CATEGORY_ICONS: Record<PropertyCategory, any> = {
 
 function HomePage() {
   const [tab, setTab] = useState<"rent" | "sale" | "all">("rent");
+  const [storyOpen, setStoryOpen] = useState(false);
   const featured = properties.filter((p) => p.featured);
+  const getPOD = useServerFn(getPropertyOfTheDay);
+  const { data: pod } = useQuery({
+    queryKey: ["property-of-the-day"],
+    queryFn: () => getPOD(),
+    staleTime: 60_000,
+  });
+  const storyVideo = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
   return (
     <div>
       {/* HERO */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-noir-deep">
+      <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-noir-deep pb-40">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85"
             alt="Luxury interior"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-transparent to-noir-deep/30" />
+          <div className="absolute inset-0 bg-noir-deep/55" />
+          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/80 to-noir-deep/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/40 to-noir-deep/60" />
         </div>
 
         <div className="container-luxe relative z-10 py-20">
@@ -65,23 +78,26 @@ function HomePage() {
               >
                 Explore Properties <ArrowRight className="w-4 h-4" />
               </Link>
-              <button className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white px-7 py-4 rounded-md font-medium hover:bg-white/20 transition-all">
+              <button
+                onClick={() => setStoryOpen(true)}
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white px-7 py-4 rounded-md font-medium hover:bg-white/20 transition-all"
+              >
                 <Play className="w-4 h-4 fill-current" /> Watch Story
               </button>
             </div>
 
-            <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl border-t border-white/10 pt-8">
+            <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl border-t border-gold/30 pt-8">
               {[
                 { n: "500+", l: "Premium Properties" },
                 { n: "15+", l: "Years Experience" },
                 { n: "2K+", l: "Properties Managed" },
               ].map((s) => (
                 <div key={s.l}>
-                  <div className="font-display text-4xl md:text-5xl text-white">
+                  <div className="font-display text-5xl md:text-6xl text-white tracking-tight">
                     {s.n.replace(/(\D+)$/, "")}
                     <span className="text-gold">{s.n.match(/\D+$/)?.[0]}</span>
                   </div>
-                  <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/50">{s.l}</div>
+                  <div className="mt-2 text-[11px] font-display italic tracking-[0.28em] uppercase text-gold/80">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -89,7 +105,7 @@ function HomePage() {
         </div>
 
         {/* Search bar overlay */}
-        <div className="absolute -bottom-12 left-0 right-0 z-20">
+        <div className="absolute bottom-0 translate-y-1/2 left-0 right-0 z-20">
           <div className="container-luxe">
             <div className="bg-card rounded-2xl shadow-2xl overflow-hidden border border-border">
               <div className="flex border-b border-border">
@@ -126,7 +142,95 @@ function HomePage() {
       </section>
 
       {/* spacer for floating search */}
-      <div className="h-24" />
+      <div className="h-32" />
+
+      {/* PROPERTY OF THE DAY */}
+      {pod && (
+        <section className="py-24 bg-gradient-to-b from-noir-deep via-noir to-noir-deep text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_var(--color-gold)_0%,_transparent_50%)]" />
+          <div className="container-luxe relative">
+            <div className="text-center max-w-2xl mx-auto">
+              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold">
+                <Crown className="w-4 h-4" /> Property of the Day
+              </div>
+              <h2 className="mt-4 font-display text-5xl md:text-6xl text-white">Luxury Living Redefined</h2>
+              <p className="mt-4 text-white/60">Experience unparalleled elegance with our curated selection of premium properties</p>
+            </div>
+
+            <div className="mt-14 grid lg:grid-cols-2 gap-10 items-center">
+              <div className="relative">
+                <div className="absolute -inset-2 bg-gradient-to-br from-gold/30 to-transparent rounded-3xl blur-xl" />
+                <div className="relative rounded-2xl overflow-hidden ring-1 ring-gold/20">
+                  <img src={pod.cover ?? "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=85"} alt={pod.title} className="w-full aspect-[4/3] object-cover" />
+                  <div className="absolute top-4 left-4">
+                    <span className="inline-flex items-center gap-1.5 bg-gold/95 text-noir-deep text-xs uppercase tracking-wider font-semibold px-3 py-1.5 rounded-md">
+                      <Crown className="w-3.5 h-3.5" /> Luxury Property
+                    </span>
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-noir-deep via-noir-deep/80 to-transparent p-6 flex items-end justify-between">
+                    <div>
+                      <div className="text-xs text-white/60">Starting from</div>
+                      <div className="font-display text-2xl text-white">
+                        ${pod.price.toLocaleString()}
+                        {pod.listing_type === "rent" && <span className="text-base text-white/60">/mo</span>}
+                      </div>
+                    </div>
+                    <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 bg-white text-noir-deep text-sm font-medium px-4 py-2.5 rounded-md hover:bg-gold transition-colors">
+                      View Details <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-display text-4xl text-white">{pod.title}</h3>
+                <div className="mt-3 flex items-center gap-2 text-white/60 text-sm">
+                  <MapPin className="w-4 h-4 text-gold" />
+                  {pod.district ? `${pod.district}, ${pod.city ?? ""}` : pod.city ?? "Kigali"}
+                </div>
+                <p className="mt-5 text-white/70 leading-relaxed">{pod.description}</p>
+
+                <div className="mt-8 grid grid-cols-3 gap-4">
+                  {[
+                    { i: Bed, v: pod.bedrooms ?? 0, l: "Bedrooms" },
+                    { i: Bath, v: pod.bathrooms ?? 0, l: "Bathrooms" },
+                    { i: Maximize2, v: pod.area_sqm ?? 0, l: "Sq. Meters" },
+                  ].map((s) => (
+                    <div key={s.l} className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
+                      <s.i className="w-5 h-5 text-gold mx-auto" />
+                      <div className="mt-2 font-display text-3xl text-white">{s.v}</div>
+                      <div className="text-xs text-white/50 uppercase tracking-wider mt-1">{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {pod.amenities.length > 0 && (
+                  <div className="mt-7">
+                    <div className="text-sm text-white/60 mb-3">Featured Amenities</div>
+                    <div className="flex flex-wrap gap-2">
+                      {pod.amenities.slice(0, 5).map((a) => (
+                        <span key={a} className="text-xs px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80">{a}</span>
+                      ))}
+                      {pod.amenities.length > 5 && (
+                        <span className="text-xs px-3 py-1.5 rounded-full bg-gold/20 border border-gold/40 text-gold">+{pod.amenities.length - 5} more</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link to="/properties" className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-6 py-3 rounded-md font-medium hover:shadow-lg hover:shadow-gold/30 transition-all">
+                    Explore Luxury Collection <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-6 py-3 rounded-md font-medium hover:bg-white/20 transition-colors">
+                    View Property
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CATEGORIES */}
       <section className="py-20">
@@ -268,6 +372,8 @@ function HomePage() {
           ))}
         </div>
       </section>
+
+      <WatchStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} src={storyVideo} />
     </div>
   );
 }

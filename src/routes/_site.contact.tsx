@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, Quote } from "lucide-react";
 
 export const Route = createFileRoute("/_site/contact")({
   head: () => ({
@@ -19,6 +19,75 @@ function ContactPage() {
           <div className="text-xs uppercase tracking-[0.2em] text-gold">Get In Touch</div>
           <h1 className="mt-4 font-display text-5xl md:text-6xl">Let's start a conversation.</h1>
           <p className="mt-4 text-white/60 max-w-xl">Whether you're searching for a home, listing a property or exploring investment, our team responds within 24 hours.</p>
+        </div>
+      </section>
+
+      {/* CEO + Team */}
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+        <div className="container-luxe">
+          <div className="text-center max-w-2xl mx-auto">
+            <div className="text-xs uppercase tracking-[0.2em] text-gold">Meet The Team</div>
+            <h2 className="mt-3 font-display text-4xl md:text-5xl text-foreground">The people behind NOVAWORKS</h2>
+            <p className="mt-3 text-muted-foreground">A small team obsessed with delivering Rwanda's finest real estate experience.</p>
+          </div>
+
+          {/* CEO card */}
+          <div className="mt-14 max-w-4xl mx-auto">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-gold via-gold-soft to-gold rounded-2xl opacity-60 blur-sm group-hover:opacity-90 transition-opacity" />
+              <div className="relative grid md:grid-cols-[280px_1fr] gap-8 bg-card border border-gold/30 rounded-2xl p-8 shadow-2xl">
+                <div className="relative">
+                  <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-gold/40 to-transparent" />
+                  <img
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=85"
+                    alt="CEO"
+                    className="relative w-full aspect-square rounded-xl object-cover ring-2 ring-gold/50"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div className="text-xs uppercase tracking-[0.2em] text-gold">Chief Executive Officer</div>
+                  <div className="mt-2 font-display text-3xl text-foreground">Jean-Paul Habimana</div>
+                  <Quote className="w-8 h-8 text-gold/60 mt-5" />
+                  <blockquote className="mt-2 font-display italic text-xl text-foreground leading-relaxed">
+                    "We don't just sell properties — we build the future of how Rwandans live, invest and call a place home."
+                  </blockquote>
+                  <div className="mt-5 text-sm text-muted-foreground">Leading NOVAWORKS since 2014</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Team grid */}
+          <div className="mt-16 grid md:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Aline Mukamana",
+                role: "Head of Sales",
+                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=85",
+              },
+              {
+                name: "Eric Niyonzima",
+                role: "Property Manager",
+                img: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=600&q=85",
+              },
+              {
+                name: "Sandrine Uwase",
+                role: "Client Relations",
+                img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=85",
+              },
+            ].map((m) => (
+              <div key={m.name} className="group relative">
+                <div className="absolute -inset-0.5 bg-gradient-to-br from-gold/50 to-transparent rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity" />
+                <div className="relative bg-card border border-gold/20 rounded-2xl p-6 text-center">
+                  <div className="mx-auto w-32 h-32 rounded-full overflow-hidden ring-2 ring-gold/40 ring-offset-4 ring-offset-card">
+                    <img src={m.img} alt={m.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="mt-5 font-display text-xl text-foreground">{m.name}</div>
+                  <div className="mt-1 text-xs uppercase tracking-[0.18em] text-gold">{m.role}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

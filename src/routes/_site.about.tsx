@@ -4,7 +4,7 @@ import { Award, Users, Building2, Sparkles, ArrowRight, Quote } from "lucide-rea
 export const Route = createFileRoute("/_site/about")({
   head: () => ({
     meta: [
-      { title: "About NOVAWORKS — Rwanda's Premier Luxury Real Estate Atelier" },
+      { title: "Who We Are — NOVAWORKS Real Estate Rwanda" },
       { name: "description", content: "NOVAWORKS is Rwanda's leading luxury real estate company — 15+ years curating exceptional properties, with a discreet, design-first approach." },
     ],
   }),
@@ -19,7 +19,7 @@ function AboutPage() {
           <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="container-luxe relative max-w-3xl">
-          <div className="text-xs uppercase tracking-[0.2em] text-gold">About NOVAWORKS</div>
+          <div className="text-xs uppercase tracking-[0.2em] text-gold">Who We Are</div>
           <h1 className="mt-4 font-display text-5xl md:text-7xl">A discreet atelier for prime property.</h1>
           <p className="mt-6 text-white/70 text-lg">
             NOVAWORKS is a Rwanda-rooted luxury real estate company. We curate, broker and manage exceptional properties for individuals, families and institutions who value design, discretion and durable value.
