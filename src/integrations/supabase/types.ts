@@ -595,6 +595,35 @@ export type Database = {
           },
         ]
       }
+      property_of_the_day: {
+        Row: {
+          id: number
+          property_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          id?: number
+          property_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          id?: number
+          property_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_of_the_day_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       property_views: {
         Row: {
           id: string
