@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Bed, Bath, Maximize2, MapPin, Heart, ArrowUpRight, Crown } from "lucide-react";
 import { type Property, formatPrice, CATEGORY_META } from "@/lib/properties";
+import { ProgressiveImage } from "@/components/site/ProgressiveImage";
 
 const STATUS_STYLES: Record<string, string> = {
   available: "bg-emerald-500/15 text-emerald-600",
@@ -17,10 +18,11 @@ export function PropertyCard({ property: p }: { property: Property }) {
       className="group block bg-card rounded-xl overflow-hidden border border-border hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
-        <img
+        <ProgressiveImage
           src={p.image}
           alt={p.title}
           loading="lazy"
+          containerClassName="absolute inset-0"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
         <div className="absolute top-3 left-3 flex gap-2">

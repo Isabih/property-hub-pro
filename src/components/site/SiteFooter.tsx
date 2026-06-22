@@ -40,59 +40,63 @@ export function SiteFooter() {
   return (
     <>
       {/* CTA strip */}
-      <section className="bg-gradient-to-br from-gold-soft via-gold to-gold-soft py-20">
-        <div className="container-luxe grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative bg-noir-deep py-20 overflow-hidden border-y border-white/5">
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_left,_var(--color-gold)_0%,_transparent_55%)]" />
+        <div className="container-luxe grid lg:grid-cols-2 gap-12 items-center relative">
           <div>
-            <h2 className="font-display text-4xl md:text-5xl text-noir-deep leading-tight">
-              Ready to Find Your<br />Dream Property?
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold" /> Get in touch
+            </div>
+            <h2 className="mt-4 font-display text-4xl md:text-5xl text-white leading-tight">
+              Ready to Find Your<br /><span className="text-gold italic">Dream Property?</span>
             </h2>
-            <p className="mt-4 text-noir-deep/80 max-w-md">
+            <p className="mt-4 text-white/70 max-w-md">
               Let our expert team help you navigate the real estate market. Whether you're buying, selling, or investing — we're here to guide you every step of the way.
             </p>
             <div className="mt-8 grid sm:grid-cols-2 gap-3 max-w-xl">
-              <a href="tel:+250793300080" className="flex items-center gap-3 bg-white/80 hover:bg-white p-4 rounded-lg transition-colors">
-                <div className="w-10 h-10 rounded-md bg-noir-deep/10 flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-noir-deep" />
+              <a href="tel:+250793300080" className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 p-4 rounded-lg transition-colors">
+                <div className="w-10 h-10 rounded-md bg-gold/15 text-gold flex items-center justify-center">
+                  <Phone className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="text-xs text-noir-deep/60">Call Us</div>
-                  <div className="text-sm font-medium text-noir-deep">+250 793 300 080</div>
+                  <div className="text-xs text-white/50">Call Us</div>
+                  <div className="text-sm font-medium text-white">+250 793 300 080</div>
                 </div>
               </a>
-              <a href="mailto:info@novaworks.rw" className="flex items-center gap-3 bg-white/80 hover:bg-white p-4 rounded-lg transition-colors">
-                <div className="w-10 h-10 rounded-md bg-noir-deep/10 flex items-center justify-center">
-                  <Mail className="w-4 h-4 text-noir-deep" />
+              <a href="mailto:info@novaworks.rw" className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 p-4 rounded-lg transition-colors">
+                <div className="w-10 h-10 rounded-md bg-gold/15 text-gold flex items-center justify-center">
+                  <Mail className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="text-xs text-noir-deep/60">Email Us</div>
-                  <div className="text-sm font-medium text-noir-deep">info@novaworks.rw</div>
+                  <div className="text-xs text-white/50">Email Us</div>
+                  <div className="text-sm font-medium text-white">info@novaworks.rw</div>
                 </div>
               </a>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/contact" className="inline-flex items-center gap-2 bg-noir-deep text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-noir transition-colors">
+              <Link to="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-6 py-3 rounded-md text-sm font-medium hover:shadow-lg hover:shadow-gold/30 transition-all">
                 Contact Us Today <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/list-property" className="inline-flex items-center gap-2 bg-white text-noir-deep px-6 py-3 rounded-md text-sm font-medium hover:bg-white/90 transition-colors">
+              <Link to="/list-property" className="inline-flex items-center gap-2 bg-white/10 border border-white/15 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-white/15 transition-colors">
                 List Your Property
               </Link>
             </div>
           </div>
-          <div className="bg-white/40 backdrop-blur p-8 rounded-2xl border border-white/50">
-            <h3 className="font-display text-2xl text-noir-deep">Stay Updated</h3>
-            <p className="text-sm text-noir-deep/70 mt-1">
+          <div className="bg-white/5 backdrop-blur p-8 rounded-2xl border border-white/10">
+            <h3 className="font-display text-2xl text-white">Stay Updated</h3>
+            <p className="text-sm text-white/60 mt-1">
               Subscribe to our newsletter and be the first to know about new properties, investment opportunities, and market insights.
             </p>
             <form className="mt-5 grid gap-3" onSubmit={(e) => submit(e, email, `${firstName} ${lastName}`.trim())}>
               <div className="grid sm:grid-cols-2 gap-3">
-                <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="First Name" />
-                <input value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="Last Name" />
+                <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="bg-white/5 border border-white/10 text-white rounded-md px-4 py-3 text-sm placeholder:text-white/30 outline-none focus:border-gold/50" placeholder="First Name" />
+                <input value={lastName} onChange={(e) => setLastName(e.target.value)} className="bg-white/5 border border-white/10 text-white rounded-md px-4 py-3 text-sm placeholder:text-white/30 outline-none focus:border-gold/50" placeholder="Last Name" />
               </div>
-              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="bg-white/70 rounded-md px-4 py-3 text-sm placeholder:text-noir-deep/40 outline-none focus:ring-2 focus:ring-noir-deep/20" placeholder="Email Address" />
-              <button type="submit" disabled={busy} className="bg-noir-deep text-white rounded-md px-6 py-3 text-sm font-medium hover:bg-noir transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="bg-white/5 border border-white/10 text-white rounded-md px-4 py-3 text-sm placeholder:text-white/30 outline-none focus:border-gold/50" placeholder="Email Address" />
+              <button type="submit" disabled={busy} className="bg-gradient-to-r from-gold-soft to-gold text-noir-deep rounded-md px-6 py-3 text-sm font-medium hover:shadow-lg hover:shadow-gold/30 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
                 {busy ? "Sending…" : "Subscribe Now"} <ArrowRight className="w-4 h-4" />
               </button>
-              <p className="text-xs text-center text-noir-deep/60">By subscribing, you agree to our <a className="underline">Privacy Policy</a></p>
+              <p className="text-xs text-center text-white/50">By subscribing, you agree to our <a className="underline hover:text-gold">Privacy Policy</a></p>
             </form>
           </div>
         </div>
