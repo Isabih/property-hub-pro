@@ -46,30 +46,30 @@ function HomePage() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-noir-deep pb-40">
+      <section className="relative min-h-[100vh] flex flex-col justify-end overflow-hidden bg-noir-deep pb-40">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85"
             alt="Luxury interior"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-noir-deep/85" />
-          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/90 to-noir-deep/75" />
-          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/80 to-noir-deep/85" />
+          <div className="absolute inset-0 bg-noir-deep/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep/90 via-noir-deep/55 to-noir-deep/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/40 to-transparent" />
         </div>
 
-        <div className="container-luxe relative z-10 py-20">
+        <div className="container-luxe relative z-10 pt-32 pb-12 flex-1 flex flex-col justify-between">
           <div className="max-w-3xl animate-nova-fade-up">
-            <div className="inline-flex items-center gap-2 bg-gold/15 backdrop-blur border border-gold/30 text-gold text-xs uppercase tracking-[0.18em] px-4 py-2 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur border border-white/10 text-white/90 text-sm px-4 py-2 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-gold" />
               Rwanda's Premier Luxury Real Estate
             </div>
-            <h1 className="mt-6 font-display text-6xl md:text-7xl lg:text-8xl text-white leading-[0.95]">
-              Where Dreams<br />
-              <span className="text-gold italic">Meet Reality</span>
+            <h1 className="mt-8 font-display text-6xl md:text-7xl lg:text-8xl text-white leading-[1.0]">
+              Invest in<br />
+              <span className="text-gold italic">Excellence</span>
             </h1>
-            <p className="mt-6 text-lg text-white/70 max-w-xl">
-              Premium apartments and exclusive villas designed for sophisticated living — curated by Kigali's most trusted real-estate atelier.
+            <p className="mt-6 text-lg text-white/75 max-w-md">
+              High-return property investments with guaranteed appreciation.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
@@ -86,21 +86,22 @@ function HomePage() {
               </button>
             </div>
 
-            <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl border-t border-gold/30 pt-8">
-              {[
-                { n: "500+", l: "Premium Properties" },
-                { n: "15+", l: "Years Experience" },
-                { n: "2K+", l: "Properties Managed" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <div className="font-display text-5xl md:text-6xl text-white tracking-tight">
-                    {s.n.replace(/(\D+)$/, "")}
-                    <span className="text-gold">{s.n.match(/\D+$/)?.[0]}</span>
-                  </div>
-                  <div className="mt-2 text-[11px] font-display italic tracking-[0.28em] uppercase text-gold/80">{s.l}</div>
+          </div>
+
+          <div className="mt-20 grid grid-cols-3 gap-8 max-w-3xl">
+            {[
+              { n: "500+", l: "Premium Properties" },
+              { n: "15+", l: "Years Experience" },
+              { n: "2K+", l: "Property Managed" },
+            ].map((s) => (
+              <div key={s.l}>
+                <div className="font-display text-5xl md:text-6xl text-white tracking-tight">
+                  {s.n.replace(/(\D+)$/, "")}
+                  <span className="text-gold">{s.n.match(/\D+$/)?.[0]}</span>
                 </div>
-              ))}
-            </div>
+                <div className="mt-2 text-[11px] tracking-[0.28em] uppercase text-white/60">{s.l}</div>
+              </div>
+            ))}
           </div>
         </div>
 
