@@ -32,11 +32,11 @@ import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './rou
 import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes/_authenticated/dashboard.receptionist'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
-import { Route as AuthenticatedDashboardItRouteImport } from './routes/_authenticated/dashboard.it'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
+import { Route as AuthenticatedDashboardItIndexRouteImport } from './routes/_authenticated/dashboard.it.index'
 import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
@@ -165,12 +165,6 @@ const AuthenticatedDashboardNotificationsRoute =
     path: '/dashboard/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardItRoute =
-  AuthenticatedDashboardItRouteImport.update({
-    id: '/dashboard/it',
-    path: '/dashboard/it',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedDashboardBuyerRoute =
   AuthenticatedDashboardBuyerRouteImport.update({
     id: '/dashboard/buyer',
@@ -195,6 +189,12 @@ const AuthenticatedDashboardPropertiesIndexRoute =
     path: '/dashboard/properties/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItIndexRoute =
+  AuthenticatedDashboardItIndexRouteImport.update({
+    id: '/dashboard/it/',
+    path: '/dashboard/it/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardInquiriesIndexRoute =
   AuthenticatedDashboardInquiriesIndexRouteImport.update({
     id: '/dashboard/inquiries/',
@@ -209,39 +209,39 @@ const AuthenticatedDashboardPropertiesNewRoute =
   } as any)
 const AuthenticatedDashboardItUsersRoute =
   AuthenticatedDashboardItUsersRouteImport.update({
-    id: '/users',
-    path: '/users',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/users',
+    path: '/dashboard/it/users',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItSystemHealthRoute =
   AuthenticatedDashboardItSystemHealthRouteImport.update({
-    id: '/system-health',
-    path: '/system-health',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/system-health',
+    path: '/dashboard/it/system-health',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItSettingsRoute =
   AuthenticatedDashboardItSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/settings',
+    path: '/dashboard/it/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItPasswordResetsRoute =
   AuthenticatedDashboardItPasswordResetsRouteImport.update({
-    id: '/password-resets',
-    path: '/password-resets',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/password-resets',
+    path: '/dashboard/it/password-resets',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItMediaVerifyRoute =
   AuthenticatedDashboardItMediaVerifyRouteImport.update({
-    id: '/media-verify',
-    path: '/media-verify',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/media-verify',
+    path: '/dashboard/it/media-verify',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItLuxuryRoute =
   AuthenticatedDashboardItLuxuryRouteImport.update({
-    id: '/luxury',
-    path: '/luxury',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/luxury',
+    path: '/dashboard/it/luxury',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardBuyerServiceRequestsRoute =
   AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
@@ -251,9 +251,9 @@ const AuthenticatedDashboardBuyerServiceRequestsRoute =
   } as any)
 const AuthenticatedDashboardItStaffNewRoute =
   AuthenticatedDashboardItStaffNewRouteImport.update({
-    id: '/staff/new',
-    path: '/staff/new',
-    getParentRoute: () => AuthenticatedDashboardItRoute,
+    id: '/dashboard/it/staff/new',
+    path: '/dashboard/it/staff/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -275,7 +275,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
-  '/dashboard/it': typeof AuthenticatedDashboardItRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
@@ -291,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
+  '/dashboard/it/': typeof AuthenticatedDashboardItIndexRoute
   '/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
   '/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
@@ -312,7 +312,6 @@ export interface FileRoutesByTo {
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
-  '/dashboard/it': typeof AuthenticatedDashboardItRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
@@ -328,6 +327,7 @@ export interface FileRoutesByTo {
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/dashboard/inquiries': typeof AuthenticatedDashboardInquiriesIndexRoute
+  '/dashboard/it': typeof AuthenticatedDashboardItIndexRoute
   '/dashboard/properties': typeof AuthenticatedDashboardPropertiesIndexRoute
   '/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
@@ -353,7 +353,6 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
-  '/_authenticated/dashboard/it': typeof AuthenticatedDashboardItRouteWithChildren
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
@@ -369,6 +368,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
   '/_authenticated/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
+  '/_authenticated/dashboard/it/': typeof AuthenticatedDashboardItIndexRoute
   '/_authenticated/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
   '/_authenticated/dashboard/it/staff/new': typeof AuthenticatedDashboardItStaffNewRoute
 }
@@ -393,7 +393,6 @@ export interface FileRouteTypes {
     | '/dashboard/admin'
     | '/dashboard/agent'
     | '/dashboard/buyer'
-    | '/dashboard/it'
     | '/dashboard/notifications'
     | '/dashboard/owner'
     | '/dashboard/receptionist'
@@ -409,6 +408,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries/'
+    | '/dashboard/it/'
     | '/dashboard/properties/'
     | '/dashboard/it/staff/new'
   fileRoutesByTo: FileRoutesByTo
@@ -430,7 +430,6 @@ export interface FileRouteTypes {
     | '/dashboard/admin'
     | '/dashboard/agent'
     | '/dashboard/buyer'
-    | '/dashboard/it'
     | '/dashboard/notifications'
     | '/dashboard/owner'
     | '/dashboard/receptionist'
@@ -446,6 +445,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
     | '/dashboard/inquiries'
+    | '/dashboard/it'
     | '/dashboard/properties'
     | '/dashboard/it/staff/new'
   id:
@@ -470,7 +470,6 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/agent'
     | '/_authenticated/dashboard/buyer'
-    | '/_authenticated/dashboard/it'
     | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/receptionist'
@@ -486,6 +485,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
     | '/_authenticated/dashboard/inquiries/'
+    | '/_authenticated/dashboard/it/'
     | '/_authenticated/dashboard/properties/'
     | '/_authenticated/dashboard/it/staff/new'
   fileRoutesById: FileRoutesById
@@ -659,13 +659,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/it': {
-      id: '/_authenticated/dashboard/it'
-      path: '/dashboard/it'
-      fullPath: '/dashboard/it'
-      preLoaderRoute: typeof AuthenticatedDashboardItRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard/buyer': {
       id: '/_authenticated/dashboard/buyer'
       path: '/dashboard/buyer'
@@ -694,6 +687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardPropertiesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/': {
+      id: '/_authenticated/dashboard/it/'
+      path: '/dashboard/it'
+      fullPath: '/dashboard/it/'
+      preLoaderRoute: typeof AuthenticatedDashboardItIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/inquiries/': {
       id: '/_authenticated/dashboard/inquiries/'
       path: '/dashboard/inquiries'
@@ -710,45 +710,45 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/dashboard/it/users': {
       id: '/_authenticated/dashboard/it/users'
-      path: '/users'
+      path: '/dashboard/it/users'
       fullPath: '/dashboard/it/users'
       preLoaderRoute: typeof AuthenticatedDashboardItUsersRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/system-health': {
       id: '/_authenticated/dashboard/it/system-health'
-      path: '/system-health'
+      path: '/dashboard/it/system-health'
       fullPath: '/dashboard/it/system-health'
       preLoaderRoute: typeof AuthenticatedDashboardItSystemHealthRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/settings': {
       id: '/_authenticated/dashboard/it/settings'
-      path: '/settings'
+      path: '/dashboard/it/settings'
       fullPath: '/dashboard/it/settings'
       preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/password-resets': {
       id: '/_authenticated/dashboard/it/password-resets'
-      path: '/password-resets'
+      path: '/dashboard/it/password-resets'
       fullPath: '/dashboard/it/password-resets'
       preLoaderRoute: typeof AuthenticatedDashboardItPasswordResetsRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/media-verify': {
       id: '/_authenticated/dashboard/it/media-verify'
-      path: '/media-verify'
+      path: '/dashboard/it/media-verify'
       fullPath: '/dashboard/it/media-verify'
       preLoaderRoute: typeof AuthenticatedDashboardItMediaVerifyRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/luxury': {
       id: '/_authenticated/dashboard/it/luxury'
-      path: '/luxury'
+      path: '/dashboard/it/luxury'
       fullPath: '/dashboard/it/luxury'
       preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/buyer/service-requests': {
       id: '/_authenticated/dashboard/buyer/service-requests'
@@ -759,10 +759,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/dashboard/it/staff/new': {
       id: '/_authenticated/dashboard/it/staff/new'
-      path: '/staff/new'
+      path: '/dashboard/it/staff/new'
       fullPath: '/dashboard/it/staff/new'
       preLoaderRoute: typeof AuthenticatedDashboardItStaffNewRouteImport
-      parentRoute: typeof AuthenticatedDashboardItRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
@@ -782,49 +782,25 @@ const AuthenticatedDashboardBuyerRouteWithChildren =
     AuthenticatedDashboardBuyerRouteChildren,
   )
 
-interface AuthenticatedDashboardItRouteChildren {
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRoute
+  AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
+  AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRouteWithChildren
+  AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
+  AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
+  AuthenticatedDashboardReceptionistRoute: typeof AuthenticatedDashboardReceptionistRoute
+  AuthenticatedDashboardServiceRequestsRoute: typeof AuthenticatedDashboardServiceRequestsRoute
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
   AuthenticatedDashboardItSystemHealthRoute: typeof AuthenticatedDashboardItSystemHealthRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
-  AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
-}
-
-const AuthenticatedDashboardItRouteChildren: AuthenticatedDashboardItRouteChildren =
-  {
-    AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
-    AuthenticatedDashboardItMediaVerifyRoute:
-      AuthenticatedDashboardItMediaVerifyRoute,
-    AuthenticatedDashboardItPasswordResetsRoute:
-      AuthenticatedDashboardItPasswordResetsRoute,
-    AuthenticatedDashboardItSettingsRoute:
-      AuthenticatedDashboardItSettingsRoute,
-    AuthenticatedDashboardItSystemHealthRoute:
-      AuthenticatedDashboardItSystemHealthRoute,
-    AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
-    AuthenticatedDashboardItStaffNewRoute:
-      AuthenticatedDashboardItStaffNewRoute,
-  }
-
-const AuthenticatedDashboardItRouteWithChildren =
-  AuthenticatedDashboardItRoute._addFileChildren(
-    AuthenticatedDashboardItRouteChildren,
-  )
-
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRoute
-  AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
-  AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRouteWithChildren
-  AuthenticatedDashboardItRoute: typeof AuthenticatedDashboardItRouteWithChildren
-  AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
-  AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
-  AuthenticatedDashboardReceptionistRoute: typeof AuthenticatedDashboardReceptionistRoute
-  AuthenticatedDashboardServiceRequestsRoute: typeof AuthenticatedDashboardServiceRequestsRoute
   AuthenticatedDashboardPropertiesNewRoute: typeof AuthenticatedDashboardPropertiesNewRoute
   AuthenticatedDashboardInquiriesIndexRoute: typeof AuthenticatedDashboardInquiriesIndexRoute
+  AuthenticatedDashboardItIndexRoute: typeof AuthenticatedDashboardItIndexRoute
   AuthenticatedDashboardPropertiesIndexRoute: typeof AuthenticatedDashboardPropertiesIndexRoute
+  AuthenticatedDashboardItStaffNewRoute: typeof AuthenticatedDashboardItStaffNewRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -832,7 +808,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
   AuthenticatedDashboardBuyerRoute:
     AuthenticatedDashboardBuyerRouteWithChildren,
-  AuthenticatedDashboardItRoute: AuthenticatedDashboardItRouteWithChildren,
   AuthenticatedDashboardNotificationsRoute:
     AuthenticatedDashboardNotificationsRoute,
   AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
@@ -840,12 +815,23 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardReceptionistRoute,
   AuthenticatedDashboardServiceRequestsRoute:
     AuthenticatedDashboardServiceRequestsRoute,
+  AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
+  AuthenticatedDashboardItMediaVerifyRoute:
+    AuthenticatedDashboardItMediaVerifyRoute,
+  AuthenticatedDashboardItPasswordResetsRoute:
+    AuthenticatedDashboardItPasswordResetsRoute,
+  AuthenticatedDashboardItSettingsRoute: AuthenticatedDashboardItSettingsRoute,
+  AuthenticatedDashboardItSystemHealthRoute:
+    AuthenticatedDashboardItSystemHealthRoute,
+  AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
   AuthenticatedDashboardPropertiesNewRoute:
     AuthenticatedDashboardPropertiesNewRoute,
   AuthenticatedDashboardInquiriesIndexRoute:
     AuthenticatedDashboardInquiriesIndexRoute,
+  AuthenticatedDashboardItIndexRoute: AuthenticatedDashboardItIndexRoute,
   AuthenticatedDashboardPropertiesIndexRoute:
     AuthenticatedDashboardPropertiesIndexRoute,
+  AuthenticatedDashboardItStaffNewRoute: AuthenticatedDashboardItStaffNewRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
