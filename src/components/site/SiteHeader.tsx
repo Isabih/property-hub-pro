@@ -18,10 +18,10 @@ const PROPERTY_ICONS: Record<PropertyCategory, any> = {
 
 const MAIN_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/services", label: "Services" },
+  { to: "/services", label: "What We Do" },
   { to: "/portfolio", label: "Portfolio" },
   { to: "/investors", label: "Investors" },
-  { to: "/about", label: "About" },
+  { to: "/about", label: "Who We Are" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -31,7 +31,7 @@ export function SiteHeader() {
   const { user, profile, primaryRole, signOut } = useAuth();
   const [userMenu, setUserMenu] = useState(false);
   return (
-    <header className="sticky top-0 z-50 bg-noir-deep/95 backdrop-blur-md border-b border-white/5">
+    <header className="sticky top-0 z-50 bg-noir-deep border-b border-white/10 shadow-lg shadow-black/20">
       <div className="container-luxe flex items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-3 group">
           <img src={logo} alt="NOVAWORKS" className="h-12 w-12 rounded-md object-cover ring-1 ring-white/10" />
