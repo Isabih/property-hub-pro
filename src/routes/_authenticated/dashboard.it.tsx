@@ -27,7 +27,7 @@ const NAV = [
   { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it/luxury", label: "Luxury Access", icon: FileCheck, group: "Management" },
   { to: "/dashboard/it/password-resets", label: "Password Resets", icon: Server, group: "Management" },
-  { to: "/dashboard/it", label: "System Health", icon: Activity, group: "System" },
+  { to: "/dashboard/it/system-health", label: "System Health", icon: Activity, group: "System" },
   { to: "/dashboard/it/settings", label: "Email Settings", icon: Settings, group: "System" },
 ];
 
@@ -77,7 +77,6 @@ function ITDashboard() {
           <ul className="space-y-2 text-sm">
             <li className="flex justify-between"><span>Database</span><span className="text-emerald-600">● Operational</span></li>
             <li className="flex justify-between"><span>Authentication</span><span className="text-emerald-600">● Operational</span></li>
-            <li className="flex justify-between"><span>Storage</span><span className="text-emerald-600">● Operational</span></li>
           </ul>
         </Panel>
         <Panel title="Recent Activity" subtitle="Latest events across the platform">

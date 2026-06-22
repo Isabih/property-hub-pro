@@ -348,7 +348,7 @@ function NewProperty() {
                     {submitting && uploadProgress[i] === 100 && (
                       <div className="absolute inset-0 bg-emerald-500/20 flex items-center justify-center">
                         <span className="text-white text-xs font-medium bg-emerald-600/90 px-2 py-0.5 rounded">
-                          ✓ {uploadProviders[i] === "r2" ? "R2" : uploadProviders[i] === "lovable" ? "Cloud (fallback)" : "Linked"}
+                          ✓ {uploadProviders[i] === "r2" ? "R2" : uploadProviders[i] === "lovable" ? "Backup" : "Linked"}
                         </span>
                       </div>
                     )}
@@ -356,15 +356,6 @@ function NewProperty() {
                 ))}
               </div>
             )}
-          </Panel>
-
-          <Panel title="Storage" subtitle="Where uploads go">
-            <p className="text-sm text-noir/70">
-              Images and videos upload directly to your Cloudflare R2 bucket
-              <code className="mx-1 px-1 rounded bg-noir/5">novaworks-media</code>
-              and are served from <code className="px-1 rounded bg-noir/5">media.novaworks.rw</code>.
-              If R2 is unreachable, uploads automatically fall back to Lovable Cloud Storage so publishing never blocks.
-            </p>
           </Panel>
 
           <Panel title="Tips" subtitle="Listings with photos perform 5× better">
