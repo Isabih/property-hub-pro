@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
 import { WatchStoryModal } from "@/components/site/WatchStoryModal";
+import { ProgressiveImage } from "@/components/site/ProgressiveImage";
 
 export const Route = createFileRoute("/_site/")({
   head: () => ({
@@ -48,9 +49,10 @@ function HomePage() {
       {/* HERO */}
       <section className="relative min-h-[100vh] flex flex-col justify-end overflow-hidden bg-noir-deep pb-40">
         <div className="absolute inset-0">
-          <img
+          <ProgressiveImage
             src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85"
             alt="Luxury interior"
+            containerClassName="absolute inset-0"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-noir-deep/80" />
