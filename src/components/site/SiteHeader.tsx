@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Search, Phone, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store, User as UserIcon, LayoutDashboard, LogOut } from "lucide-react";
 import logo from "@/assets/novaworks-logo.png";
 import { CATEGORY_META, type PropertyCategory } from "@/lib/properties";
@@ -30,8 +30,25 @@ export function SiteHeader() {
   const [megaOpen, setMegaOpen] = useState(false);
   const { user, profile, primaryRole, signOut } = useAuth();
   const [userMenu, setUserMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  const solid = scrolled || hovered || open || megaOpen || userMenu;
   return (
-    <header className="sticky top-0 z-50 bg-noir-deep border-b border-white/10 shadow-lg shadow-black/20">
+    <header
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
+        solid
+          ? "bg-noir-deep border-b border-white/10 shadow-lg shadow-black/20"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
       <div className="container-luxe flex items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-3 group">
           <img src={logo} alt="NOVAWORKS" className="h-12 w-12 rounded-md object-cover ring-1 ring-white/10" />
