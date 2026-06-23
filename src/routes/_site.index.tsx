@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
+import { getHomeContent } from "@/lib/home-content.functions";
 import { WatchStoryModal } from "@/components/site/WatchStoryModal";
 import { ProgressiveImage } from "@/components/site/ProgressiveImage";
 
@@ -32,7 +33,7 @@ const CATEGORY_ICONS: Record<PropertyCategory, any> = {
   commercial: Store,
 };
 
-const HERO_SLIDES = [
+const FALLBACK_SLIDES = [
   {
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85",
     title: "Discover",
@@ -60,10 +61,18 @@ function HomePage() {
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const getHome = useServerFn(getHomeContent);
+  const { data: home } = useQuery({
+    queryKey: ["home-content"],
+    queryFn: () => getHome(),
+    staleTime: 60_000,
+  });
+  const HERO_SLIDES = (home?.hero_slides && home.hero_slides.length > 0 ? home.hero_slides : FALLBACK_SLIDES) as ReadonlyArray<{ image: string; title: string; titleAccent: string; subtitle: string }>;
+  const categoryImages = home?.category_images ?? {};
   const nextSlide = useCallback(() => {
-    setSlide((p) => (p + 1) % HERO_SLIDES.length);
+    setSlide((p) => (p + 1) % Math.max(HERO_SLIDES.length, 1));
     setProgress(0);
-  }, []);
+  }, [HERO_SLIDES.length]);
   useEffect(() => { setLoaded(true); }, []);
   useEffect(() => {
     if (paused) return;
@@ -82,13 +91,17 @@ function HomePage() {
     queryFn: () => getPOD(),
     staleTime: 60_000,
   });
-  const storyVideo = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+  const storyVideo = home?.hero_story_video_url ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  const bgVideo = home?.hero_video_bg_url ?? null;
+  const currentSlide = HERO_SLIDES[Math.min(slide, HERO_SLIDES.length - 1)] ?? FALLBACK_SLIDES[0];
 
   return (
     <div>
       {/* HERO — cinematic slideshow with Ken Burns */}
       <section className="relative h-screen min-h-[700px] max-h-[1100px] overflow-hidden bg-noir-deep">
-        {HERO_SLIDES.map((s, i) => (
+        {bgVideo ? (
+          <video src={bgVideo} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+        ) : HERO_SLIDES.map((s, i) => (
           <div
             key={i}
             className={`absolute inset-0 transition-opacity duration-1000 ${slide === i ? "opacity-100" : "opacity-0"}`}
@@ -105,6 +118,7 @@ function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
           </div>
         ))}
+        {bgVideo && <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />}
 
         <div className="relative h-full container-luxe flex items-center pt-20">
           <div className="max-w-4xl">
@@ -118,13 +132,13 @@ function HomePage() {
 
             <div className={`mb-8 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
               <h1 className="font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.05]">
-                <span className="block">{HERO_SLIDES[slide].title}</span>
-                <span className="block gold-text italic">{HERO_SLIDES[slide].titleAccent}</span>
+                <span className="block">{currentSlide.title}</span>
+                <span className="block gold-text italic">{currentSlide.titleAccent}</span>
               </h1>
             </div>
 
             <p className={`text-xl md:text-2xl text-white/75 mb-12 max-w-2xl leading-relaxed font-light transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              {HERO_SLIDES[slide].subtitle}
+              {currentSlide.subtitle}
             </p>
 
             <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>

@@ -47,6 +47,7 @@ import { Route as AuthenticatedDashboardItPropertyOfTheDayRouteImport } from './
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
+import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
 import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
@@ -256,6 +257,12 @@ const AuthenticatedDashboardItLuxuryRoute =
     path: '/dashboard/it/luxury',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItHomeContentRoute =
+  AuthenticatedDashboardItHomeContentRouteImport.update({
+    id: '/dashboard/it/home-content',
+    path: '/dashboard/it/home-content',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardBuyerServiceRequestsRoute =
   AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
     id: '/service-requests',
@@ -296,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+  '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -335,6 +343,7 @@ export interface FileRoutesByTo {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+  '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -378,6 +387,7 @@ export interface FileRoutesById {
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+  '/_authenticated/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -420,6 +430,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/buyer/service-requests'
+    | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
@@ -459,6 +470,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/buyer/service-requests'
+    | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
@@ -501,6 +513,7 @@ export interface FileRouteTypes {
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/buyer/service-requests'
+    | '/_authenticated/dashboard/it/home-content'
     | '/_authenticated/dashboard/it/luxury'
     | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
@@ -790,6 +803,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/home-content': {
+      id: '/_authenticated/dashboard/it/home-content'
+      path: '/dashboard/it/home-content'
+      fullPath: '/dashboard/it/home-content'
+      preLoaderRoute: typeof AuthenticatedDashboardItHomeContentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/buyer/service-requests': {
       id: '/_authenticated/dashboard/buyer/service-requests'
       path: '/service-requests'
@@ -830,6 +850,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardReceptionistRoute: typeof AuthenticatedDashboardReceptionistRoute
   AuthenticatedDashboardServiceRequestsRoute: typeof AuthenticatedDashboardServiceRequestsRoute
+  AuthenticatedDashboardItHomeContentRoute: typeof AuthenticatedDashboardItHomeContentRoute
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -856,6 +877,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardReceptionistRoute,
   AuthenticatedDashboardServiceRequestsRoute:
     AuthenticatedDashboardServiceRequestsRoute,
+  AuthenticatedDashboardItHomeContentRoute:
+    AuthenticatedDashboardItHomeContentRoute,
   AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
   AuthenticatedDashboardItMediaVerifyRoute:
     AuthenticatedDashboardItMediaVerifyRoute,
