@@ -29,6 +29,7 @@ import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
+import { Route as SitePortfolioVideosRouteImport } from './routes/_site.portfolio.videos'
 import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './routes/_authenticated/dashboard.service-requests'
 import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes/_authenticated/dashboard.receptionist'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
@@ -149,6 +150,11 @@ const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
   id: '/properties/$slug',
   path: '/properties/$slug',
   getParentRoute: () => SiteRoute,
+} as any)
+const SitePortfolioVideosRoute = SitePortfolioVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => SitePortfolioRoute,
 } as any)
 const AuthenticatedDashboardServiceRequestsRoute =
   AuthenticatedDashboardServiceRequestsRouteImport.update({
@@ -292,7 +298,7 @@ export interface FileRoutesByFullPath {
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
   '/luxury-access': typeof SiteLuxuryAccessRoute
-  '/portfolio': typeof SitePortfolioRoute
+  '/portfolio': typeof SitePortfolioRouteWithChildren
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
   '/api/chat': typeof ApiChatRoute
@@ -307,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
+  '/portfolio/videos': typeof SitePortfolioVideosRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
@@ -333,7 +340,7 @@ export interface FileRoutesByTo {
   '/investors': typeof SiteInvestorsRoute
   '/list-property': typeof SiteListPropertyRoute
   '/luxury-access': typeof SiteLuxuryAccessRoute
-  '/portfolio': typeof SitePortfolioRoute
+  '/portfolio': typeof SitePortfolioRouteWithChildren
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
   '/api/chat': typeof ApiChatRoute
@@ -348,6 +355,7 @@ export interface FileRoutesByTo {
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
+  '/portfolio/videos': typeof SitePortfolioVideosRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
@@ -377,7 +385,7 @@ export interface FileRoutesById {
   '/_site/investors': typeof SiteInvestorsRoute
   '/_site/list-property': typeof SiteListPropertyRoute
   '/_site/luxury-access': typeof SiteLuxuryAccessRoute
-  '/_site/portfolio': typeof SitePortfolioRoute
+  '/_site/portfolio': typeof SitePortfolioRouteWithChildren
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
   '/api/chat': typeof ApiChatRoute
@@ -393,6 +401,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
   '/_authenticated/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
+  '/_site/portfolio/videos': typeof SitePortfolioVideosRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
@@ -437,6 +446,7 @@ export interface FileRouteTypes {
     | '/dashboard/owner'
     | '/dashboard/receptionist'
     | '/dashboard/service-requests'
+    | '/portfolio/videos'
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/admin/contact-edit'
@@ -478,6 +488,7 @@ export interface FileRouteTypes {
     | '/dashboard/owner'
     | '/dashboard/receptionist'
     | '/dashboard/service-requests'
+    | '/portfolio/videos'
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/admin/contact-edit'
@@ -522,6 +533,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/receptionist'
     | '/_authenticated/dashboard/service-requests'
+    | '/_site/portfolio/videos'
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/admin/contact-edit'
@@ -689,6 +701,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/properties/$slug'
       preLoaderRoute: typeof SitePropertiesSlugRouteImport
       parentRoute: typeof SiteRoute
+    }
+    '/_site/portfolio/videos': {
+      id: '/_site/portfolio/videos'
+      path: '/videos'
+      fullPath: '/portfolio/videos'
+      preLoaderRoute: typeof SitePortfolioVideosRouteImport
+      parentRoute: typeof SitePortfolioRoute
     }
     '/_authenticated/dashboard/service-requests': {
       id: '/_authenticated/dashboard/service-requests'
@@ -939,6 +958,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface SitePortfolioRouteChildren {
+  SitePortfolioVideosRoute: typeof SitePortfolioVideosRoute
+}
+
+const SitePortfolioRouteChildren: SitePortfolioRouteChildren = {
+  SitePortfolioVideosRoute: SitePortfolioVideosRoute,
+}
+
+const SitePortfolioRouteWithChildren = SitePortfolioRoute._addFileChildren(
+  SitePortfolioRouteChildren,
+)
+
 interface SiteRouteChildren {
   SiteAboutRoute: typeof SiteAboutRoute
   SiteBlogRoute: typeof SiteBlogRoute
@@ -946,7 +977,7 @@ interface SiteRouteChildren {
   SiteInvestorsRoute: typeof SiteInvestorsRoute
   SiteListPropertyRoute: typeof SiteListPropertyRoute
   SiteLuxuryAccessRoute: typeof SiteLuxuryAccessRoute
-  SitePortfolioRoute: typeof SitePortfolioRoute
+  SitePortfolioRoute: typeof SitePortfolioRouteWithChildren
   SiteServicesRoute: typeof SiteServicesRoute
   SiteVerifyAccessRoute: typeof SiteVerifyAccessRoute
   SiteIndexRoute: typeof SiteIndexRoute
@@ -961,7 +992,7 @@ const SiteRouteChildren: SiteRouteChildren = {
   SiteInvestorsRoute: SiteInvestorsRoute,
   SiteListPropertyRoute: SiteListPropertyRoute,
   SiteLuxuryAccessRoute: SiteLuxuryAccessRoute,
-  SitePortfolioRoute: SitePortfolioRoute,
+  SitePortfolioRoute: SitePortfolioRouteWithChildren,
   SiteServicesRoute: SiteServicesRoute,
   SiteVerifyAccessRoute: SiteVerifyAccessRoute,
   SiteIndexRoute: SiteIndexRoute,

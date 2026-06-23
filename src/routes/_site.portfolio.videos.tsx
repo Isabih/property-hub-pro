@@ -23,7 +23,7 @@ function thumbFor(v: PortfolioVideo): string {
 }
 
 function VideosPage() {
-  const videos = Route.useLoaderData();
+  const videos = Route.useLoaderData() as PortfolioVideo[];
   const [activeId, setActiveId] = useState<string | null>(videos[0]?.id ?? null);
   const [q, setQ] = useState("");
 
