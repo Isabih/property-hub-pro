@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Phone, Mail, MapPin, Clock, Send, Quote } from "lucide-react";
 import { getContactContent } from "@/lib/contact-content.functions";
+import type { TeamMember } from "@/lib/contact-content.functions";
 
 export const Route = createFileRoute("/_site/contact")({
   head: () => ({
@@ -70,7 +71,7 @@ function ContactPage() {
           {/* Team grid */}
           {team.length > 0 && (
           <div className="mt-16 grid md:grid-cols-3 gap-6">
-            {team.map((m) => (
+            {team.map((m: TeamMember) => (
               <div key={m.name + m.image} className="group relative">
                 <div className="absolute -inset-0.5 bg-gradient-to-br from-gold/50 to-transparent rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity" />
                 <div className="relative bg-card border border-gold/20 rounded-2xl p-6 text-center">
