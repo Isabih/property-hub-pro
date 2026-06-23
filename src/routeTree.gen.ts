@@ -17,6 +17,7 @@ import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
 import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
 import { Route as AuthPasswordResetRouteImport } from './routes/auth.password-reset'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
@@ -86,6 +87,11 @@ const AuthPasswordResetRoute = AuthPasswordResetRouteImport.update({
   id: '/password-reset',
   path: '/password-reset',
   getParentRoute: () => AuthRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
   id: '/verify-access',
@@ -275,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
@@ -313,6 +320,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
@@ -354,6 +362,7 @@ export interface FileRoutesById {
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
@@ -396,6 +405,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/api/chat'
     | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/api/chat'
     | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
+    | '/api/chat'
     | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
@@ -507,6 +519,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -566,6 +579,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/password-reset'
       preLoaderRoute: typeof AuthPasswordResetRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_site/verify-access': {
       id: '/_site/verify-access'
@@ -912,6 +932,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
