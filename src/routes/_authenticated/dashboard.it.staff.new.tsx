@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
 import { createStaffUser } from "@/lib/staff.functions";
+import { MediaInput } from "@/components/dashboard/MediaInput";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/it/staff/new")({
@@ -21,7 +22,7 @@ function AddStaff() {
   useEffect(() => { if (roles.length && !allowed) navigate({ to: dashboardPathFor(primaryRole) }); }, [roles, allowed, primaryRole, navigate]);
 
   const create = useServerFn(createStaffUser);
-  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: isIT ? "owner" : "owner" as any });
+  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: isIT ? "owner" : "owner" as any, avatar_url: "" });
   const [saving, setSaving] = useState(false);
 
   const allowedRoles = isIT
@@ -33,9 +34,9 @@ function AddStaff() {
     if (form.password.length < 8) return toast.error("Password must be 8+ chars");
     setSaving(true);
     try {
-      await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any } });
+      await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null } });
       toast.success(`${form.role} created`);
-      setForm({ full_name: "", email: "", phone: "", password: "", role: form.role });
+      setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "" });
     } catch (e: any) { toast.error(e.message ?? "Failed"); }
     finally { setSaving(false); }
   };
@@ -62,6 +63,14 @@ function AddStaff() {
             <select className="input-luxe" value={form.role} onChange={(e) => setForm({...form, role: e.target.value as any})}>
               {allowedRoles.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
+          </Field>
+          <Field label="Profile photo" full>
+            <MediaInput
+              value={form.avatar_url}
+              onChange={(url) => setForm({ ...form, avatar_url: url })}
+              subdir="avatars"
+              aspect="aspect-square"
+            />
           </Field>
         </div>
         <button onClick={submit} disabled={saving} className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-noir-deep text-white text-sm font-medium disabled:opacity-60">

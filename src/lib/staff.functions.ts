@@ -72,7 +72,25 @@ export const listAllUsers = createServerFn({ method: "GET" })
       if (!byUser.has(r.user_id)) byUser.set(r.user_id, []);
       byUser.get(r.user_id)!.push(r.role);
     });
-    return (profiles ?? []).map((p: any) => ({ ...p, roles: byUser.get(p.id) ?? [] }));
+    // Pull email_confirmed_at from auth.users (paginated)
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const verifiedMap = new Map<string, string | null>();
+    try {
+      let page = 1;
+      // up to 5 pages * 1000 = 5k users; plenty for now
+      while (page <= 5) {
+        const { data: au, error: aerr } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
+        if (aerr) break;
+        (au?.users ?? []).forEach((u: any) => verifiedMap.set(u.id, u.email_confirmed_at ?? null));
+        if (!au || au.users.length < 1000) break;
+        page++;
+      }
+    } catch {}
+    return (profiles ?? []).map((p: any) => ({
+      ...p,
+      roles: byUser.get(p.id) ?? [],
+      email_confirmed_at: verifiedMap.get(p.id) ?? null,
+    }));
   });
 
 export const updateUserProfile = createServerFn({ method: "POST" })

@@ -15,8 +15,10 @@ function VerifyOtpPage() {
   const navigate = useNavigate();
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [autoSent, setAutoSent] = useState(false);
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
 
   useEffect(() => {
@@ -24,6 +26,20 @@ function VerifyOtpPage() {
     const t = setTimeout(() => setCooldown((s) => s - 1), 1000);
     return () => clearTimeout(t);
   }, [cooldown]);
+
+  // Auto-send a fresh code on first landing so the user always has a valid one
+  useEffect(() => {
+    if (autoSent) return;
+    setAutoSent(true);
+    (async () => {
+      const { error: err } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+      if (!err) {
+        setInfo("A fresh 6-digit code was sent to your inbox.");
+        setCooldown(45);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateDigit = (i: number, v: string) => {
     const digit = v.replace(/\D/g, "").slice(-1);
@@ -60,7 +76,23 @@ function VerifyOtpPage() {
     });
     setSubmitting(false);
     if (err) {
-      setError(err.message);
+      const msg = err.message.toLowerCase();
+      if (msg.includes("expired") || msg.includes("invalid")) {
+        // Auto-resend a new code if the previous one expired
+        setError("That code expired — sending you a new one…");
+        const { error: rerr } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+        if (!rerr) {
+          setError(null);
+          setInfo("A new 6-digit code was sent. Enter it below.");
+          setCooldown(45);
+          setCode(Array(6).fill(""));
+          inputs.current[0]?.focus();
+        } else {
+          setError(rerr.message);
+        }
+      } else {
+        setError(err.message);
+      }
       return;
     }
     if (data.session) navigate({ to: "/auth/welcome", search: { to: "" } });
@@ -68,12 +100,14 @@ function VerifyOtpPage() {
 
   const resend = async () => {
     setError(null);
+    setInfo(null);
     setCooldown(45);
     const { error: err } = await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: false },
     });
     if (err) setError(err.message);
+    else setInfo("A new code was sent.");
   };
 
   // Auto-submit on 6 digits
@@ -97,6 +131,12 @@ function VerifyOtpPage() {
         {error && (
           <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
+          </div>
+        )}
+
+        {info && !error && (
+          <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            {info}
           </div>
         )}
 

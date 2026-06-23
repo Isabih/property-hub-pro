@@ -36,6 +36,13 @@ export const Route = createFileRoute("/_authenticated")({
     if (error || !data.user) {
       throw redirect({ to: "/auth" });
     }
+    if (!data.user.email_confirmed_at && data.user.email) {
+      // Trigger an OTP and force verification before any dashboard access
+      try {
+        await supabase.auth.signInWithOtp({ email: data.user.email, options: { shouldCreateUser: false } });
+      } catch {}
+      throw redirect({ to: "/auth/verify", search: { email: data.user.email } });
+    }
     return { user: data.user };
   },
   component: () => (<><IdleLogout /><Outlet /></>),

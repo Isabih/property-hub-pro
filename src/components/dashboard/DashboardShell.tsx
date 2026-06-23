@@ -2,7 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { LogOut, Menu, X, Bell, Search, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { useAuth, type AppRole, dashboardPathFor } from "@/lib/use-auth";
+import { useAuth, type AppRole } from "@/lib/use-auth";
 
 export interface NavItem {
   to: string;
@@ -28,9 +28,6 @@ const ROLE_LABEL: Record<AppRole, string> = {
   receptionist: "Receptionist Dashboard",
 };
 
-const ALL_ROLES: AppRole[] = ["it", "admin", "receptionist", "owner", "agent", "buyer"];
-const SHORT: Record<AppRole, string> = { it: "IT", admin: "Admin", receptionist: "Reception", owner: "Owner", agent: "Agent", buyer: "Customer" };
-
 export function DashboardShell({
   title,
   subtitle,
@@ -46,7 +43,7 @@ export function DashboardShell({
   actions?: HeaderAction[];
   children: ReactNode;
 }) {
-  const { profile, user, roles, signOut } = useAuth();
+  const { profile, user, signOut } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const name = profile?.full_name ?? user?.email ?? "Demo User";
@@ -92,29 +89,6 @@ export function DashboardShell({
               </div>
             </div>
           ))}
-
-          <div>
-            <div className="px-3 mb-2 text-[10px] uppercase tracking-[0.18em] text-white/40">Switch Dashboard</div>
-            <div className="grid grid-cols-2 gap-2 px-2">
-              {ALL_ROLES.map((r) => {
-                const enabled = roles.includes(r) || roles.includes("admin") || (roles.includes("it") && r !== "buyer");
-                const target = dashboardPathFor(r);
-                const current = r === role;
-                return (
-                  <Link
-                    key={r}
-                    to={enabled ? target : target}
-                    onClick={(e) => { if (!enabled) e.preventDefault(); setOpen(false); }}
-                    className={`text-center text-xs py-2 rounded-md transition ${
-                      current ? "bg-gold text-noir-deep font-medium" : enabled ? "bg-white/5 text-white/70 hover:bg-white/10" : "bg-white/[0.02] text-white/25 cursor-not-allowed"
-                    }`}
-                  >
-                    {SHORT[r]}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
         </nav>
 
         <div className="border-t border-white/10 p-3 flex items-center gap-3">
