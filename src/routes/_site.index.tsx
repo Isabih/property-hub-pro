@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
+import { getHomeContent } from "@/lib/home-content.functions";
 import { WatchStoryModal } from "@/components/site/WatchStoryModal";
 import { ProgressiveImage } from "@/components/site/ProgressiveImage";
 
@@ -32,7 +33,7 @@ const CATEGORY_ICONS: Record<PropertyCategory, any> = {
   commercial: Store,
 };
 
-const HERO_SLIDES = [
+const FALLBACK_SLIDES = [
   {
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85",
     title: "Discover",
@@ -60,10 +61,18 @@ function HomePage() {
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const getHome = useServerFn(getHomeContent);
+  const { data: home } = useQuery({
+    queryKey: ["home-content"],
+    queryFn: () => getHome(),
+    staleTime: 60_000,
+  });
+  const HERO_SLIDES = (home?.hero_slides && home.hero_slides.length > 0 ? home.hero_slides : FALLBACK_SLIDES) as ReadonlyArray<{ image: string; title: string; titleAccent: string; subtitle: string }>;
+  const categoryImages = home?.category_images ?? {};
   const nextSlide = useCallback(() => {
-    setSlide((p) => (p + 1) % HERO_SLIDES.length);
+    setSlide((p) => (p + 1) % Math.max(HERO_SLIDES.length, 1));
     setProgress(0);
-  }, []);
+  }, [HERO_SLIDES.length]);
   useEffect(() => { setLoaded(true); }, []);
   useEffect(() => {
     if (paused) return;
@@ -82,13 +91,17 @@ function HomePage() {
     queryFn: () => getPOD(),
     staleTime: 60_000,
   });
-  const storyVideo = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+  const storyVideo = home?.hero_story_video_url ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  const bgVideo = home?.hero_video_bg_url ?? null;
+  const currentSlide = HERO_SLIDES[Math.min(slide, HERO_SLIDES.length - 1)] ?? FALLBACK_SLIDES[0];
 
   return (
     <div>
       {/* HERO — cinematic slideshow with Ken Burns */}
       <section className="relative h-screen min-h-[700px] max-h-[1100px] overflow-hidden bg-noir-deep">
-        {HERO_SLIDES.map((s, i) => (
+        {bgVideo ? (
+          <video src={bgVideo} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+        ) : HERO_SLIDES.map((s, i) => (
           <div
             key={i}
             className={`absolute inset-0 transition-opacity duration-1000 ${slide === i ? "opacity-100" : "opacity-0"}`}
@@ -105,6 +118,7 @@ function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
           </div>
         ))}
+        {bgVideo && <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />}
 
         <div className="relative h-full container-luxe flex items-center pt-20">
           <div className="max-w-4xl">
@@ -118,13 +132,13 @@ function HomePage() {
 
             <div className={`mb-8 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
               <h1 className="font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.05]">
-                <span className="block">{HERO_SLIDES[slide].title}</span>
-                <span className="block gold-text italic">{HERO_SLIDES[slide].titleAccent}</span>
+                <span className="block">{currentSlide.title}</span>
+                <span className="block gold-text italic">{currentSlide.titleAccent}</span>
               </h1>
             </div>
 
             <p className={`text-xl md:text-2xl text-white/75 mb-12 max-w-2xl leading-relaxed font-light transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              {HERO_SLIDES[slide].subtitle}
+              {currentSlide.subtitle}
             </p>
 
             <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
@@ -316,29 +330,110 @@ function HomePage() {
         <div className="container-luxe">
           <div className="text-center max-w-2xl mx-auto">
             <div className="text-xs uppercase tracking-[0.2em] text-gold">Browse by Category</div>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl text-foreground">Curated Collections</h2>
+            <h2 className="mt-3 font-display text-4xl md:text-5xl text-foreground">Explore Property Types</h2>
             <p className="mt-3 text-muted-foreground">From sun-drenched studios to private estates, find the home that matches your standard.</p>
           </div>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             {(Object.keys(CATEGORY_META) as PropertyCategory[]).map((cat) => {
               const Icon = CATEGORY_ICONS[cat];
               const count = properties.filter((p) => p.category === cat).length;
+              const img = categoryImages[cat];
               return (
                 <Link
                   key={cat}
                   to="/properties"
                   search={{ category: cat }}
-                  className="group relative bg-card border border-border rounded-2xl p-6 hover:border-gold/50 hover:shadow-xl transition-all"
+                  className="group relative overflow-hidden bg-card border border-border rounded-2xl hover:border-gold/50 hover:shadow-xl transition-all"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-noir-deep transition-colors">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <div className="mt-5 font-display text-xl text-foreground">{CATEGORY_META[cat].plural}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{count} listings</div>
-                  <ArrowRight className="absolute top-6 right-6 w-4 h-4 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
+                  {img ? (
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      <img src={img} alt={CATEGORY_META[cat].plural} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/40 to-transparent" />
+                      <div className="absolute inset-x-0 bottom-0 p-5">
+                        <div className="inline-flex items-center gap-2 text-white">
+                          <span className="w-8 h-8 rounded-md bg-gold/90 text-noir-deep flex items-center justify-center">
+                            <Icon className="w-4 h-4" />
+                          </span>
+                          <span className="font-display text-lg">{CATEGORY_META[cat].plural}</span>
+                        </div>
+                        <div className="text-xs text-white/70 mt-1">{count} listings</div>
+                      </div>
+                      <ArrowRight className="absolute top-4 right-4 w-4 h-4 text-white/80 group-hover:text-gold group-hover:translate-x-1 transition-all" />
+                    </div>
+                  ) : (
+                    <div className="p-6">
+                      <div className="w-12 h-12 rounded-lg bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-noir-deep transition-colors">
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <div className="mt-5 font-display text-xl text-foreground">{CATEGORY_META[cat].plural}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{count} listings</div>
+                      <ArrowRight className="absolute top-6 right-6 w-4 h-4 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
+                    </div>
+                  )}
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* BUILDING RWANDA'S REAL ESTATE FUTURE */}
+      <section className="py-24 bg-gradient-to-br from-noir-deep via-noir to-noir-deep text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_bottom_left,_var(--color-gold)_0%,_transparent_45%)]" />
+        <div className="container-luxe relative grid lg:grid-cols-2 gap-14 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold">
+              <Sparkles className="w-4 h-4" /> Our Vision
+            </div>
+            <h2 className="mt-4 font-display text-5xl md:text-6xl leading-[1.05]">
+              Building Rwanda's<br />
+              <span className="gold-text italic">Real Estate Future</span>
+            </h2>
+            <p className="mt-6 text-lg text-white/70 max-w-xl leading-relaxed">
+              From Kigali's skyline to the hills of Musanze, NOVAWORKS is shaping how Rwandans buy, rent, and invest in property — with transparency, technology, and uncompromising standards.
+            </p>
+            <div className="mt-10 grid sm:grid-cols-3 gap-6">
+              {[
+                { n: "500+", l: "Properties Delivered" },
+                { n: "2K+", l: "Clients Served" },
+                { n: "15", l: "Years of Trust" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <div className="font-display text-4xl text-white">{s.n}</div>
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-white/50 mt-1">{s.l}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link to="/about" className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-6 py-3 rounded-md font-medium hover:shadow-lg hover:shadow-gold/30 transition-all">
+                About NOVAWORKS <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link to="/investors" className="inline-flex items-center gap-2 border border-white/20 text-white px-6 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
+                Investor Relations
+              </Link>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10">
+                <img src={HERO_SLIDES[0]?.image} alt="" className="w-full h-full object-cover" />
+              </div>
+              <div className="aspect-square rounded-2xl overflow-hidden ring-1 ring-white/10">
+                <img src={HERO_SLIDES[2 % HERO_SLIDES.length]?.image} alt="" className="w-full h-full object-cover" />
+              </div>
+            </div>
+            <div className="pt-12 space-y-4">
+              <div className="aspect-square rounded-2xl overflow-hidden ring-1 ring-gold/20">
+                <img src={HERO_SLIDES[1 % HERO_SLIDES.length]?.image} alt="" className="w-full h-full object-cover" />
+              </div>
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10 bg-noir flex items-center justify-center text-center p-6">
+                <div>
+                  <Crown className="w-8 h-8 text-gold mx-auto" />
+                  <div className="mt-3 font-display text-2xl">Award-winning craftsmanship</div>
+                  <div className="mt-2 text-xs text-white/60 uppercase tracking-[0.15em]">Trusted across East Africa</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

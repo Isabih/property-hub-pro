@@ -64,7 +64,11 @@ export type Database = {
       app_settings: {
         Row: {
           brand_color: string
+          category_images: Json
           from_email: string
+          hero_slides: Json
+          hero_story_video_url: string
+          hero_video_bg_url: string | null
           id: boolean
           reply_to: string | null
           sender_name: string
@@ -80,7 +84,11 @@ export type Database = {
         }
         Insert: {
           brand_color?: string
+          category_images?: Json
           from_email?: string
+          hero_slides?: Json
+          hero_story_video_url?: string
+          hero_video_bg_url?: string | null
           id?: boolean
           reply_to?: string | null
           sender_name?: string
@@ -96,7 +104,11 @@ export type Database = {
         }
         Update: {
           brand_color?: string
+          category_images?: Json
           from_email?: string
+          hero_slides?: Json
+          hero_story_video_url?: string
+          hero_video_bg_url?: string | null
           id?: boolean
           reply_to?: string | null
           sender_name?: string

@@ -17,6 +17,7 @@ import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
 import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
 import { Route as AuthPasswordResetRouteImport } from './routes/auth.password-reset'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
 import { Route as SiteServicesRouteImport } from './routes/_site.services'
 import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
@@ -46,6 +47,7 @@ import { Route as AuthenticatedDashboardItPropertyOfTheDayRouteImport } from './
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
+import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
 import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
@@ -86,6 +88,11 @@ const AuthPasswordResetRoute = AuthPasswordResetRouteImport.update({
   id: '/password-reset',
   path: '/password-reset',
   getParentRoute: () => AuthRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
   id: '/verify-access',
@@ -250,6 +257,12 @@ const AuthenticatedDashboardItLuxuryRoute =
     path: '/dashboard/it/luxury',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItHomeContentRoute =
+  AuthenticatedDashboardItHomeContentRouteImport.update({
+    id: '/dashboard/it/home-content',
+    path: '/dashboard/it/home-content',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardBuyerServiceRequestsRoute =
   AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
     id: '/service-requests',
@@ -275,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
@@ -289,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+  '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -313,6 +328,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof SitePortfolioRoute
   '/services': typeof SiteServicesRoute
   '/verify-access': typeof SiteVerifyAccessRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
@@ -327,6 +343,7 @@ export interface FileRoutesByTo {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+  '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -354,6 +371,7 @@ export interface FileRoutesById {
   '/_site/portfolio': typeof SitePortfolioRoute
   '/_site/services': typeof SiteServicesRoute
   '/_site/verify-access': typeof SiteVerifyAccessRoute
+  '/api/chat': typeof ApiChatRoute
   '/auth/password-reset': typeof AuthPasswordResetRoute
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
@@ -369,6 +387,7 @@ export interface FileRoutesById {
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
+  '/_authenticated/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -396,6 +415,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/api/chat'
     | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
@@ -410,6 +430,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/buyer/service-requests'
+    | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
@@ -434,6 +455,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/verify-access'
+    | '/api/chat'
     | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
@@ -448,6 +470,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/buyer/service-requests'
+    | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
@@ -474,6 +497,7 @@ export interface FileRouteTypes {
     | '/_site/portfolio'
     | '/_site/services'
     | '/_site/verify-access'
+    | '/api/chat'
     | '/auth/password-reset'
     | '/auth/verify'
     | '/auth/welcome'
@@ -489,6 +513,7 @@ export interface FileRouteTypes {
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/buyer/service-requests'
+    | '/_authenticated/dashboard/it/home-content'
     | '/_authenticated/dashboard/it/luxury'
     | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
@@ -507,6 +532,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -566,6 +592,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/password-reset'
       preLoaderRoute: typeof AuthPasswordResetRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_site/verify-access': {
       id: '/_site/verify-access'
@@ -770,6 +803,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/home-content': {
+      id: '/_authenticated/dashboard/it/home-content'
+      path: '/dashboard/it/home-content'
+      fullPath: '/dashboard/it/home-content'
+      preLoaderRoute: typeof AuthenticatedDashboardItHomeContentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/buyer/service-requests': {
       id: '/_authenticated/dashboard/buyer/service-requests'
       path: '/service-requests'
@@ -810,6 +850,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardReceptionistRoute: typeof AuthenticatedDashboardReceptionistRoute
   AuthenticatedDashboardServiceRequestsRoute: typeof AuthenticatedDashboardServiceRequestsRoute
+  AuthenticatedDashboardItHomeContentRoute: typeof AuthenticatedDashboardItHomeContentRoute
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
@@ -836,6 +877,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardReceptionistRoute,
   AuthenticatedDashboardServiceRequestsRoute:
     AuthenticatedDashboardServiceRequestsRoute,
+  AuthenticatedDashboardItHomeContentRoute:
+    AuthenticatedDashboardItHomeContentRoute,
   AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
   AuthenticatedDashboardItMediaVerifyRoute:
     AuthenticatedDashboardItMediaVerifyRoute,
@@ -912,6 +955,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
