@@ -1,6 +1,26 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
 
+function toYouTubeEmbed(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) {
+      const id = u.pathname.replace(/^\//, "");
+      return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : null;
+    }
+    if (u.hostname.includes("youtube.com")) {
+      if (u.pathname.startsWith("/embed/")) return `${url}${url.includes("?") ? "&" : "?"}autoplay=1&rel=0`;
+      const id = u.searchParams.get("v");
+      if (id) return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+    }
+    if (u.hostname.includes("vimeo.com")) {
+      const id = u.pathname.replace(/^\//, "");
+      return id ? `https://player.vimeo.com/video/${id}?autoplay=1` : null;
+    }
+  } catch {}
+  return null;
+}
+
 export function WatchStoryModal({ open, onClose, src }: { open: boolean; onClose: () => void; src: string }) {
   useEffect(() => {
     if (!open) return;
@@ -14,6 +34,7 @@ export function WatchStoryModal({ open, onClose, src }: { open: boolean; onClose
   }, [open, onClose]);
 
   if (!open) return null;
+  const embed = toYouTubeEmbed(src);
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center animate-nova-fade-up">
       <button
@@ -23,13 +44,17 @@ export function WatchStoryModal({ open, onClose, src }: { open: boolean; onClose
       >
         <X className="w-6 h-6" />
       </button>
-      <video
-        autoPlay
-        controls
-        playsInline
-        className="w-full h-full max-w-6xl max-h-[90vh] object-contain"
-        src={src}
-      />
+      {embed ? (
+        <iframe
+          src={embed}
+          title="Story"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="w-full max-w-6xl aspect-video"
+        />
+      ) : (
+        <video autoPlay controls playsInline className="w-full h-full max-w-6xl max-h-[90vh] object-contain" src={src} />
+      )}
     </div>
   );
 }
