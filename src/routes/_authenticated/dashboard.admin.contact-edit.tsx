@@ -50,13 +50,13 @@ function ContactEditPage() {
 
   // Block in-app navigation when there are unsaved changes
   useBlocker({
-    shouldBlockFn: ({ next }) => {
+    shouldBlockFn: ({ next }: any) => {
       if (!dirty) return false;
       // Allow staying on the same route
       return next.pathname !== "/dashboard/admin/contact-edit";
     },
     withResolver: true,
-    blockerFn: ({ resolve }) => {
+    blockerFn: ({ resolve }: any) => {
       navBlocker.current = { proceed: () => resolve(true), reset: () => resolve(false) };
       setNavPrompt(true);
     },
