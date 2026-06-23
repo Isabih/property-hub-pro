@@ -88,14 +88,41 @@ export function VideoUrlInput({ value, onChange, placeholder, allowEmpty = true 
         )}
       </div>
       {confirm && (
-        <div className="flex items-center justify-between gap-3 p-3 rounded border border-red-200 bg-red-50 text-sm">
-          <span className="text-noir">Remove this video URL? You can undo for 8 seconds.</span>
-          <div className="flex gap-2 shrink-0">
-            <button onClick={doClear} className="px-3 py-1 rounded bg-red-600 text-white text-xs font-medium hover:bg-red-700">
-              Remove
-            </button>
-            <button onClick={() => setConfirm(false)} className="px-3 py-1 rounded bg-white border border-noir/10 text-xs hover:bg-noir/5">
+        <div className="p-3 rounded border border-red-200 bg-red-50 text-sm space-y-3">
+          <div className="text-noir font-medium">Remove this video?</div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-noir/60">Before</div>
+              <div className="aspect-video rounded overflow-hidden bg-noir ring-1 ring-noir/10">
+                {parsed.embed ? (
+                  parsed.kind === "mp4" || parsed.kind === "webm" ? (
+                    <video src={parsed.embed} muted playsInline className="w-full h-full object-cover" />
+                  ) : (
+                    <iframe src={parsed.embed} className="w-full h-full pointer-events-none" title="Before" />
+                  )
+                ) : (
+                  <div className="w-full h-full grid place-items-center text-white/50 text-xs break-all px-2">{value}</div>
+                )}
+              </div>
+              <div className="text-[10px] text-noir/60 truncate" title={value}>{value}</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-red-600">After</div>
+              <div className="aspect-video rounded overflow-hidden bg-red-100 ring-1 ring-red-300 grid place-items-center text-red-700">
+                <div className="flex flex-col items-center gap-1">
+                  <X className="w-5 h-5" />
+                  <span className="text-[10px]">No video</span>
+                </div>
+              </div>
+              <div className="text-[10px] text-red-600">Cleared — falls back to image slideshow.</div>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button onClick={() => setConfirm(false)} className="px-3 py-1.5 rounded bg-white border border-noir/10 text-xs hover:bg-noir/5">
               Cancel
+            </button>
+            <button onClick={doClear} className="px-3 py-1.5 rounded bg-red-600 text-white text-xs font-medium hover:bg-red-700">
+              Remove video
             </button>
           </div>
         </div>
