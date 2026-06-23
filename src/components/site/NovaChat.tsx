@@ -3,6 +3,22 @@ import { MessageCircle, X, Send, Sparkles, Phone, Mail } from "lucide-react";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+const ESCALATE_PATTERNS = [
+  // explicit asks
+  /\b(human|agent|receptionist|reception|admin|support|manager|staff|someone|talk to (a )?person|contact)\b/i,
+  // dissatisfaction
+  /\b(not (satisfied|happy|working)|unhappy|disappoint|complain|frustrat|angry|useless|stupid|terrible|awful|bad service)\b/i,
+  // explicit help
+  /\b(help me|i need help|escalate|urgent|emergency|refund|cancel|problem|issue|broken|doesn'?t work|can'?t (login|sign|access|find))\b/i,
+  // languages
+  /\b(mfasha|ndakeneye ubufasha|aide|aidez)\b/i,
+];
+
+function shouldEscalate(userText: string, assistantText: string) {
+  const blob = `${userText}\n${assistantText}`;
+  return ESCALATE_PATTERNS.some((re) => re.test(blob));
+}
+
 const WELCOME: Msg = {
   role: "assistant",
   content:
