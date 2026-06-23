@@ -136,18 +136,18 @@ function HomePage() {
               </button>
             </div>
 
-            <div className={`flex flex-wrap items-center gap-12 mt-16 pt-10 border-t border-white/10 transition-all duration-700 delay-400 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+            <div className={`mt-16 pt-10 border-t border-white/10 flex flex-wrap items-center gap-x-12 gap-y-6 transition-all duration-700 delay-400 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
               {[
                 { n: "500", l: "Premium Properties" },
                 { n: "15", l: "Years Experience" },
                 { n: "2K", l: "Happy Clients" },
               ].map((s, idx) => (
                 <div key={s.l} className="flex items-center gap-12">
+                  {idx > 0 && <div className="w-px h-16 bg-white/10 hidden sm:block" />}
                   <div>
-                    <p className="text-5xl font-display font-bold text-white mb-1">{s.n}<span className="text-gold">+</span></p>
-                    <p className="text-white/50 text-sm uppercase tracking-wider">{s.l}</p>
+                    <p className="text-5xl font-display font-bold text-white mb-1 leading-none">{s.n}<span className="text-gold">+</span></p>
+                    <p className="text-white/50 text-xs uppercase tracking-[0.2em] mt-2">{s.l}</p>
                   </div>
-                  {idx < 2 && <div className="w-px h-16 bg-white/10" />}
                 </div>
               ))}
             </div>
