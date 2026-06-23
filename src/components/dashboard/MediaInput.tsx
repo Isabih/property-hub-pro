@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Upload, X, Loader2, ImageIcon, Replace } from "lucide-react";
+import { Upload, X, Loader2, ImageIcon, Replace, ArrowRight } from "lucide-react";
 import { uploadPropertyMedia } from "@/lib/r2-upload";
 import { useAuth } from "@/lib/use-auth";
 import { toast } from "sonner";
@@ -29,6 +29,8 @@ export function MediaInput({
   const userId = user?.id ?? null;
   const [pct, setPct] = useState<number | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [pendingNew, setPendingNew] = useState<string | null>(null);
+  const [pendingPrev, setPendingPrev] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function onFile(file: File) {
@@ -40,14 +42,12 @@ export function MediaInput({
     setPct(0);
     try {
       const res = await uploadPropertyMedia(userId, file, subdir, setPct);
-      onChange(res.url);
       if (previous) {
-        toast.success("Image replaced", {
-          description: "Previous image will be removed from the live site on save.",
-          duration: 8000,
-          action: { label: "Undo", onClick: () => onChange(previous) },
-        });
+        // Show before/after diff overlay before committing the replace
+        setPendingPrev(previous);
+        setPendingNew(res.url);
       } else {
+        onChange(res.url);
         toast.success("Uploaded");
       }
     } catch (e: any) {
@@ -55,6 +55,26 @@ export function MediaInput({
     } finally {
       setPct(null);
     }
+  }
+
+  function confirmReplace() {
+    if (!pendingNew) return;
+    const prev = pendingPrev;
+    const next = pendingNew;
+    onChange(next);
+    setPendingNew(null);
+    setPendingPrev("");
+    toast.success("Image replaced", {
+      description: "Save to apply. You can undo within 8 seconds.",
+      duration: 8000,
+      action: { label: "Undo", onClick: () => onChange(prev) },
+    });
+  }
+
+  function cancelReplace() {
+    setPendingNew(null);
+    setPendingPrev("");
+    toast.info("Replacement cancelled");
   }
 
   function doClear() {
@@ -86,9 +106,24 @@ export function MediaInput({
               <X className="w-3.5 h-3.5" />
             </button>
             {confirmClear && (
-              <div className="absolute inset-0 bg-noir-deep/80 backdrop-blur-sm flex flex-col items-center justify-center gap-3 text-white p-4 text-center">
+              <div className="absolute inset-0 bg-noir-deep/85 backdrop-blur-sm flex flex-col items-center justify-center gap-3 text-white p-3 text-center">
                 <div className="text-sm font-medium">Remove this image?</div>
-                <div className="text-xs text-white/70">You can undo for 8 seconds after confirming.</div>
+                <div className="grid grid-cols-2 gap-2 w-full max-w-[260px]">
+                  <div className="space-y-1">
+                    <div className="text-[10px] uppercase tracking-wider text-white/60">Before</div>
+                    <div className="aspect-[4/3] rounded overflow-hidden ring-1 ring-white/20">
+                      <img src={value} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] uppercase tracking-wider text-red-300">After</div>
+                    <div className="aspect-[4/3] rounded overflow-hidden bg-red-900/40 ring-1 ring-red-400/40 flex flex-col items-center justify-center text-red-200">
+                      <ImageIcon className="w-5 h-5 opacity-60" />
+                      <span className="text-[10px] mt-1">Empty</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-[10px] text-white/60">8-second undo after confirming.</div>
                 <div className="flex gap-2">
                   <button
                     onClick={doClear}
@@ -100,6 +135,34 @@ export function MediaInput({
                     onClick={() => setConfirmClear(false)}
                     className="px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white text-xs"
                   >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            {pendingNew && (
+              <div className="absolute inset-0 bg-noir-deep/90 backdrop-blur-sm flex flex-col items-center justify-center gap-3 text-white p-3 text-center">
+                <div className="text-sm font-medium">Replace this image?</div>
+                <div className="flex items-center gap-2 w-full max-w-[300px]">
+                  <div className="flex-1 space-y-1">
+                    <div className="text-[10px] uppercase tracking-wider text-white/60">Before</div>
+                    <div className="aspect-[4/3] rounded overflow-hidden ring-1 ring-white/20">
+                      <img src={pendingPrev} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-gold shrink-0" />
+                  <div className="flex-1 space-y-1">
+                    <div className="text-[10px] uppercase tracking-wider text-gold">After</div>
+                    <div className="aspect-[4/3] rounded overflow-hidden ring-1 ring-gold/50">
+                      <img src={pendingNew} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={confirmReplace} className="px-3 py-1.5 rounded bg-gold text-noir-deep text-xs font-medium hover:brightness-110">
+                    Confirm replace
+                  </button>
+                  <button onClick={cancelReplace} className="px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white text-xs">
                     Cancel
                   </button>
                 </div>
