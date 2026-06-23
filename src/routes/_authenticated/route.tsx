@@ -90,11 +90,11 @@ export const Route = createFileRoute("/_authenticated")({
     const path = location.pathname;
     // Bare /dashboard → send to user's home
     if (path === "/dashboard" || path === "/dashboard/") {
-      throw redirect({ to: home, replace: true });
+      throw redirect({ to: home, replace: true } as any);
     }
     // Gate every /dashboard/* path by role
     if (path.startsWith("/dashboard/") && !canAccess(path, roles)) {
-      throw redirect({ to: home, replace: true });
+      throw redirect({ to: home, replace: true } as any);
     }
 
     return { user: data.user, roles, primaryRole: primary };
