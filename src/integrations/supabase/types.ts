@@ -73,6 +73,7 @@ export type Database = {
           hero_story_video_url: string
           hero_video_bg_url: string | null
           id: boolean
+          portfolio_videos: Json
           reply_to: string | null
           sender_name: string
           signature: string
@@ -96,6 +97,7 @@ export type Database = {
           hero_story_video_url?: string
           hero_video_bg_url?: string | null
           id?: boolean
+          portfolio_videos?: Json
           reply_to?: string | null
           sender_name?: string
           signature?: string
@@ -119,6 +121,7 @@ export type Database = {
           hero_story_video_url?: string
           hero_video_bg_url?: string | null
           id?: boolean
+          portfolio_videos?: Json
           reply_to?: string | null
           sender_name?: string
           signature?: string

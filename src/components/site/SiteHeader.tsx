@@ -72,8 +72,8 @@ export function SiteHeader() {
       <header
         className={`fixed inset-x-0 z-40 transition-all duration-500 ease-out lg:top-8 top-0 ${
           solid
-            ? "bg-noir-deep/95 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/30"
-            : "bg-gradient-to-b from-black/60 via-black/25 to-transparent"
+            ? "bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/30"
+            : "bg-transparent"
         }`}
       >
       <div className="container-luxe flex items-center justify-between h-16 lg:h-20">
