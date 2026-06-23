@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import { CheckCircle2, AlertCircle, Youtube, Film } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { CheckCircle2, AlertCircle, Youtube, Film, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   value: string;
@@ -30,6 +31,25 @@ export function VideoUrlInput({ value, onChange, placeholder, allowEmpty = true 
   const parsed = useMemo(() => parseVideoUrl(value), [value]);
   const isEmpty = !value.trim();
   const valid = isEmpty ? allowEmpty : parsed.kind !== null;
+  const [confirm, setConfirm] = useState(false);
+  const lastValueRef = useRef(value);
+
+  function requestClear() {
+    if (isEmpty) return;
+    setConfirm(true);
+  }
+
+  function doClear() {
+    const previous = value;
+    lastValueRef.current = previous;
+    onChange("");
+    setConfirm(false);
+    toast.success("Video removed", {
+      description: "Save to apply. You can undo within 8 seconds.",
+      duration: 8000,
+      action: { label: "Undo", onClick: () => onChange(previous) },
+    });
+  }
 
   return (
     <div className="space-y-2">
@@ -46,6 +66,16 @@ export function VideoUrlInput({ value, onChange, placeholder, allowEmpty = true 
           className={`flex-1 bg-white border rounded-md px-3 py-2 text-sm ${valid ? "border-noir/10" : "border-red-400"}`}
         />
         {!isEmpty && (
+          <button
+            type="button"
+            onClick={requestClear}
+            className="inline-flex items-center gap-1 text-xs text-red-600 hover:text-red-700 px-2 py-1.5 rounded hover:bg-red-50"
+            aria-label="Remove video"
+          >
+            <X className="w-3.5 h-3.5" /> Remove
+          </button>
+        )}
+        {!isEmpty && (
           valid ? (
             <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
               <CheckCircle2 className="w-4 h-4" /> {parsed.kind}
@@ -57,6 +87,19 @@ export function VideoUrlInput({ value, onChange, placeholder, allowEmpty = true 
           )
         )}
       </div>
+      {confirm && (
+        <div className="flex items-center justify-between gap-3 p-3 rounded border border-red-200 bg-red-50 text-sm">
+          <span className="text-noir">Remove this video URL? You can undo for 8 seconds.</span>
+          <div className="flex gap-2 shrink-0">
+            <button onClick={doClear} className="px-3 py-1 rounded bg-red-600 text-white text-xs font-medium hover:bg-red-700">
+              Remove
+            </button>
+            <button onClick={() => setConfirm(false)} className="px-3 py-1 rounded bg-white border border-noir/10 text-xs hover:bg-noir/5">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
       {!valid && !isEmpty && (
         <p className="text-xs text-red-600">
           Supported: youtube.com / youtu.be links, vimeo.com links, or direct .mp4 / .webm URLs.
