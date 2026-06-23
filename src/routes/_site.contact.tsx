@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Phone, Mail, MapPin, Clock, Send, Quote } from "lucide-react";
+import { getContactContent } from "@/lib/contact-content.functions";
+import type { TeamMember } from "@/lib/contact-content.functions";
 
 export const Route = createFileRoute("/_site/contact")({
   head: () => ({
@@ -8,10 +10,21 @@ export const Route = createFileRoute("/_site/contact")({
       { name: "description", content: "Get in touch with NOVAWORKS Real Estate. Our team is available to discuss listings, valuations and bespoke property requirements." },
     ],
   }),
+  loader: () => getContactContent(),
   component: ContactPage,
 });
 
 function ContactPage() {
+  const data = Route.useLoaderData();
+  const ceo = data.ceo;
+  const team = data.team;
+  const info = data.info;
+  const contactItems = [
+    { i: Phone, t: "Call us", v: info.phone, s: info.phone_hours },
+    { i: Mail, t: "Email us", v: info.email, s: info.email_note },
+    { i: MapPin, t: "Visit us", v: info.address, s: info.address_note },
+    { i: Clock, t: "Office hours", v: info.hours, s: info.hours_note },
+  ];
   return (
     <div>
       <section className="bg-noir-deep text-white py-20">
@@ -32,55 +45,38 @@ function ContactPage() {
           </div>
 
           {/* CEO card */}
-          <div className="mt-14 max-w-4xl mx-auto">
+          <div className="mt-14 max-w-5xl mx-auto">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-gold via-gold-soft to-gold rounded-2xl opacity-60 blur-sm group-hover:opacity-90 transition-opacity" />
-              <div className="relative grid md:grid-cols-[280px_1fr] gap-8 bg-card border border-gold/30 rounded-2xl p-8 shadow-2xl">
+              <div className="relative grid md:grid-cols-[400px_1fr] gap-10 bg-card border border-gold/30 rounded-2xl p-8 md:p-10 shadow-2xl items-center">
                 <div className="relative">
                   <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-gold/40 to-transparent" />
                   <img
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=85"
-                    alt="CEO"
-                    className="relative w-full aspect-square rounded-xl object-cover ring-2 ring-gold/50"
+                    src={ceo.image}
+                    alt={ceo.name}
+                    className="relative w-full aspect-[4/5] rounded-xl object-cover object-top ring-2 ring-gold/50"
                   />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <div className="text-xs uppercase tracking-[0.2em] text-gold">Chief Executive Officer</div>
-                  <div className="mt-2 font-display text-3xl text-foreground">Jean-Paul Habimana</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-gold">{ceo.title}</div>
+                  <div className="mt-2 font-display text-3xl md:text-4xl text-foreground">{ceo.name}</div>
                   <Quote className="w-8 h-8 text-gold/60 mt-5" />
-                  <blockquote className="mt-2 font-display italic text-xl text-foreground leading-relaxed">
-                    "We don't just sell properties — we build the future of how Rwandans live, invest and call a place home."
-                  </blockquote>
-                  <div className="mt-5 text-sm text-muted-foreground">Leading NOVAWORKS since 2014</div>
+                  <blockquote className="mt-2 font-display italic text-xl text-foreground leading-relaxed">"{ceo.quote}"</blockquote>
+                  {ceo.since && <div className="mt-5 text-sm text-muted-foreground">{ceo.since}</div>}
                 </div>
               </div>
             </div>
           </div>
 
           {/* Team grid */}
+          {team.length > 0 && (
           <div className="mt-16 grid md:grid-cols-3 gap-6">
-            {[
-              {
-                name: "Aline Mukamana",
-                role: "Head of Sales",
-                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=85",
-              },
-              {
-                name: "Eric Niyonzima",
-                role: "Property Manager",
-                img: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=600&q=85",
-              },
-              {
-                name: "Sandrine Uwase",
-                role: "Client Relations",
-                img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=85",
-              },
-            ].map((m) => (
-              <div key={m.name} className="group relative">
+            {team.map((m: TeamMember) => (
+              <div key={m.name + m.image} className="group relative">
                 <div className="absolute -inset-0.5 bg-gradient-to-br from-gold/50 to-transparent rounded-2xl opacity-60 group-hover:opacity-100 transition-opacity" />
                 <div className="relative bg-card border border-gold/20 rounded-2xl p-6 text-center">
                   <div className="mx-auto w-32 h-32 rounded-full overflow-hidden ring-2 ring-gold/40 ring-offset-4 ring-offset-card">
-                    <img src={m.img} alt={m.name} className="w-full h-full object-cover" />
+                    <img src={m.image} alt={m.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="mt-5 font-display text-xl text-foreground">{m.name}</div>
                   <div className="mt-1 text-xs uppercase tracking-[0.18em] text-gold">{m.role}</div>
@@ -88,18 +84,14 @@ function ContactPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
 
       <section className="py-20">
         <div className="container-luxe grid lg:grid-cols-[1fr_1.2fr] gap-12">
           <div className="space-y-4">
-            {[
-              { i: Phone, t: "Call us", v: "+250 793 300 080", s: "Mon – Sat, 8am – 6pm" },
-              { i: Mail, t: "Email us", v: "info@novaworks.rw", s: "Replies within 24 hours" },
-              { i: MapPin, t: "Visit us", v: "Kigali Heights, KG 7 Ave", s: "Kimihurura, Kigali, Rwanda" },
-              { i: Clock, t: "Office hours", v: "Mon – Sat", s: "8:00am – 6:00pm" },
-            ].map((c) => (
+            {contactItems.map((c) => (
               <div key={c.t} className="flex gap-4 p-5 bg-card border border-border rounded-xl">
                 <div className="w-11 h-11 rounded-lg bg-gold/10 text-gold flex items-center justify-center shrink-0">
                   <c.i className="w-5 h-5" />

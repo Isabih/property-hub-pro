@@ -49,6 +49,7 @@ import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './route
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
 import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
 import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
+import { Route as AuthenticatedDashboardAdminContactEditRouteImport } from './routes/_authenticated/dashboard.admin.contact-edit'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
 const AuthRoute = AuthRouteImport.update({
@@ -269,6 +270,12 @@ const AuthenticatedDashboardBuyerServiceRequestsRoute =
     path: '/service-requests',
     getParentRoute: () => AuthenticatedDashboardBuyerRoute,
   } as any)
+const AuthenticatedDashboardAdminContactEditRoute =
+  AuthenticatedDashboardAdminContactEditRouteImport.update({
+    id: '/contact-edit',
+    path: '/contact-edit',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
 const AuthenticatedDashboardItStaffNewRoute =
   AuthenticatedDashboardItStaffNewRouteImport.update({
     id: '/dashboard/it/staff/new',
@@ -293,7 +300,7 @@ export interface FileRoutesByFullPath {
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth/': typeof AuthIndexRoute
-  '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
+  '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -333,7 +341,7 @@ export interface FileRoutesByTo {
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth': typeof AuthIndexRoute
-  '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -342,6 +350,7 @@ export interface FileRoutesByTo {
   '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
+  '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -377,7 +386,7 @@ export interface FileRoutesById {
   '/auth/welcome': typeof AuthWelcomeRoute
   '/_site/': typeof SiteIndexRoute
   '/auth/': typeof AuthIndexRoute
-  '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
+  '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -386,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
+  '/_authenticated/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/_authenticated/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/dashboard/service-requests'
     | '/properties/$slug'
     | '/properties/'
+    | '/dashboard/admin/contact-edit'
     | '/dashboard/buyer/service-requests'
     | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
@@ -469,6 +480,7 @@ export interface FileRouteTypes {
     | '/dashboard/service-requests'
     | '/properties/$slug'
     | '/properties'
+    | '/dashboard/admin/contact-edit'
     | '/dashboard/buyer/service-requests'
     | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
@@ -512,6 +524,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/service-requests'
     | '/_site/properties/$slug'
     | '/_site/properties/'
+    | '/_authenticated/dashboard/admin/contact-edit'
     | '/_authenticated/dashboard/buyer/service-requests'
     | '/_authenticated/dashboard/it/home-content'
     | '/_authenticated/dashboard/it/luxury'
@@ -817,6 +830,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
       parentRoute: typeof AuthenticatedDashboardBuyerRoute
     }
+    '/_authenticated/dashboard/admin/contact-edit': {
+      id: '/_authenticated/dashboard/admin/contact-edit'
+      path: '/contact-edit'
+      fullPath: '/dashboard/admin/contact-edit'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminContactEditRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
     '/_authenticated/dashboard/it/staff/new': {
       id: '/_authenticated/dashboard/it/staff/new'
       path: '/dashboard/it/staff/new'
@@ -826,6 +846,21 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedDashboardAdminRouteChildren {
+  AuthenticatedDashboardAdminContactEditRoute: typeof AuthenticatedDashboardAdminContactEditRoute
+}
+
+const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren =
+  {
+    AuthenticatedDashboardAdminContactEditRoute:
+      AuthenticatedDashboardAdminContactEditRoute,
+  }
+
+const AuthenticatedDashboardAdminRouteWithChildren =
+  AuthenticatedDashboardAdminRoute._addFileChildren(
+    AuthenticatedDashboardAdminRouteChildren,
+  )
 
 interface AuthenticatedDashboardBuyerRouteChildren {
   AuthenticatedDashboardBuyerServiceRequestsRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRoute
@@ -843,7 +878,7 @@ const AuthenticatedDashboardBuyerRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRoute
+  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRouteWithChildren
   AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRouteWithChildren
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
@@ -866,7 +901,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardAdminRoute: AuthenticatedDashboardAdminRoute,
+  AuthenticatedDashboardAdminRoute:
+    AuthenticatedDashboardAdminRouteWithChildren,
   AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
   AuthenticatedDashboardBuyerRoute:
     AuthenticatedDashboardBuyerRouteWithChildren,
