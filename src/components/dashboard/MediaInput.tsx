@@ -11,6 +11,8 @@ interface Props {
   aspect?: string; // tailwind aspect class
   label?: string;
   accept?: string;
+  /** Max file size in MB (default 20) */
+  maxSizeMB?: number;
 }
 
 /**
@@ -24,6 +26,7 @@ export function MediaInput({
   aspect = "aspect-[4/3]",
   label,
   accept = "image/*",
+  maxSizeMB = 20,
 }: Props) {
   const { user } = useAuth();
   const userId = user?.id ?? null;
@@ -36,6 +39,22 @@ export function MediaInput({
   async function onFile(file: File) {
     if (!userId) {
       toast.error("Sign in to upload");
+      return;
+    }
+    // Client-side validation
+    const isImg = accept.includes("image");
+    const isVid = accept.includes("video");
+    if (isImg && !file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    if (isVid && !file.type.startsWith("video/")) {
+      toast.error("Please choose a video file");
+      return;
+    }
+    const maxBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxBytes) {
+      toast.error(`File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Max ${maxSizeMB} MB.`);
       return;
     }
     const previous = value;
