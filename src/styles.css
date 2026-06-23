@@ -53,9 +53,11 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
+  --color-gold-light: var(--gold-soft);
+  --color-gold-dark: var(--gold-dark);
   --color-noir: var(--noir);
   --color-ivory: var(--ivory);
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-display: "Playfair Display", "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -65,6 +67,7 @@
   --noir-deep: oklch(0.10 0.008 60);
   --gold: oklch(0.78 0.13 75);
   --gold-soft: oklch(0.88 0.07 80);
+  --gold-dark: oklch(0.60 0.14 75);
   --ivory: oklch(0.985 0.008 80);
   --background: oklch(0.985 0.008 80);
   --foreground: oklch(0.16 0.01 60);
