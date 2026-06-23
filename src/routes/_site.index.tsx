@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Play, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown } from "lucide-react";
+import { ArrowRight, Play, Pause, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown, ChevronDown } from "lucide-react";
 import { properties, CATEGORY_META, type PropertyCategory } from "@/lib/properties";
 import { PropertyCard } from "@/components/site/PropertyCard";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
@@ -35,6 +35,25 @@ const CATEGORY_ICONS: Record<PropertyCategory, any> = {
 function HomePage() {
   const [tab, setTab] = useState<"rent" | "sale" | "all">("rent");
   const [storyOpen, setStoryOpen] = useState(false);
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const nextSlide = useCallback(() => {
+    setSlide((p) => (p + 1) % HERO_SLIDES.length);
+    setProgress(0);
+  }, []);
+  useEffect(() => { setLoaded(true); }, []);
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) { nextSlide(); return 0; }
+        return p + 0.5;
+      });
+    }, 30);
+    return () => clearInterval(id);
+  }, [paused, nextSlide]);
   const featured = properties.filter((p) => p.featured);
   const getPOD = useServerFn(getPropertyOfTheDay);
   const { data: pod } = useQuery({
@@ -46,106 +65,142 @@ function HomePage() {
 
   return (
     <div>
-      {/* HERO */}
-      <section className="relative min-h-[100vh] flex flex-col justify-end overflow-hidden bg-noir-deep pb-40">
-        <div className="absolute inset-0">
-          <ProgressiveImage
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85"
-            alt="Luxury interior"
-            containerClassName="absolute inset-0"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-noir-deep/80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/80 to-noir-deep/60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/70 to-noir-deep/60" />
-        </div>
-
-        <div className="container-luxe relative z-10 pt-32 pb-12 flex-1 flex flex-col justify-between">
-          <div className="max-w-3xl animate-nova-fade-up">
-            <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur border border-white/10 text-white/90 text-sm px-4 py-2 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-gold" />
-              Rwanda's Premier Luxury Real Estate
+      {/* HERO — cinematic slideshow with Ken Burns */}
+      <section className="relative h-screen min-h-[700px] max-h-[1100px] overflow-hidden bg-noir-deep">
+        {HERO_SLIDES.map((s, i) => (
+          <div
+            key={i}
+            className={`absolute inset-0 transition-opacity duration-1000 ${slide === i ? "opacity-100" : "opacity-0"}`}
+          >
+            <div className={`absolute inset-0 ${slide === i ? "animate-ken-burns" : ""}`}>
+              <ProgressiveImage
+                src={s.image}
+                alt={s.title}
+                containerClassName="absolute inset-0"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <h1 className="mt-8 font-display text-6xl md:text-7xl lg:text-8xl text-white leading-[1.0]">
-              Invest in<br />
-              <span className="text-gold italic">Excellence</span>
-            </h1>
-            <p className="mt-6 text-lg text-white/75 max-w-md">
-              High-return property investments with guaranteed appreciation.
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+          </div>
+        ))}
+
+        <div className="relative h-full container-luxe flex items-center pt-20">
+          <div className="max-w-4xl">
+            <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass mb-10 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gold" />
+              </span>
+              <span className="text-white/90 text-sm font-medium tracking-wide">Rwanda's Premier Luxury Real Estate</span>
+            </div>
+
+            <div className={`mb-8 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.05]">
+                <span className="block">{HERO_SLIDES[slide].title}</span>
+                <span className="block gold-text italic">{HERO_SLIDES[slide].titleAccent}</span>
+              </h1>
+            </div>
+
+            <p className={`text-xl md:text-2xl text-white/75 mb-12 max-w-2xl leading-relaxed font-light transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              {HERO_SLIDES[slide].subtitle}
             </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link
-                to="/properties"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-7 py-4 rounded-md font-medium hover:shadow-2xl hover:shadow-gold/30 transition-all"
-              >
-                Explore Properties <ArrowRight className="w-4 h-4" />
+
+            <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              <Link to="/properties" className="btn-luxury group inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep h-14 px-8 rounded-md text-base font-medium">
+                Explore Properties <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
-              <button
-                onClick={() => setStoryOpen(true)}
-                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white px-7 py-4 rounded-md font-medium hover:bg-white/20 transition-all"
-              >
-                <Play className="w-4 h-4 fill-current" /> Watch Story
+              <button onClick={() => setStoryOpen(true)} className="inline-flex items-center gap-2 border border-white/30 text-white hover:bg-white/10 h-14 px-8 rounded-md text-base backdrop-blur-sm transition-colors">
+                <Play className="w-5 h-5 fill-current" /> Watch Story
               </button>
             </div>
 
-          </div>
-
-          <div className="mt-20 grid grid-cols-3 gap-8 max-w-3xl">
-            {[
-              { n: "500+", l: "Premium Properties" },
-              { n: "15+", l: "Years Experience" },
-              { n: "2K+", l: "Property Managed" },
-            ].map((s) => (
-              <div key={s.l}>
-                <div className="font-display text-5xl md:text-6xl text-white tracking-tight">
-                  {s.n.replace(/(\D+)$/, "")}
-                  <span className="text-gold">{s.n.match(/\D+$/)?.[0]}</span>
+            <div className={`flex flex-wrap items-center gap-12 mt-16 pt-10 border-t border-white/10 transition-all duration-700 delay-400 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              {[
+                { n: "500", l: "Premium Properties" },
+                { n: "15", l: "Years Experience" },
+                { n: "2K", l: "Happy Clients" },
+              ].map((s, idx) => (
+                <div key={s.l} className="flex items-center gap-12">
+                  <div>
+                    <p className="text-5xl font-display font-bold text-white mb-1">{s.n}<span className="text-gold">+</span></p>
+                    <p className="text-white/50 text-sm uppercase tracking-wider">{s.l}</p>
+                  </div>
+                  {idx < 2 && <div className="w-px h-16 bg-white/10" />}
                 </div>
-                <div className="mt-2 text-[11px] tracking-[0.28em] uppercase text-white/60">{s.l}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Search bar overlay */}
-        <div className="absolute bottom-0 translate-y-1/2 left-0 right-0 z-20">
-          <div className="container-luxe">
-            <div className="bg-card rounded-2xl shadow-2xl overflow-hidden border border-border">
-              <div className="flex border-b border-border">
-                {(["rent", "sale", "all"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTab(t)}
-                    className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                      tab === t ? "text-foreground border-b-2 border-gold" : "text-muted-foreground"
-                    }`}
-                  >
-                    {t === "rent" ? "For Rent" : t === "sale" ? "For Sale" : "All Properties"}
-                  </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_max-content] gap-3 p-6 items-end">
-                <Field icon={<MapPin className="w-4 h-4" />} label="Location" placeholder="Select location" />
-                <Field icon={<Home className="w-4 h-4" />} label="Property Type" placeholder="Select type" />
-                <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
-                <div className="flex flex-col gap-1.5 min-w-0">
-                  <label className="text-xs text-muted-foreground">Keyword</label>
-                  <input className="bg-muted rounded-md px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold/30 w-full min-w-0" placeholder="Search by name..." />
-                </div>
-                <Link
-                  to="/properties"
-                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep rounded-md px-6 py-3 font-medium hover:shadow-lg hover:shadow-gold/30 transition-all whitespace-nowrap shrink-0"
+        {/* Slide controls */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-6 z-10">
+          <div className="flex items-center gap-3">
+            {HERO_SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { setSlide(i); setProgress(0); }}
+                className="group relative h-1 w-12 rounded-full bg-white/20 overflow-hidden"
+                aria-label={`Go to slide ${i + 1}`}
+              >
+                <div
+                  className="absolute inset-y-0 left-0 bg-gold rounded-full transition-all duration-150"
+                  style={{ width: slide === i ? `${progress}%` : "0%" }}
+                />
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setPaused(!paused)}
+            className="w-10 h-10 rounded-full glass flex items-center justify-center text-white/80 hover:text-white transition-colors"
+            aria-label={paused ? "Play" : "Pause"}
+          >
+            {paused ? <Play className="w-4 h-4 ml-0.5" /> : <Pause className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-12 right-8 hidden md:flex flex-col items-center gap-2 text-white/40 z-10">
+          <span className="text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl] rotate-180">Scroll</span>
+          <ChevronDown className="w-4 h-4 animate-bounce" />
+        </div>
+      </section>
+
+      {/* SEARCH SECTION */}
+      <section className="bg-background py-12 lg:py-16 border-b border-border">
+        <div className="container-luxe">
+          <div className="bg-card rounded-2xl shadow-xl overflow-hidden border border-border">
+            <div className="flex border-b border-border">
+              {(["rent", "sale", "all"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`flex-1 py-4 text-sm font-medium transition-colors ${
+                    tab === t ? "text-foreground border-b-2 border-gold" : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
-                  <Search className="w-4 h-4" /> Search
-                </Link>
+                  {t === "rent" ? "For Rent" : t === "sale" ? "For Sale" : "All Properties"}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:[grid-template-columns:minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)_max-content] gap-3 p-6 items-end">
+              <Field icon={<MapPin className="w-4 h-4" />} label="Location" placeholder="Select location" />
+              <Field icon={<Home className="w-4 h-4" />} label="Property Type" placeholder="Select type" />
+              <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
+              <div className="flex flex-col gap-1.5 min-w-0">
+                <label className="text-xs text-muted-foreground">Keyword</label>
+                <input className="bg-muted rounded-md px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold/30 w-full min-w-0" placeholder="Search by name..." />
               </div>
+              <Link
+                to="/properties"
+                className="btn-luxury inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep rounded-md h-[46px] px-6 font-medium whitespace-nowrap shrink-0"
+              >
+                <Search className="w-4 h-4" /> Search
+              </Link>
             </div>
           </div>
         </div>
       </section>
-
-      {/* spacer for floating search */}
-      <div className="h-32" />
 
       {/* PROPERTY OF THE DAY */}
       {pod && (
