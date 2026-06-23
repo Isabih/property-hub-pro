@@ -50,6 +50,7 @@ import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './route
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
 import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
 import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
+import { Route as AuthenticatedDashboardAdminPortfolioVideosRouteImport } from './routes/_authenticated/dashboard.admin.portfolio-videos'
 import { Route as AuthenticatedDashboardAdminContactEditRouteImport } from './routes/_authenticated/dashboard.admin.contact-edit'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
@@ -276,6 +277,12 @@ const AuthenticatedDashboardBuyerServiceRequestsRoute =
     path: '/service-requests',
     getParentRoute: () => AuthenticatedDashboardBuyerRoute,
   } as any)
+const AuthenticatedDashboardAdminPortfolioVideosRoute =
+  AuthenticatedDashboardAdminPortfolioVideosRouteImport.update({
+    id: '/portfolio-videos',
+    path: '/portfolio-videos',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
 const AuthenticatedDashboardAdminContactEditRoute =
   AuthenticatedDashboardAdminContactEditRouteImport.update({
     id: '/contact-edit',
@@ -317,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
+  '/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -359,6 +367,7 @@ export interface FileRoutesByTo {
   '/properties/$slug': typeof SitePropertiesSlugRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
+  '/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -405,6 +414,7 @@ export interface FileRoutesById {
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
+  '/_authenticated/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
   '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/_authenticated/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -450,6 +460,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties/'
     | '/dashboard/admin/contact-edit'
+    | '/dashboard/admin/portfolio-videos'
     | '/dashboard/buyer/service-requests'
     | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
@@ -492,6 +503,7 @@ export interface FileRouteTypes {
     | '/properties/$slug'
     | '/properties'
     | '/dashboard/admin/contact-edit'
+    | '/dashboard/admin/portfolio-videos'
     | '/dashboard/buyer/service-requests'
     | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
@@ -537,6 +549,7 @@ export interface FileRouteTypes {
     | '/_site/properties/$slug'
     | '/_site/properties/'
     | '/_authenticated/dashboard/admin/contact-edit'
+    | '/_authenticated/dashboard/admin/portfolio-videos'
     | '/_authenticated/dashboard/buyer/service-requests'
     | '/_authenticated/dashboard/it/home-content'
     | '/_authenticated/dashboard/it/luxury'
@@ -849,6 +862,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
       parentRoute: typeof AuthenticatedDashboardBuyerRoute
     }
+    '/_authenticated/dashboard/admin/portfolio-videos': {
+      id: '/_authenticated/dashboard/admin/portfolio-videos'
+      path: '/portfolio-videos'
+      fullPath: '/dashboard/admin/portfolio-videos'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminPortfolioVideosRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
     '/_authenticated/dashboard/admin/contact-edit': {
       id: '/_authenticated/dashboard/admin/contact-edit'
       path: '/contact-edit'
@@ -868,12 +888,15 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardAdminRouteChildren {
   AuthenticatedDashboardAdminContactEditRoute: typeof AuthenticatedDashboardAdminContactEditRoute
+  AuthenticatedDashboardAdminPortfolioVideosRoute: typeof AuthenticatedDashboardAdminPortfolioVideosRoute
 }
 
 const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren =
   {
     AuthenticatedDashboardAdminContactEditRoute:
       AuthenticatedDashboardAdminContactEditRoute,
+    AuthenticatedDashboardAdminPortfolioVideosRoute:
+      AuthenticatedDashboardAdminPortfolioVideosRoute,
   }
 
 const AuthenticatedDashboardAdminRouteWithChildren =
