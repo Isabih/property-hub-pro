@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Menu, X, Search, Phone, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store, User as UserIcon, LayoutDashboard, LogOut } from "lucide-react";
+import { Menu, X, Search, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store, User as UserIcon, LayoutDashboard, LogOut, Mail, Map as MapIcon, Heart, TrendingUp, Sparkles } from "lucide-react";
 import logo from "@/assets/novaworks-logo.png";
 import { CATEGORY_META, type PropertyCategory } from "@/lib/properties";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
@@ -18,10 +18,11 @@ const PROPERTY_ICONS: Record<PropertyCategory, any> = {
 
 const MAIN_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/services", label: "What We Do" },
+  { to: "/services", label: "Services" },
+  { to: "/investors", label: "Invest" },
   { to: "/portfolio", label: "Portfolio" },
-  { to: "/investors", label: "Investors" },
-  { to: "/about", label: "Who We Are" },
+  { to: "/blog", label: "Blog" },
+  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -31,47 +32,72 @@ export function SiteHeader() {
   const { user, profile, primaryRole, signOut } = useAuth();
   const [userMenu, setUserMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hovered, setHovered] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const solid = scrolled || hovered || open || megaOpen || userMenu;
+  const solid = scrolled || open || megaOpen || userMenu;
   return (
-    <header
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-out ${
-        solid
-          ? "bg-noir-deep/95 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/30"
-          : "bg-gradient-to-b from-black/50 via-black/20 to-transparent border-b border-transparent"
-      }`}
-      style={!solid ? { textShadow: "0 1px 3px rgba(0,0,0,0.6)" } : undefined}
-    >
-      <div className="container-luxe flex items-center justify-between py-4">
+    <>
+      {/* Top utility bar */}
+      <div className="hidden lg:block fixed top-0 inset-x-0 z-50 bg-noir-deep text-white/70 text-xs">
+        <div className="container-luxe flex items-center justify-between h-8">
+          <div className="flex items-center gap-5">
+            <a href="https://mail.google.com" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <Mail className="w-3.5 h-3.5 text-red-400" /> Gmail
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <span className="w-3.5 h-3.5 rounded-[3px] bg-red-600 inline-flex items-center justify-center text-[8px] font-bold">▶</span> YouTube
+            </a>
+            <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <MapIcon className="w-3.5 h-3.5 text-emerald-400" /> Maps
+            </a>
+            <a href="tel:+250793300080" className="hidden xl:flex items-center gap-1.5 hover:text-white transition-colors">
+              <span className="text-gold">●</span> +250 793 300 080
+            </a>
+          </div>
+          <div className="flex items-center gap-5">
+            <Link to="/luxury-access" className="flex items-center gap-1.5 hover:text-gold transition-colors">
+              <Sparkles className="w-3.5 h-3.5 text-gold" /> Luxury Access
+            </Link>
+            <Link to="/auth" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <Heart className="w-3.5 h-3.5" /> Saved
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <header
+        className={`fixed inset-x-0 z-40 transition-all duration-500 ease-out lg:top-8 top-0 ${
+          solid
+            ? "bg-noir-deep/95 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/30"
+            : "bg-gradient-to-b from-black/60 via-black/25 to-transparent"
+        }`}
+      >
+      <div className="container-luxe flex items-center justify-between h-16 lg:h-20">
         <Link to="/" className="flex items-center gap-3 group">
           <img src={logo} alt="NOVAWORKS" className="h-12 w-12 rounded-md object-cover ring-1 ring-white/10" />
           <div className="leading-tight">
             <div className="font-display text-xl tracking-wide text-white">NOVAWORKS</div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-gold">Digital Real Estate</div>
+            <div className="text-[9px] uppercase tracking-[0.16em] text-gold">Digital Real Estate Platform</div>
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-7 text-sm text-white/80">
-          <Link to="/" className="hover:text-gold transition-colors [&.active]:text-gold">Home</Link>
+        <nav className="hidden lg:flex items-center gap-1 text-sm text-white/90">
+          <Link to="/" className="px-3 py-2 rounded-lg hover:text-gold transition-colors [&.active]:text-gold">Home</Link>
           <div
             className="relative"
             onMouseEnter={() => setMegaOpen(true)}
             onMouseLeave={() => setMegaOpen(false)}
           >
-            <button className="flex items-center gap-1 hover:text-gold transition-colors">
-              Properties <ChevronDown className="w-3.5 h-3.5" />
+            <button className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${megaOpen ? "text-gold" : "hover:text-gold"}`}>
+              Properties <ChevronDown className={`w-3.5 h-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
             </button>
             {megaOpen && (
-              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-[720px] animate-nova-fade-up">
-                <div className="bg-noir border border-white/10 rounded-2xl p-6 grid grid-cols-2 gap-2 shadow-2xl">
+              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-[760px] animate-nova-fade-up">
+                <div className="bg-noir-deep border border-white/10 rounded-2xl p-6 grid grid-cols-2 gap-2 shadow-2xl">
                   {(Object.keys(CATEGORY_META) as PropertyCategory[]).map((cat) => {
                     const Icon = PROPERTY_ICONS[cat];
                     return (
@@ -79,13 +105,13 @@ export function SiteHeader() {
                         key={cat}
                         to="/properties"
                         search={{ category: cat }}
-                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group"
+                        className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group"
                       >
                         <div className="w-10 h-10 rounded-md bg-gold/15 text-gold flex items-center justify-center shrink-0 group-hover:bg-gold group-hover:text-noir-deep transition-colors">
                           <Icon className="w-5 h-5" />
                         </div>
                         <div>
-                          <div className="text-white font-medium">{CATEGORY_META[cat].plural}</div>
+                          <div className="text-white font-medium group-hover:text-gold transition-colors">{CATEGORY_META[cat].plural}</div>
                           <div className="text-xs text-white/50">{CATEGORY_META[cat].description}</div>
                         </div>
                       </Link>
@@ -100,21 +126,14 @@ export function SiteHeader() {
             )}
           </div>
           {MAIN_LINKS.slice(1).map((l) => (
-            <Link key={l.to} to={l.to} className="hover:text-gold transition-colors [&.active]:text-gold">
+            <Link key={l.to} to={l.to} className="px-3 py-2 rounded-lg hover:text-gold transition-colors [&.active]:text-gold">
               {l.label}
             </Link>
           ))}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="tel:+250793300080"
-            className="hidden xl:flex items-center gap-2 text-xs text-white/60 hover:text-gold transition-colors"
-          >
-            <Phone className="w-3.5 h-3.5" />
-            +250 793 300 080
-          </a>
-          <button className="text-white/70 hover:text-gold p-2" aria-label="Search">
+          <button className="w-9 h-9 rounded-full text-white/80 hover:text-white hover:bg-white/10 inline-flex items-center justify-center transition-colors" aria-label="Search">
             <Search className="w-4 h-4" />
           </button>
           {user ? (
@@ -154,7 +173,7 @@ export function SiteHeader() {
           )}
           <Link
             to="/list-property"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-5 py-2.5 rounded-md font-medium text-sm hover:shadow-lg hover:shadow-gold/20 transition-all"
+            className="btn-luxury inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-5 py-2.5 rounded-md font-medium text-sm"
           >
             <Home className="w-4 h-4" /> List Property
           </Link>
@@ -206,6 +225,7 @@ export function SiteHeader() {
           </div>
         </div>
       )}
-    </header>
+      </header>
+    </>
   );
 }
