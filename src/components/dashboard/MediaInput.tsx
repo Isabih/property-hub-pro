@@ -25,7 +25,8 @@ export function MediaInput({
   label,
   accept = "image/*",
 }: Props) {
-  const { id: userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
   const [pct, setPct] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
