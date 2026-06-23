@@ -48,9 +48,7 @@ export function NovaChat() {
           return copy;
         });
       }
-      if (/contact|reception|admin|support|human|complain|unhappy|not satisf/i.test(text + " " + acc)) {
-        setShowEscalate(true);
-      }
+      if (shouldEscalate(text, acc)) setShowEscalate(true);
     } catch (e: any) {
       setMessages((m) => {
         const copy = m.slice();
@@ -65,6 +63,7 @@ export function NovaChat() {
       setStreaming(false);
     }
   }
+
 
   return (
     <>
