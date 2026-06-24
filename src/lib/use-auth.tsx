@@ -41,13 +41,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const loadExtras = async (uid: string) => {
+    setRolesLoaded(false);
     try {
       const [p, r] = await Promise.all([
         supabase.from("profiles").select("id,full_name,email,phone,avatar_url").eq("id", uid).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", uid),
       ]);
+      if (p.error) throw p.error;
+      if (r.error) throw r.error;
       setProfile((p.data as AuthProfile | null) ?? null);
       setRoles(((r.data ?? []) as Array<{ role: AppRole }>).map((x) => x.role));
+    } catch (error) {
+      console.error("Failed to load auth profile/roles", error);
+      setProfile(null);
+      setRoles([]);
     } finally {
       setRolesLoaded(true);
     }
@@ -57,10 +64,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let active = true;
     supabase.auth.getSession().then(async ({ data }) => {
       if (!active) return;
-      setSession(data.session);
-      if (data.session?.user) await loadExtras(data.session.user.id);
-      else setRolesLoaded(true);
-      setLoading(false);
+      try {
+        setSession(data.session);
+        if (data.session?.user) await loadExtras(data.session.user.id);
+        else setRolesLoaded(true);
+      } finally {
+        if (active) setLoading(false);
+      }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s);
@@ -68,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setProfile(null);
         setRoles([]);
         setRolesLoaded(true);
+        setLoading(false);
         return;
       }
       // defer to avoid deadlock

@@ -24,7 +24,7 @@ function canOpenRequestedPath(path: string, roles: string[]) {
 function WelcomeAnimation() {
   const navigate = useNavigate();
   const { to } = Route.useSearch();
-  const { user, profile, primaryRole, roles, loading } = useAuth();
+  const { user, profile, primaryRole, roles, loading, rolesLoaded } = useAuth();
   const [progress, setProgress] = useState(0);
 
   // animate progress 0 → 100 over ~2.4s
@@ -41,17 +41,18 @@ function WelcomeAnimation() {
 
   // After progress complete + auth ready, redirect
   useEffect(() => {
-    if (progress < 100 || loading) return;
+    if (progress < 100 || loading || !rolesLoaded) return;
     if (!user) {
       navigate({ to: "/auth" });
       return;
     }
-    // Wait until roles have actually loaded — otherwise primaryRole is null
-    // and we'd wrongly default to /dashboard/buyer.
-    if (roles.length === 0) return;
+    if (roles.length === 0) {
+      navigate({ to: "/auth", replace: true });
+      return;
+    }
     const dest = to && canOpenRequestedPath(to, roles) ? to : dashboardPathFor(primaryRole);
     navigate({ to: dest });
-  }, [progress, loading, user, roles, primaryRole, to, navigate]);
+  }, [progress, loading, rolesLoaded, user, roles, primaryRole, to, navigate]);
 
   const firstName = (profile?.full_name ?? user?.email ?? "").split(" ")[0] || "back";
 
