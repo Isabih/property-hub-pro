@@ -581,7 +581,6 @@ function HomePage() {
         </div>
       </section>
 
-      <WatchStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} src={storyVideo} />
     </div>
   );
 }
