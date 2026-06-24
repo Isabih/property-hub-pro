@@ -86,15 +86,8 @@ export const listAllUsers = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const verifiedMap = new Map<string, string | null>();
     try {
-      let page = 1;
-      // up to 5 pages * 1000 = 5k users; plenty for now
-      while (page <= 5) {
-        const { data: au, error: aerr } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
-        if (aerr) break;
-        (au?.users ?? []).forEach((u: any) => verifiedMap.set(u.id, u.email_confirmed_at ?? null));
-        if (!au || au.users.length < 1000) break;
-        page++;
-      }
+      const { data: au } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      (au?.users ?? []).forEach((u: any) => verifiedMap.set(u.id, u.email_confirmed_at ?? null));
     } catch {}
     return (profiles ?? []).map((p: any) => ({
       ...p,
