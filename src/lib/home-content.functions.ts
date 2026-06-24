@@ -29,7 +29,7 @@ function publicClient() {
 const DEFAULTS: HomeContent = {
   hero_slides: [],
   category_images: {},
-  hero_story_video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  hero_story_video_url: "https://www.youtube.com/watch?v=1uO3l3k7a34",
   hero_video_bg_url: null,
 };
 
