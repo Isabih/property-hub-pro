@@ -69,7 +69,6 @@ function NewProperty() {
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
   const [uploadProviders, setUploadProviders] = useState<(UploadProvider | null)[]>([]);
-  const [notifySubs, setNotifySubs] = useState(false);
   const notifyFn = useServerFn(notifySubscribersOfProperty);
   const loadStaff = useServerFn(listStaffForAssignment);
   const genUnits = useServerFn(generateApartmentsForProperty);
@@ -170,7 +169,7 @@ function NewProperty() {
         lng: form.lng ? Number(form.lng) : null,
         amenities: form.amenities.split(",").map((s) => s.trim()).filter(Boolean),
         status,
-        notify_subscribers: notifySubs,
+        notify_subscribers: true,
         video_url: videoUrl,
         tour_3d_url: form.tour_3d_url.trim() || null,
         blueprint_url: blueprintUrl,
