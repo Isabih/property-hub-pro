@@ -6,9 +6,10 @@ import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
 import { shellForStaff } from "@/components/dashboard/nav-config";
 import { useAuth } from "@/lib/use-auth";
-import { createStaffUser } from "@/lib/staff.functions";
+import { startCreateStaff, verifyAndCreateStaff, resendStaffOtp } from "@/lib/staff.functions";
 import { MediaInput } from "@/components/dashboard/MediaInput";
 import { toast } from "sonner";
+import { StaffOtpModal } from "@/components/auth/StaffOtpModal";
 
 export const Route = createFileRoute("/_authenticated/dashboard/it/staff/new")({
   head: () => ({ meta: [{ title: "Add Staff — NOVAWORKS" }] }),
@@ -24,10 +25,13 @@ function AddStaff() {
   const isIT = roles.includes("it");
   const shell = shellForStaff(roles);
 
-  const create = useServerFn(createStaffUser);
+  const start = useServerFn(startCreateStaff);
+  const verify = useServerFn(verifyAndCreateStaff);
+  const resend = useServerFn(resendStaffOtp);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: "owner" as any, avatar_url: "" });
   const [saving, setSaving] = useState(false);
   const [lastCreated, setLastCreated] = useState<{ email: string; role: string } | null>(null);
+  const [pending, setPending] = useState<{ id: string; email: string } | null>(null);
 
   const allowedRoles = isIT
     ? ["admin", "owner", "agent", "receptionist"]
@@ -38,10 +42,9 @@ function AddStaff() {
     if (form.password.length < 8) return toast.error("Password must be 8+ chars");
     setSaving(true);
     try {
-      await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null, send_verification: true } });
-      toast.success(`${form.role} created — verification email sent`);
-      setLastCreated({ email: form.email, role: form.role });
-      setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "" });
+      const res = await start({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null } });
+      setPending({ id: res.pending_id, email: res.email });
+      toast.success(`Verification code sent to ${res.email}`);
     } catch (e: any) { toast.error(e.message ?? "Failed"); }
     finally { setSaving(false); }
   };
@@ -54,6 +57,20 @@ function AddStaff() {
       nav={shell.nav}
     >
       <Panel title="New staff user" subtitle="An account will be created and the email confirmed automatically">
+        {pending && (
+          <StaffOtpModal
+            email={pending.email}
+            onClose={() => setPending(null)}
+            onResend={async () => { await resend({ data: { pending_id: pending.id } }); }}
+            onSubmit={async (code) => {
+              const res = await verify({ data: { pending_id: pending.id, code } });
+              setLastCreated({ email: res.email, role: res.role });
+              setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "" });
+              setPending(null);
+              toast.success(`${res.role} account created for ${res.email}`);
+            }}
+          />
+        )}
         {lastCreated && (
           <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 flex items-start gap-3">
             <MailCheck className="h-5 w-5 text-emerald-700 mt-0.5" />
