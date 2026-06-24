@@ -18,6 +18,7 @@ interface AuthState {
   user: User | null;
   profile: AuthProfile | null;
   roles: AppRole[];
+  rolesLoaded: boolean;
   primaryRole: AppRole | null;
   refresh: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -36,15 +37,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<AuthProfile | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
+  const [rolesLoaded, setRolesLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadExtras = async (uid: string) => {
-    const [p, r] = await Promise.all([
-      supabase.from("profiles").select("id,full_name,email,phone,avatar_url").eq("id", uid).maybeSingle(),
-      supabase.from("user_roles").select("role").eq("user_id", uid),
-    ]);
-    setProfile((p.data as AuthProfile | null) ?? null);
-    setRoles(((r.data ?? []) as Array<{ role: AppRole }>).map((x) => x.role));
+    try {
+      const [p, r] = await Promise.all([
+        supabase.from("profiles").select("id,full_name,email,phone,avatar_url").eq("id", uid).maybeSingle(),
+        supabase.from("user_roles").select("role").eq("user_id", uid),
+      ]);
+      setProfile((p.data as AuthProfile | null) ?? null);
+      setRoles(((r.data ?? []) as Array<{ role: AppRole }>).map((x) => x.role));
+    } finally {
+      setRolesLoaded(true);
+    }
   };
 
   useEffect(() => {
@@ -53,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!active) return;
       setSession(data.session);
       if (data.session?.user) await loadExtras(data.session.user.id);
+      else setRolesLoaded(true);
       setLoading(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
@@ -60,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === "SIGNED_OUT" || !s?.user) {
         setProfile(null);
         setRoles([]);
+        setRolesLoaded(true);
         return;
       }
       // defer to avoid deadlock
@@ -77,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: session?.user ?? null,
     profile,
     roles,
+    rolesLoaded,
     primaryRole: pickPrimary(roles),
     refresh: async () => {
       if (session?.user) await loadExtras(session.user.id);

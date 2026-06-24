@@ -15,7 +15,7 @@ export function RoleGate({
   allow: AppRole[];
   children: ReactNode;
 }) {
-  const { roles, primaryRole, loading, session } = useAuth();
+  const { roles, primaryRole, loading, session, rolesLoaded } = useAuth();
   const navigate = useNavigate();
   // Admin and IT are system roles, but customer-only pages stay customer-only.
   const customerOnly = allow.length === 1 && allow[0] === "buyer";
@@ -24,11 +24,8 @@ export function RoleGate({
   const toasted = useRef(false);
 
   useEffect(() => {
-    if (loading) return;
-    // Not signed in — the parent _authenticated gate handles redirect; don't toast.
+    if (loading || !rolesLoaded) return;
     if (!session) return;
-    // No roles yet (race during hydration) — wait, don't toast.
-    if (roles.length === 0) return;
     if (!allowed) {
       if (!toasted.current) {
         toasted.current = true;
@@ -36,9 +33,9 @@ export function RoleGate({
       }
       navigate({ to: dashboardPathFor(primaryRole), replace: true });
     }
-  }, [loading, allowed, roles, primaryRole, navigate, session]);
+  }, [loading, rolesLoaded, allowed, primaryRole, navigate, session]);
 
-  if (loading || !allowed) {
+  if (loading || !rolesLoaded || !allowed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f7f6f2]">
         <Loader2 className="h-6 w-6 animate-spin text-gold" />
