@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Upload, X, Loader2, ImageIcon, Replace, ArrowRight } from "lucide-react";
 import { uploadPropertyMedia } from "@/lib/r2-upload";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/use-auth";
 import { toast } from "sonner";
 
 interface Props {
@@ -13,6 +14,8 @@ interface Props {
   accept?: string;
   /** Max file size in MB (default 20) */
   maxSizeMB?: number;
+  /** Optional explicit user id (used as the storage path prefix). Falls back to the signed-in user. */
+  userId?: string | null;
 }
 
 /**
@@ -27,7 +30,9 @@ export function MediaInput({
   label,
   accept = "image/*",
   maxSizeMB = 20,
+  userId: userIdProp,
 }: Props) {
+  const { user } = useAuth();
   const [pct, setPct] = useState<number | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [pendingNew, setPendingNew] = useState<string | null>(null);
@@ -35,11 +40,19 @@ export function MediaInput({
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function onFile(file: File) {
-    // Read session fresh at click time to avoid hydration races where
-    // useAuth() context hasn't loaded yet but the user is actually signed in.
-    const { data: sessionData } = await supabase.auth.getSession();
-    const userId = sessionData.session?.user?.id ?? null;
-    if (!userId) {
+    // Resolve the storage-path owner. Prefer the explicit prop (e.g. admin uploading
+    // for another user), then the auth context, finally a fresh session read.
+    let ownerId = userIdProp ?? user?.id ?? null;
+    if (!ownerId) {
+      const { data: sessionData } = await supabase.auth.getSession();
+      ownerId = sessionData.session?.user?.id ?? null;
+    }
+    if (!ownerId) {
+      // Last-resort: server-validated identity check.
+      const { data: u } = await supabase.auth.getUser();
+      ownerId = u.user?.id ?? null;
+    }
+    if (!ownerId) {
       toast.error("Sign in to upload");
       return;
     }
@@ -62,7 +75,7 @@ export function MediaInput({
     const previous = value;
     setPct(0);
     try {
-      const res = await uploadPropertyMedia(userId, file, subdir, setPct);
+      const res = await uploadPropertyMedia(ownerId, file, subdir, setPct);
       if (previous) {
         // Show before/after diff overlay before committing the replace
         setPendingPrev(previous);

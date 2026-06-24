@@ -1,25 +1,28 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { LayoutDashboard, UserPlus, Users } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { UserPlus } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
-import { useAuth, dashboardPathFor } from "@/lib/use-auth";
+import { RoleGate } from "@/components/dashboard/RoleGate";
+import { shellForStaff } from "@/components/dashboard/nav-config";
+import { useAuth } from "@/lib/use-auth";
 import { createStaffUser } from "@/lib/staff.functions";
 import { MediaInput } from "@/components/dashboard/MediaInput";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/it/staff/new")({
   head: () => ({ meta: [{ title: "Add Staff — NOVAWORKS" }] }),
-  component: AddStaff,
+  component: () => (
+    <RoleGate allow={["it", "admin"]}>
+      <AddStaff />
+    </RoleGate>
+  ),
 });
 
 function AddStaff() {
-  const { roles, primaryRole } = useAuth();
-  const navigate = useNavigate();
+  const { roles, user } = useAuth();
   const isIT = roles.includes("it");
-  const isAdmin = roles.includes("admin");
-  const allowed = isIT || isAdmin;
-  useEffect(() => { if (roles.length && !allowed) navigate({ to: dashboardPathFor(primaryRole) }); }, [roles, allowed, primaryRole, navigate]);
+  const shell = shellForStaff(roles);
 
   const create = useServerFn(createStaffUser);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: isIT ? "owner" : "owner" as any, avatar_url: "" });
@@ -41,17 +44,12 @@ function AddStaff() {
     finally { setSaving(false); }
   };
 
-  const dashTo = isIT ? "/dashboard/it" : "/dashboard/admin";
-
   return (
     <DashboardShell
       title="Add Staff Member"
       subtitle={isIT ? "Create owners, agents, receptionists, or admins" : "Create owners, agents, or receptionists"}
-      role={isIT ? "it" : "admin"}
-      nav={[
-        { to: dashTo, label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-        { to: isIT ? "/dashboard/it/users" : "/dashboard/admin", label: "Users", icon: Users, group: "Management" },
-      ]}
+      role={shell.role}
+      nav={shell.nav}
     >
       <Panel title="New staff user" subtitle="An account will be created and the email confirmed automatically">
         <div className="grid sm:grid-cols-2 gap-3 max-w-2xl">
@@ -70,6 +68,7 @@ function AddStaff() {
               onChange={(url) => setForm({ ...form, avatar_url: url })}
               subdir="avatars"
               aspect="aspect-square"
+              userId={user?.id ?? null}
             />
           </Field>
         </div>
