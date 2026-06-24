@@ -1,6 +1,6 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { UserPlus } from "lucide-react";
+import { UserPlus, MailCheck } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
@@ -23,11 +23,11 @@ function AddStaff() {
   const { roles, user } = useAuth();
   const isIT = roles.includes("it");
   const shell = shellForStaff(roles);
-  const navigate = useNavigate();
 
   const create = useServerFn(createStaffUser);
-  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: "owner" as any, avatar_url: "", send_verification: false });
+  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: "owner" as any, avatar_url: "" });
   const [saving, setSaving] = useState(false);
+  const [lastCreated, setLastCreated] = useState<{ email: string; role: string } | null>(null);
 
   const allowedRoles = isIT
     ? ["admin", "owner", "agent", "receptionist"]
@@ -38,10 +38,10 @@ function AddStaff() {
     if (form.password.length < 8) return toast.error("Password must be 8+ chars");
     setSaving(true);
     try {
-      const res = await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null, send_verification: form.send_verification } });
-      toast.success(res?.verification_sent ? `${form.role} created — verification email sent` : `${form.role} created`);
-      if (isIT) navigate({ to: "/dashboard/it/users" });
-      else setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "", send_verification: false });
+      await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null, send_verification: true } });
+      toast.success(`${form.role} created — verification email sent`);
+      setLastCreated({ email: form.email, role: form.role });
+      setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "" });
     } catch (e: any) { toast.error(e.message ?? "Failed"); }
     finally { setSaving(false); }
   };
@@ -54,6 +54,24 @@ function AddStaff() {
       nav={shell.nav}
     >
       <Panel title="New staff user" subtitle="An account will be created and the email confirmed automatically">
+        {lastCreated && (
+          <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 flex items-start gap-3">
+            <MailCheck className="h-5 w-5 text-emerald-700 mt-0.5" />
+            <div className="text-sm">
+              <div className="font-medium text-emerald-900">
+                {lastCreated.role} account created for {lastCreated.email}
+              </div>
+              <p className="text-emerald-800/80 mt-0.5">
+                A verification email has been sent. The user cannot sign in until they verify their email address.
+              </p>
+              {isIT && (
+                <Link to="/dashboard/it/users" className="underline text-emerald-900 text-xs mt-1 inline-block">
+                  View users →
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
         <div className="grid sm:grid-cols-2 gap-3 max-w-2xl">
           <Field label="Full name" full><input className="input-luxe" value={form.full_name} onChange={(e) => setForm({...form, full_name: e.target.value})} /></Field>
           <Field label="Email"><input className="input-luxe" type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} /></Field>
@@ -73,21 +91,13 @@ function AddStaff() {
               userId={user?.id ?? null}
             />
           </Field>
-          <Field label="Email verification" full>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={form.send_verification}
-                onChange={(e) => setForm({ ...form, send_verification: e.target.checked })}
-              />
-              Require the user to verify their email (send verification link instead of auto-confirming)
-            </label>
-          </Field>
         </div>
         <button onClick={submit} disabled={saving} className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-noir-deep text-white text-sm font-medium disabled:opacity-60">
           <UserPlus className="h-4 w-4" /> {saving ? "Creating…" : "Create account"}
         </button>
-        <p className="text-xs text-noir/50 mt-3">The user will need to verify their identity at first sign-in. Share their credentials securely.</p>
+        <p className="text-xs text-noir/50 mt-3">
+          A verification email is sent automatically. No user can sign in without verifying their email first.
+        </p>
         {isIT && <p className="mt-4 text-sm"><Link to="/dashboard/it/users" className="underline">Manage existing users →</Link></p>}
       </Panel>
     </DashboardShell>
