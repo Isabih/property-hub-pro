@@ -162,3 +162,24 @@ export const itTriggerPasswordReset = createServerFn({ method: "POST" })
     if (error) throw error;
     return { ok: true, id: req.id };
   });
+
+/** Permanently delete a user (auth + profile + roles). IT only. */
+export const deleteUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { user_id: string }) => d)
+  .handler(async ({ data, context }) => {
+    const mine = await assertRole(context, ["it", "admin"]);
+    if (data.user_id === context.userId) throw new Error("You cannot delete your own account.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Guard: only IT can delete admins or other IT users
+    const { data: targetRoles } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id);
+    const tRoles = (targetRoles ?? []).map((r: any) => r.role);
+    if ((tRoles.includes("admin") || tRoles.includes("it")) && !mine.includes("it")) {
+      throw new Error("Only IT can delete admin or IT users.");
+    }
+    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.user_id);
+    await supabaseAdmin.from("profiles").delete().eq("id", data.user_id);
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.user_id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
