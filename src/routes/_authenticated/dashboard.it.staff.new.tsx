@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
@@ -23,9 +23,10 @@ function AddStaff() {
   const { roles, user } = useAuth();
   const isIT = roles.includes("it");
   const shell = shellForStaff(roles);
+  const navigate = useNavigate();
 
   const create = useServerFn(createStaffUser);
-  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: isIT ? "owner" : "owner" as any, avatar_url: "" });
+  const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", role: "owner" as any, avatar_url: "", send_verification: false });
   const [saving, setSaving] = useState(false);
 
   const allowedRoles = isIT
@@ -37,9 +38,10 @@ function AddStaff() {
     if (form.password.length < 8) return toast.error("Password must be 8+ chars");
     setSaving(true);
     try {
-      await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null } });
-      toast.success(`${form.role} created`);
-      setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "" });
+      const res = await create({ data: { full_name: form.full_name, email: form.email, phone: form.phone, password: form.password, role: form.role as any, avatar_url: form.avatar_url || null, send_verification: form.send_verification } });
+      toast.success(res?.verification_sent ? `${form.role} created — verification email sent` : `${form.role} created`);
+      if (isIT) navigate({ to: "/dashboard/it/users" });
+      else setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "", send_verification: false });
     } catch (e: any) { toast.error(e.message ?? "Failed"); }
     finally { setSaving(false); }
   };
@@ -70,6 +72,16 @@ function AddStaff() {
               aspect="aspect-square"
               userId={user?.id ?? null}
             />
+          </Field>
+          <Field label="Email verification" full>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={form.send_verification}
+                onChange={(e) => setForm({ ...form, send_verification: e.target.checked })}
+              />
+              Require the user to verify their email (send verification link instead of auto-confirming)
+            </label>
           </Field>
         </div>
         <button onClick={submit} disabled={saving} className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-noir-deep text-white text-sm font-medium disabled:opacity-60">

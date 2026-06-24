@@ -24,6 +24,7 @@ export const createStaffUser = createServerFn({ method: "POST" })
     phone?: string;
     role: Role;
     avatar_url?: string | null;
+    send_verification?: boolean;
   }) => d)
   .handler(async ({ data, context }) => {
     const mine = await assertRole(context, ["it", "admin"]);
@@ -35,10 +36,11 @@ export const createStaffUser = createServerFn({ method: "POST" })
       throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const autoConfirm = !data.send_verification;
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email.trim().toLowerCase(),
       password: data.password,
-      email_confirm: true,
+      email_confirm: autoConfirm,
       user_metadata: { full_name: data.full_name, phone: data.phone ?? null, requested_role: data.role },
     });
     if (error) throw new Error(error.message);
@@ -54,7 +56,17 @@ export const createStaffUser = createServerFn({ method: "POST" })
     // Replace roles with the requested one (single-role on creation)
     await supabaseAdmin.from("user_roles").delete().eq("user_id", uid);
     await supabaseAdmin.from("user_roles").insert({ user_id: uid, role: data.role });
-    return { id: uid };
+    // Optionally send the Supabase email-verification link
+    if (!autoConfirm) {
+      try {
+        await supabaseAdmin.auth.admin.generateLink({
+          type: "signup",
+          email: data.email.trim().toLowerCase(),
+          password: data.password,
+        });
+      } catch {}
+    }
+    return { id: uid, verification_sent: !autoConfirm };
   });
 
 export const listAllUsers = createServerFn({ method: "GET" })
