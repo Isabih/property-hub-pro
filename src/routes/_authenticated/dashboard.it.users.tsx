@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { KeyRound, Power, Save, X, BadgeCheck, AlertCircle } from "lucide-react";
+import { KeyRound, Power, Save, X, BadgeCheck, AlertCircle, Trash2 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
 import { shellForStaff } from "@/components/dashboard/nav-config";
 import { useAuth } from "@/lib/use-auth";
-import { listAllUsers, updateUserProfile, updateUserRoles, itTriggerPasswordReset } from "@/lib/staff.functions";
+import { listAllUsers, updateUserProfile, updateUserRoles, itTriggerPasswordReset, deleteUser } from "@/lib/staff.functions";
 import { MediaInput } from "@/components/dashboard/MediaInput";
 import { toast } from "sonner";
 
@@ -30,6 +30,7 @@ function UsersPage() {
   const updProfile = useServerFn(updateUserProfile);
   const updRoles = useServerFn(updateUserRoles);
   const triggerReset = useServerFn(itTriggerPasswordReset);
+  const removeUser = useServerFn(deleteUser);
 
   const [users, setUsers] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
@@ -77,6 +78,16 @@ function UsersPage() {
     try {
       await triggerReset({ data: { user_id: u.id } });
       toast.success("Reset request created — approve in Password Resets");
+    } catch (e: any) { toast.error(e.message ?? "Failed"); }
+  };
+
+  const remove = async (u: any) => {
+    if (!confirm(`Permanently delete ${u.full_name || u.email}? This cannot be undone.`)) return;
+    if (!confirm(`Type-of-check: really delete ${u.email}? All their data will be removed.`)) return;
+    try {
+      await removeUser({ data: { user_id: u.id } });
+      toast.success("User deleted");
+      refresh();
     } catch (e: any) { toast.error(e.message ?? "Failed"); }
   };
 
@@ -133,6 +144,9 @@ function UsersPage() {
                     <button onClick={() => setEditing({ ...u, roles: [...u.roles] })} className="text-xs underline">Edit</button>
                     <button onClick={() => toggleActive(u)} className="text-xs underline"><Power className="inline h-3 w-3" /> {u.active === false ? "Enable" : "Disable"}</button>
                     <button onClick={() => reset(u)} className="text-xs underline"><KeyRound className="inline h-3 w-3" /> Reset</button>
+                    {u.id !== user?.id && (
+                      <button onClick={() => remove(u)} className="text-xs underline text-rose-600 hover:text-rose-700"><Trash2 className="inline h-3 w-3" /> Delete</button>
+                    )}
                   </td>
                 </tr>
               ))}
