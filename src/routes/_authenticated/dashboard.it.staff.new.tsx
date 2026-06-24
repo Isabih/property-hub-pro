@@ -62,7 +62,7 @@ function AddStaff() {
             email={pending.email}
             onClose={() => setPending(null)}
             onResend={async () => { await resend({ data: { pending_id: pending.id } }); }}
-            onSubmit={async (code) => {
+            onSubmit={async (code: string) => {
               const res = await verify({ data: { pending_id: pending.id, code } });
               setLastCreated({ email: res.email, role: res.role });
               setForm({ full_name: "", email: "", phone: "", password: "", role: form.role, avatar_url: "" });
