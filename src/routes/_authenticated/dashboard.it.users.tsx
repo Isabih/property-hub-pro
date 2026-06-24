@@ -1,27 +1,30 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { LayoutDashboard, Users, UserPlus, KeyRound, Power, Save, X, BadgeCheck, AlertCircle } from "lucide-react";
+import { KeyRound, Power, Save, X, BadgeCheck, AlertCircle } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
-import { useAuth, dashboardPathFor } from "@/lib/use-auth";
+import { RoleGate } from "@/components/dashboard/RoleGate";
+import { shellForStaff } from "@/components/dashboard/nav-config";
+import { useAuth } from "@/lib/use-auth";
 import { listAllUsers, updateUserProfile, updateUserRoles, itTriggerPasswordReset } from "@/lib/staff.functions";
 import { MediaInput } from "@/components/dashboard/MediaInput";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/it/users")({
   head: () => ({ meta: [{ title: "Users — NOVAWORKS" }] }),
-  component: UsersPage,
+  component: () => (
+    <RoleGate allow={["it", "admin"]}>
+      <UsersPage />
+    </RoleGate>
+  ),
 });
 
 const ALL_ROLES = ["admin", "it", "receptionist", "owner", "agent", "buyer"] as const;
 
 function UsersPage() {
-  const { roles, primaryRole } = useAuth();
-  const navigate = useNavigate();
+  const { roles, user } = useAuth();
   const isIT = roles.includes("it");
-  const isAdmin = roles.includes("admin");
-  const allowed = isIT || isAdmin;
-  useEffect(() => { if (roles.length && !allowed) navigate({ to: dashboardPathFor(primaryRole) }); }, [roles, allowed, primaryRole, navigate]);
+  const shell = shellForStaff(roles);
 
   const load = useServerFn(listAllUsers);
   const updProfile = useServerFn(updateUserProfile);
@@ -35,7 +38,7 @@ function UsersPage() {
   const [query, setQuery] = useState("");
 
   const refresh = () => load().then((d: any) => setUsers(d));
-  useEffect(() => { if (allowed) refresh(); }, [allowed]);
+  useEffect(() => { refresh(); }, []);
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
@@ -81,12 +84,8 @@ function UsersPage() {
     <DashboardShell
       title="User Management"
       subtitle="View, edit, deactivate, and reset passwords"
-      role={isIT ? "it" : "admin"}
-      nav={[
-        { to: isIT ? "/dashboard/it" : "/dashboard/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-        { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
-        { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
-      ]}
+      role={shell.role}
+      nav={shell.nav}
     >
       <Panel title={`All Users (${filtered.length} / ${users.length})`}>
         <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -158,6 +157,7 @@ function UsersPage() {
                   onChange={(url) => setEditing({ ...editing, avatar_url: url })}
                   subdir="avatars"
                   aspect="aspect-square"
+                  userId={user?.id ?? null}
                 />
               </div>
               <div>
