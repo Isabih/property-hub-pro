@@ -7,8 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
 import { getHomeContent } from "@/lib/home-content.functions";
-import { WatchStoryModal } from "@/components/site/WatchStoryModal";
 import { ProgressiveImage } from "@/components/site/ProgressiveImage";
+import { getYouTubeId } from "@/components/site/VideoPlayer";
 
 export const Route = createFileRoute("/_site/")({
   head: () => ({
@@ -56,7 +56,7 @@ const FALLBACK_SLIDES = [
 
 function HomePage() {
   const [tab, setTab] = useState<"rent" | "sale" | "all">("rent");
-  const [storyOpen, setStoryOpen] = useState(false);
+  const [storyActive, setStoryActive] = useState(false);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -91,16 +91,38 @@ function HomePage() {
     queryFn: () => getPOD(),
     staleTime: 60_000,
   });
-  const storyVideo = home?.hero_story_video_url ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  const storyVideo = home?.hero_story_video_url ?? "https://www.youtube.com/watch?v=1uO3l3k7a34";
   const bgVideo = home?.hero_video_bg_url ?? null;
   const currentSlide = HERO_SLIDES[Math.min(slide, HERO_SLIDES.length - 1)] ?? FALLBACK_SLIDES[0];
+
+  // Active hero video: either IT-configured background OR Watch-Story toggled
+  const activeHeroVideo = storyActive ? storyVideo : bgVideo;
+  const activeYtId = activeHeroVideo ? getYouTubeId(activeHeroVideo) : null;
+  const activeDirect = activeHeroVideo && /\.(mp4|webm|mov|m4v)(\?|$)/i.test(activeHeroVideo);
 
   return (
     <div>
       {/* HERO — cinematic slideshow with Ken Burns */}
       <section className="relative h-screen min-h-[700px] max-h-[1100px] overflow-hidden bg-noir-deep">
-        {bgVideo ? (
-          <video src={bgVideo} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+        {activeHeroVideo ? (
+          activeYtId ? (
+            <iframe
+              key={activeYtId}
+              src={`https://www.youtube-nocookie.com/embed/${activeYtId}?autoplay=1&mute=1&loop=1&playlist=${activeYtId}&controls=0&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
+              title="Hero video"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              className="absolute inset-0 w-[120%] h-[120%] -left-[10%] -top-[10%] pointer-events-none"
+            />
+          ) : activeDirect ? (
+            <video src={activeHeroVideo} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          ) : (
+            <iframe
+              src={activeHeroVideo}
+              title="Hero video"
+              allow="autoplay; encrypted-media"
+              className="absolute inset-0 w-full h-full pointer-events-none"
+            />
+          )
         ) : HERO_SLIDES.map((s, i) => (
           <div
             key={i}
@@ -118,7 +140,12 @@ function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
           </div>
         ))}
-        {bgVideo && <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />}
+        {activeHeroVideo && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+          </>
+        )}
 
         <div className="relative h-full container-luxe flex items-center pt-20">
           <div className="max-w-4xl">
@@ -145,8 +172,15 @@ function HomePage() {
               <Link to="/properties" className="btn-luxury group inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep h-14 px-8 rounded-md text-base font-medium">
                 Explore Properties <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
-              <button onClick={() => setStoryOpen(true)} className="inline-flex items-center gap-2 border border-white/30 text-white hover:bg-white/10 h-14 px-8 rounded-md text-base backdrop-blur-sm transition-colors">
-                <Play className="w-5 h-5 fill-current" /> Watch Story
+              <button
+                onClick={() => setStoryActive((v) => !v)}
+                className="inline-flex items-center gap-2 border border-white/30 text-white hover:bg-white/10 h-14 px-8 rounded-md text-base backdrop-blur-sm transition-colors"
+              >
+                {storyActive ? (
+                  <><Pause className="w-5 h-5 fill-current" /> Stop Video</>
+                ) : (
+                  <><Play className="w-5 h-5 fill-current" /> Watch Story</>
+                )}
               </button>
             </div>
 
@@ -547,7 +581,6 @@ function HomePage() {
         </div>
       </section>
 
-      <WatchStoryModal open={storyOpen} onClose={() => setStoryOpen(false)} src={storyVideo} />
     </div>
   );
 }

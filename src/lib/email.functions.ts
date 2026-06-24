@@ -167,15 +167,19 @@ export const verifySubscriberOtp = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/** Notify all verified, opted-in subscribers about a new property. */
+/** Notify all verified subscribers + every staff/user we have an email for about a new property. */
 export const notifySubscribersOfProperty = createServerFn({ method: "POST" })
   .inputValidator((d: { propertyId: string }) => d)
   .handler(async ({ data }) => {
     const sb = adminClient();
     const { data: p } = await sb.from("properties").select("id,title,slug,price,currency,city,property_type").eq("id", data.propertyId).maybeSingle();
     if (!p) throw new Error("Property not found");
-    const { data: subs } = await sb.from("subscribers").select("email,full_name").eq("verified", true).eq("notify", true);
-    if (!subs || !subs.length) return { ok: true, sent: 0 };
+    const { data: subs } = await sb.from("subscribers").select("email").eq("verified", true).eq("notify", true);
+    const { data: profs } = await sb.from("profiles").select("email");
+    const recipients = new Set<string>();
+    for (const s of subs ?? []) if (s.email) recipients.add(s.email.toLowerCase());
+    for (const u of profs ?? []) if (u.email) recipients.add(u.email.toLowerCase());
+    if (recipients.size === 0) return { ok: true, sent: 0 };
     const settings = await getSettings();
     const link = `${settings.site_url.replace(/\/$/, "")}/properties/${p.slug}`;
     const html = `<p>A new property is now available on ${settings.sender_name}:</p>
@@ -184,8 +188,8 @@ export const notifySubscribersOfProperty = createServerFn({ method: "POST" })
       <p><a href="${link}" style="background:${settings.brand_color};color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;display:inline-block">View Property</a></p>
       <p style="color:#666;font-size:13px">Or visit: <a href="${settings.site_url}">${settings.site_url}</a></p>`;
     let sent = 0;
-    for (const s of subs) {
-      try { await sendViaResend(s.email, `New property: ${p.title}`, html, "property_notify"); sent++; } catch {}
+    for (const email of recipients) {
+      try { await sendViaResend(email, `New property: ${p.title}`, html, "property_notify"); sent++; } catch {}
     }
     return { ok: true, sent };
   });
