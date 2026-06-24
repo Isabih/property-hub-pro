@@ -184,10 +184,10 @@ function NewProperty() {
         catch (e: any) { toast.error("Property saved but apartments failed: " + (e.message ?? "error")); }
       }
       toast.success(status === "active" ? "Property published" : "Draft saved");
-      if (status === "active" && notifySubs && prop) {
+      if (status === "active" && prop) {
         notifyFn({ data: { propertyId: (prop as any).id } })
-          .then((r: any) => toast.success(`Notified ${r.sent ?? 0} subscriber(s)`))
-          .catch((e) => toast.error("Subscriber notify failed: " + (e.message ?? "error")));
+          .then((r: any) => toast.success(`Notified ${r.sent ?? 0} recipient(s)`))
+          .catch((e) => toast.error("Notify failed: " + (e.message ?? "error")));
       }
       navigate({ to: "/dashboard/properties" });
     } catch (e: any) {
@@ -366,14 +366,11 @@ function NewProperty() {
             </ul>
           </Panel>
 
-          <Panel title="Notify subscribers" subtitle="Email all verified subscribers when this property is published">
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" className="mt-1" checked={notifySubs} onChange={(e) => setNotifySubs(e.target.checked)} />
-              <span className="text-sm">
-                <strong className="block">Send a new-property email</strong>
-                <span className="text-noir/60">Sends only when you click <em>Publish</em>. Drafts never notify.</span>
-              </span>
-            </label>
+          <Panel title="Email notifications" subtitle="Sent automatically on publish">
+            <p className="text-sm text-noir/70">
+              When you click <em>Publish</em>, every verified subscriber <strong>and</strong> every staff/user
+              account with an email on file is notified about this property. Drafts never notify.
+            </p>
           </Panel>
         </div>
       </div>
