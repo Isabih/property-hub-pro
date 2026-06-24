@@ -1,8 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useRef } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { dashboardPathFor, type AppRole } from "@/lib/use-auth";
 
 const ROLE_PRIORITY: AppRole[] = ["admin", "it", "receptionist", "owner", "agent", "buyer"];
@@ -38,31 +35,6 @@ function canAccess(pathname: string, roles: AppRole[]): boolean {
   return true;
 }
 
-const IDLE_MS = 30 * 60_000; // 30 minutes
-
-function IdleLogout() {
-  const navigate = useNavigate();
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    const reset = () => {
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(async () => {
-        try { await supabase.auth.signOut(); } catch {}
-        toast("Signed out due to inactivity", { description: "Please sign in again to continue." });
-        navigate({ to: "/auth", replace: true });
-      }, IDLE_MS);
-    };
-    const events = ["mousemove", "mousedown", "keydown", "touchstart", "scroll", "visibilitychange"];
-    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
-    reset();
-    return () => {
-      events.forEach((e) => window.removeEventListener(e, reset));
-      if (timer.current) clearTimeout(timer.current);
-    };
-  }, [navigate]);
-  return null;
-}
-
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ location }) => {
@@ -79,10 +51,13 @@ export const Route = createFileRoute("/_authenticated")({
     }
 
     // Load roles for centralised deep-link gating
-    const { data: roleRows } = await supabase
+    const { data: roleRows, error: rolesError } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", data.user.id);
+    if (rolesError) {
+      throw redirect({ to: "/auth/welcome", search: { to: "" }, replace: true } as any);
+    }
     const roles = ((roleRows ?? []) as Array<{ role: AppRole }>).map((r) => r.role);
     const primary = pickPrimary(roles);
     const home = dashboardPathFor(primary);
@@ -99,5 +74,5 @@ export const Route = createFileRoute("/_authenticated")({
 
     return { user: data.user, roles, primaryRole: primary };
   },
-  component: () => (<><IdleLogout /><Outlet /></>),
+  component: () => <Outlet />,
 });
