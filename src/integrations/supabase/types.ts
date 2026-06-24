@@ -387,6 +387,51 @@ export type Database = {
         }
         Relationships: []
       }
+      pending_staff: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          created_by: string | null
+          email: string
+          full_name: string
+          id: string
+          otp_attempts: number
+          otp_expires_at: string
+          otp_hash: string
+          password: string
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          email: string
+          full_name: string
+          id?: string
+          otp_attempts?: number
+          otp_expires_at: string
+          otp_hash: string
+          password: string
+          phone?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          otp_attempts?: number
+          otp_expires_at?: string
+          otp_hash?: string
+          password?: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           active: boolean
