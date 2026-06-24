@@ -18,11 +18,11 @@ const PROPERTY_ICONS: Record<PropertyCategory, any> = {
 
 const MAIN_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/services", label: "Services" },
+  { to: "/services", label: "What we do" },
   { to: "/investors", label: "Invest" },
   { to: "/portfolio", label: "Portfolio" },
   { to: "/blog", label: "Blog" },
-  { to: "/about", label: "About" },
+  { to: "/about", label: "Who we are" },
   { to: "/contact", label: "Contact" },
 ];
 
