@@ -36,11 +36,11 @@ export const createStaffUser = createServerFn({ method: "POST" })
       throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const autoConfirm = !data.send_verification;
+    // Email verification is ALWAYS required — staff cannot sign in until they verify.
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email.trim().toLowerCase(),
       password: data.password,
-      email_confirm: autoConfirm,
+      email_confirm: false,
       user_metadata: { full_name: data.full_name, phone: data.phone ?? null, requested_role: data.role },
     });
     if (error) throw new Error(error.message);
@@ -56,17 +56,15 @@ export const createStaffUser = createServerFn({ method: "POST" })
     // Replace roles with the requested one (single-role on creation)
     await supabaseAdmin.from("user_roles").delete().eq("user_id", uid);
     await supabaseAdmin.from("user_roles").insert({ user_id: uid, role: data.role });
-    // Optionally send the Supabase email-verification link
-    if (!autoConfirm) {
-      try {
-        await supabaseAdmin.auth.admin.generateLink({
-          type: "signup",
-          email: data.email.trim().toLowerCase(),
-          password: data.password,
-        });
-      } catch {}
-    }
-    return { id: uid, verification_sent: !autoConfirm };
+    // Send the Supabase email-verification link
+    try {
+      await supabaseAdmin.auth.admin.generateLink({
+        type: "signup",
+        email: data.email.trim().toLowerCase(),
+        password: data.password,
+      });
+    } catch {}
+    return { id: uid, verification_sent: true };
   });
 
 export const listAllUsers = createServerFn({ method: "GET" })
