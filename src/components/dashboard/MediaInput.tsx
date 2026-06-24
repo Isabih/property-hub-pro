@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Upload, X, Loader2, ImageIcon, Replace, ArrowRight } from "lucide-react";
 import { uploadPropertyMedia } from "@/lib/r2-upload";
-import { useAuth } from "@/lib/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface Props {
@@ -28,8 +28,6 @@ export function MediaInput({
   accept = "image/*",
   maxSizeMB = 20,
 }: Props) {
-  const { user } = useAuth();
-  const userId = user?.id ?? null;
   const [pct, setPct] = useState<number | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [pendingNew, setPendingNew] = useState<string | null>(null);
@@ -37,6 +35,10 @@ export function MediaInput({
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function onFile(file: File) {
+    // Read session fresh at click time to avoid hydration races where
+    // useAuth() context hasn't loaded yet but the user is actually signed in.
+    const { data: sessionData } = await supabase.auth.getSession();
+    const userId = sessionData.session?.user?.id ?? null;
     if (!userId) {
       toast.error("Sign in to upload");
       return;
