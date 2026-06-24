@@ -82,7 +82,7 @@ function Page() {
         <div className="flex items-center gap-2 text-noir/60"><Loader2 className="w-4 h-4 animate-spin" /> Loading…</div>
       ) : (
         <div className="space-y-6">
-          <Panel title="Watch Story video" subtitle="Played when visitors click 'Watch Story' on the hero">
+          <Panel title="Watch Story video" subtitle="Used as the hero background when visitors click 'Watch Story'. Supports YouTube or direct .mp4 URLs.">
             <VideoUrlInput value={video} onChange={setVideo} placeholder="https://www.youtube.com/watch?v=..." />
           </Panel>
 
