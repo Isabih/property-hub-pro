@@ -38,7 +38,7 @@ function canAccess(pathname: string, roles: AppRole[]): boolean {
   return true;
 }
 
-const IDLE_MS = 60_000; // 1 minute
+const IDLE_MS = 30 * 60_000; // 30 minutes
 
 function IdleLogout() {
   const navigate = useNavigate();
