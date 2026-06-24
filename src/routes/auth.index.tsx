@@ -5,6 +5,7 @@ import { Eye, EyeOff, Mail, Lock, User as UserIcon, ArrowRight, Phone, Home } fr
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
+import { VerifyOtpModal } from "@/components/auth/VerifyOtpModal";
 
 export const Route = createFileRoute("/auth/")({
   head: () => ({
@@ -38,6 +39,7 @@ function AuthPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [remember, setRemember] = useState(false);
+  const [verifyEmail, setVerifyEmail] = useState<string | null>(null);
 
   // Sign-in fields
   const [siEmail, setSiEmail] = useState("");
@@ -73,9 +75,8 @@ function AuthPage() {
     setSubmitting(false);
     if (err) {
       if (err.message.toLowerCase().includes("email not confirmed")) {
-        // Send OTP and route to verify
         await supabase.auth.signInWithOtp({ email: parsed.data.email, options: { shouldCreateUser: false } });
-        navigate({ to: "/auth/verify", search: { email: parsed.data.email } });
+        setVerifyEmail(parsed.data.email);
         return;
       }
       setError(err.message);
@@ -114,12 +115,12 @@ function AuthPage() {
       setError(err.message);
       return;
     }
-    // Send 6-digit OTP for email verification
+    // Send 6-digit OTP for email verification and open the popup
     await supabase.auth.signInWithOtp({
       email: parsed.data.email,
       options: { shouldCreateUser: false },
     });
-    navigate({ to: "/auth/verify", search: { email: parsed.data.email } });
+    setVerifyEmail(parsed.data.email);
   };
 
   const handleGoogle = async () => {
@@ -305,6 +306,16 @@ function AuthPage() {
           </div>
         </div>
       </div>
+      {verifyEmail && (
+        <VerifyOtpModal
+          email={verifyEmail}
+          onClose={() => setVerifyEmail(null)}
+          onSuccess={() => {
+            setVerifyEmail(null);
+            navigate({ to: "/auth/welcome", search: { to: "" } });
+          }}
+        />
+      )}
     </div>
   );
 }
