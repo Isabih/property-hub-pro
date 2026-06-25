@@ -461,15 +461,15 @@ function HomePage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-4">
               <div className="aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10">
-                <img src={HERO_SLIDES[0]?.image} alt="" className="w-full h-full object-cover" />
+                <img src={collageImages[0]} alt="" className="w-full h-full object-cover" />
               </div>
               <div className="aspect-square rounded-2xl overflow-hidden ring-1 ring-white/10">
-                <img src={HERO_SLIDES[2 % HERO_SLIDES.length]?.image} alt="" className="w-full h-full object-cover" />
+                <img src={collageImages[2]} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
             <div className="pt-12 space-y-4">
               <div className="aspect-square rounded-2xl overflow-hidden ring-1 ring-gold/20">
-                <img src={HERO_SLIDES[1 % HERO_SLIDES.length]?.image} alt="" className="w-full h-full object-cover" />
+                <img src={collageImages[1]} alt="" className="w-full h-full object-cover" />
               </div>
               <div className="aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-white/10 bg-noir flex items-center justify-center text-center p-6">
                 <div>
