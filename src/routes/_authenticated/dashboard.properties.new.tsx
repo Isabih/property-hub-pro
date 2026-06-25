@@ -90,7 +90,10 @@ function NewProperty() {
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
-    const arr = Array.from(list).slice(0, 10 - files.length);
+    const arr = Array.from(list).slice(0, 15 - files.length);
+    if (files.length + arr.length >= 15) {
+      // silently cap; UI label below already says "up to 15"
+    }
     setFiles((prev) => [...prev, ...arr]);
     setPreviews((prev) => [...prev, ...arr.map((f) => URL.createObjectURL(f))]);
     setSections((prev) => {
