@@ -77,13 +77,15 @@ function HomePage() {
   useEffect(() => {
     if (paused) return;
     const id = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) { nextSlide(); return 0; }
-        return p + 0.5;
-      });
+      setProgress((p) => (p >= 100 ? 100 : p + 0.5));
     }, 30);
     return () => clearInterval(id);
-  }, [paused, nextSlide]);
+  }, [paused]);
+  // Advance the slide as a SIDE EFFECT of progress reaching 100 — never inside
+  // a setState updater (StrictMode runs updaters twice and would double-advance).
+  useEffect(() => {
+    if (progress >= 100) nextSlide();
+  }, [progress, nextSlide]);
   const getFeatured = useServerFn(getFeaturedProperties);
   const { data: featuredReal } = useQuery({
     queryKey: ["home-featured-properties"],
