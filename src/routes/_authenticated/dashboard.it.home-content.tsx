@@ -117,22 +117,53 @@ function Page() {
             <VideoUrlInput value={bg} onChange={setBg} placeholder="https://...mp4 (leave empty to use image slideshow)" />
           </Panel>
 
-          <Panel title="Hero slideshow" subtitle="These rotate on the homepage hero">
-            <div className="space-y-4">
+          <Panel title="Hero slideshow" subtitle="These rotate on the homepage hero. Upload to replace — you'll see a before / after preview before it saves.">
+            <div className="space-y-5">
               {slides.map((s, i) => (
-                <div key={i} className="grid md:grid-cols-[160px_1fr_auto] gap-4 p-4 rounded-lg border border-noir/10 bg-white">
-                  <MediaInput value={s.image} onChange={(v) => updateSlide(i, "image", v)} subdir="hero" aspect="aspect-[4/3]" />
-                  <div className="grid sm:grid-cols-2 gap-2">
-                    <input value={s.title} onChange={(e) => updateSlide(i, "title", e.target.value)} placeholder="Title line 1" className="bg-noir/5 rounded px-3 py-2 text-sm" />
-                    <input value={s.titleAccent} onChange={(e) => updateSlide(i, "titleAccent", e.target.value)} placeholder="Title accent (gold)" className="bg-noir/5 rounded px-3 py-2 text-sm" />
-                    <input value={s.subtitle} onChange={(e) => updateSlide(i, "subtitle", e.target.value)} placeholder="Subtitle" className="sm:col-span-2 bg-noir/5 rounded px-3 py-2 text-sm" />
+                <div key={i} className="rounded-xl border border-noir/10 bg-white overflow-hidden shadow-sm">
+                  <div className="flex items-center justify-between px-4 py-2.5 border-b border-noir/10 bg-noir/[0.03]">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-noir/70">
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gold/20 text-gold-dark">{i + 1}</span>
+                      Slide {i + 1}
+                    </div>
+                    <button
+                      onClick={() => removeSlide(i)}
+                      className="inline-flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
+                      aria-label="Remove slide"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Remove
+                    </button>
                   </div>
-                  <button onClick={() => removeSlide(i)} className="text-red-600 hover:text-red-700 self-start" aria-label="Remove">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="grid md:grid-cols-[minmax(0,360px)_1fr] gap-5 p-4">
+                    <div>
+                      <MediaInput
+                        value={s.image}
+                        onChange={(v) => updateSlide(i, "image", v)}
+                        subdir="hero"
+                        aspect="aspect-[16/10]"
+                        label="Background image"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="grid sm:grid-cols-2 gap-2">
+                        <label className="block">
+                          <span className="text-[11px] uppercase tracking-wider text-noir/50">Title</span>
+                          <input value={s.title} onChange={(e) => updateSlide(i, "title", e.target.value)} placeholder="Discover" className="mt-1 w-full bg-noir/5 rounded px-3 py-2 text-sm" />
+                        </label>
+                        <label className="block">
+                          <span className="text-[11px] uppercase tracking-wider text-noir/50">Accent (gold)</span>
+                          <input value={s.titleAccent} onChange={(e) => updateSlide(i, "titleAccent", e.target.value)} placeholder="Exceptional Living" className="mt-1 w-full bg-noir/5 rounded px-3 py-2 text-sm" />
+                        </label>
+                      </div>
+                      <label className="block">
+                        <span className="text-[11px] uppercase tracking-wider text-noir/50">Subtitle</span>
+                        <textarea value={s.subtitle} onChange={(e) => updateSlide(i, "subtitle", e.target.value)} placeholder="One line that supports the headline." rows={2} className="mt-1 w-full bg-noir/5 rounded px-3 py-2 text-sm resize-none" />
+                      </label>
+                    </div>
+                  </div>
                 </div>
               ))}
-              <button onClick={addSlide} className="inline-flex items-center gap-2 text-sm text-gold hover:underline">
+              <button onClick={addSlide} className="inline-flex items-center gap-2 text-sm font-medium text-gold hover:underline">
                 <Plus className="w-4 h-4" /> Add slide
               </button>
             </div>
