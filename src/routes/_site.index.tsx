@@ -382,7 +382,7 @@ function HomePage() {
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             {(Object.keys(CATEGORY_META) as PropertyCategory[]).map((cat) => {
               const Icon = CATEGORY_ICONS[cat];
-              const count = properties.filter((p) => p.category === cat).length;
+              const count = featured.filter((p) => p.category === cat).length;
               const img = categoryImages[cat];
               return (
                 <Link
