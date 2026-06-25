@@ -627,13 +627,21 @@ const TYPE_TO_CAT: Record<string, PropertyCategory> = {
 
 function featuredToProperty(p: FeaturedProperty): Property {
   const category = TYPE_TO_CAT[p.category] ?? "apartment";
+  const statusMap: Record<string, "available" | "sold" | "rented" | "maintenance"> = {
+    active: "available",
+    available: "available",
+    sold: "sold",
+    rented: "rented",
+    maintenance: "maintenance",
+  };
+  const status = statusMap[p.status] ?? "available";
   return {
     id: p.id,
     slug: p.slug,
     title: p.title,
     category,
     listing: (p.listing_type === "rent" ? "rent" : "sale"),
-    status: "available",
+    status,
     luxury: category === "luxury-apartment" || category === "villa",
     featured: true,
     price: p.price,

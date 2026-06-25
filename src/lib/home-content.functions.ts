@@ -103,6 +103,7 @@ export type FeaturedProperty = {
   area_sqm: number | null;
   category: string;
   cover: string | null;
+  status: string;
 };
 
 export const getFeaturedProperties = createServerFn({ method: "GET" }).handler(async (): Promise<FeaturedProperty[]> => {
@@ -115,7 +116,7 @@ export const getFeaturedProperties = createServerFn({ method: "GET" }).handler(a
   const ids = ((settings as any)?.featured_property_ids as string[] | null) ?? [];
   let query = supabase
     .from("properties")
-    .select("id,slug,title,description,property_type,listing_type,price,currency,bedrooms,bathrooms,area_sqm,city,district,property_images(url,is_cover,position)")
+    .select("id,slug,title,description,property_type,listing_type,price,currency,bedrooms,bathrooms,area_sqm,city,district,status,property_images(url,is_cover,position)")
     .in("status", ["active", "sold", "maintenance"]);
   if (ids.length > 0) query = query.in("id", ids);
   else query = query.order("created_at", { ascending: false }).limit(6);
@@ -140,6 +141,7 @@ export const getFeaturedProperties = createServerFn({ method: "GET" }).handler(a
       area_sqm: p.area_sqm,
       category: p.property_type,
       cover: imgs[0]?.url ?? null,
+      status: p.status ?? "active",
     };
   });
   if (ids.length > 0) {
