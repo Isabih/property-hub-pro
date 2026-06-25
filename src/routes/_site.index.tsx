@@ -608,3 +608,42 @@ function Field({ icon, label, placeholder }: { icon: React.ReactNode; label: str
     </div>
   );
 }
+
+const TYPE_TO_CAT: Record<string, PropertyCategory> = {
+  apartment: "apartment",
+  villa: "villa",
+  penthouse: "luxury-apartment",
+  "luxury-apartment": "luxury-apartment",
+  building: "building",
+  office: "office",
+  land: "land",
+  studio: "studio",
+  commercial: "commercial",
+  residential: "apartment",
+};
+
+function featuredToProperty(p: FeaturedProperty): Property {
+  const category = TYPE_TO_CAT[p.category] ?? "apartment";
+  return {
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    category,
+    listing: (p.listing_type === "rent" ? "rent" : "sale"),
+    status: "available",
+    luxury: category === "luxury-apartment" || category === "villa",
+    featured: true,
+    price: p.price,
+    currency: p.currency === "RWF" ? "RWF" : "USD",
+    priceUnit: p.listing_type === "rent" ? "month" : "total",
+    location: p.city ?? "Kigali",
+    district: p.district ?? "",
+    beds: p.bedrooms ?? undefined,
+    baths: p.bathrooms ?? undefined,
+    area: p.area_sqm ?? 0,
+    description: p.description ?? "",
+    image: p.cover ?? "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1600&q=80",
+    roomGallery: [],
+    amenities: [],
+  };
+}
