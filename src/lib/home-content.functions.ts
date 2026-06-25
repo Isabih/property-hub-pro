@@ -16,6 +16,7 @@ export type HomeContent = {
   category_images: Record<string, string>;
   hero_story_video_url: string;
   hero_video_bg_url: string | null;
+  featured_property_ids: string[];
 };
 
 function publicClient() {
@@ -31,13 +32,14 @@ const DEFAULTS: HomeContent = {
   category_images: {},
   hero_story_video_url: "https://www.youtube.com/watch?v=1uO3l3k7a34",
   hero_video_bg_url: null,
+  featured_property_ids: [],
 };
 
 export const getHomeContent = createServerFn({ method: "GET" }).handler(async (): Promise<HomeContent> => {
   const supabase = publicClient();
   const { data } = await supabase
     .from("app_settings")
-    .select("hero_slides,category_images,hero_story_video_url,hero_video_bg_url")
+    .select("hero_slides,category_images,hero_story_video_url,hero_video_bg_url,featured_property_ids")
     .eq("id", true)
     .maybeSingle();
   if (!data) return DEFAULTS;
@@ -46,21 +48,23 @@ export const getHomeContent = createServerFn({ method: "GET" }).handler(async ()
     category_images: (data.category_images as Record<string, string> | null) ?? {},
     hero_story_video_url: data.hero_story_video_url ?? DEFAULTS.hero_story_video_url,
     hero_video_bg_url: data.hero_video_bg_url ?? null,
+    featured_property_ids: ((data as any).featured_property_ids as string[] | null) ?? [],
   };
 });
 
 const HeroSlideSchema = z.object({
-  image: z.string().url(),
+  image: z.string().url().or(z.literal("")),
   title: z.string().min(1),
   titleAccent: z.string().min(1),
   subtitle: z.string().min(1),
 });
 
 const UpdateSchema = z.object({
-  hero_slides: z.array(HeroSlideSchema).min(1).max(8),
+  hero_slides: z.array(HeroSlideSchema).max(8),
   category_images: z.record(z.string(), z.string().url().or(z.literal(""))),
   hero_story_video_url: z.string().url(),
   hero_video_bg_url: z.string().url().nullable().or(z.literal("")),
+  featured_property_ids: z.array(z.string().uuid()).max(24).default([]),
 });
 
 export const updateHomeContent = createServerFn({ method: "POST" })
@@ -75,6 +79,7 @@ export const updateHomeContent = createServerFn({ method: "POST" })
       category_images: data.category_images,
       hero_story_video_url: data.hero_story_video_url,
       hero_video_bg_url: data.hero_video_bg_url || null,
+      featured_property_ids: data.featured_property_ids ?? [],
       updated_at: new Date().toISOString(),
       updated_by: context.userId,
     };
