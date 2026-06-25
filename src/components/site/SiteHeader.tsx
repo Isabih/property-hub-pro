@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Menu, X, Search, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store, User as UserIcon, LayoutDashboard, LogOut, Mail, Map as MapIcon, Heart, TrendingUp, Sparkles } from "lucide-react";
+import { Menu, X, Search, ChevronDown, Home, Building2, Castle, Building, Briefcase, MapPin, Square, Store, User as UserIcon, LayoutDashboard, LogOut, Mail, Map as MapIcon, Heart, TrendingUp, Sparkles, Sun, Moon } from "lucide-react";
 import logo from "@/assets/novaworks-logo.png";
 import { CATEGORY_META, type PropertyCategory } from "@/lib/properties";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
@@ -31,6 +31,19 @@ export function SiteHeader() {
   const { user, profile, primaryRole, signOut } = useAuth();
   const [userMenu, setUserMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    const stored = (typeof window !== "undefined" && localStorage.getItem("theme")) as "light" | "dark" | null;
+    const next = stored === "dark" ? "dark" : "light";
+    setTheme(next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+  }, []);
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+    try { localStorage.setItem("theme", next); } catch {}
+  };
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
@@ -134,6 +147,14 @@ export function SiteHeader() {
         <div className="hidden md:flex items-center gap-3">
           <button className="w-9 h-9 rounded-full text-white/80 hover:text-white hover:bg-white/10 inline-flex items-center justify-center transition-colors" aria-label="Search">
             <Search className="w-4 h-4" />
+          </button>
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-full text-white/80 hover:text-white hover:bg-white/10 inline-flex items-center justify-center transition-colors"
+            aria-label="Toggle theme"
+            title={theme === "dark" ? "Switch to light" : "Switch to dark"}
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
           {user ? (
             <div className="relative" onMouseLeave={() => setUserMenu(false)}>
