@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Play, Pause, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown, ChevronDown } from "lucide-react";
-import { properties, CATEGORY_META, type PropertyCategory } from "@/lib/properties";
+import { CATEGORY_META, type PropertyCategory, type Property } from "@/lib/properties";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPropertyOfTheDay } from "@/lib/property-of-day.functions";
-import { getHomeContent } from "@/lib/home-content.functions";
+import { getHomeContent, getFeaturedProperties, type FeaturedProperty } from "@/lib/home-content.functions";
 import { ProgressiveImage } from "@/components/site/ProgressiveImage";
 import { getYouTubeId } from "@/components/site/VideoPlayer";
 
@@ -84,7 +84,13 @@ function HomePage() {
     }, 30);
     return () => clearInterval(id);
   }, [paused, nextSlide]);
-  const featured = properties.filter((p) => p.featured);
+  const getFeatured = useServerFn(getFeaturedProperties);
+  const { data: featuredReal } = useQuery({
+    queryKey: ["home-featured-properties"],
+    queryFn: () => getFeatured(),
+    staleTime: 60_000,
+  });
+  const featured: Property[] = (featuredReal ?? []).map(featuredToProperty);
   const getPOD = useServerFn(getPropertyOfTheDay);
   const { data: pod } = useQuery({
     queryKey: ["property-of-the-day"],
@@ -94,6 +100,12 @@ function HomePage() {
   const storyVideo = home?.hero_story_video_url ?? "https://www.youtube.com/watch?v=1uO3l3k7a34";
   const bgVideo = home?.hero_video_bg_url ?? null;
   const currentSlide = HERO_SLIDES[Math.min(slide, HERO_SLIDES.length - 1)] ?? FALLBACK_SLIDES[0];
+  // Real-property images for the "Building Rwanda" collage. Falls back to hero slide images.
+  const collageImages: string[] = (featuredReal ?? [])
+    .map((p) => p.cover)
+    .filter((x): x is string => !!x)
+    .slice(0, 3);
+  while (collageImages.length < 3) collageImages.push(HERO_SLIDES[collageImages.length % HERO_SLIDES.length]?.image ?? FALLBACK_SLIDES[collageImages.length % FALLBACK_SLIDES.length].image);
 
   // Active hero video: either IT-configured background OR Watch-Story toggled
   const activeHeroVideo = storyActive ? storyVideo : bgVideo;
