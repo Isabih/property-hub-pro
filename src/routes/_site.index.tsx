@@ -107,8 +107,10 @@ function HomePage() {
     .slice(0, 3);
   while (collageImages.length < 3) collageImages.push(HERO_SLIDES[collageImages.length % HERO_SLIDES.length]?.image ?? FALLBACK_SLIDES[collageImages.length % FALLBACK_SLIDES.length].image);
 
-  // Active hero video: either IT-configured background OR Watch-Story toggled
-  const activeHeroVideo = storyActive ? storyVideo : bgVideo;
+  // Hero ALWAYS shows the image slideshow by default.
+  // Watch Story toggles the video overlay (prefers the dedicated story video,
+  // falls back to the IT-configured background video if no story is set).
+  const activeHeroVideo = storyActive ? (storyVideo || bgVideo) : null;
   const activeYtId = activeHeroVideo ? getYouTubeId(activeHeroVideo) : null;
   const activeDirect = activeHeroVideo && /\.(mp4|webm|mov|m4v)(\?|$)/i.test(activeHeroVideo);
 
