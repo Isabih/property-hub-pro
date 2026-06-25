@@ -322,7 +322,7 @@ function NewProperty() {
             <label className="border-2 border-dashed border-noir/15 rounded-xl p-6 text-center cursor-pointer block hover:border-gold transition">
               <Upload className="h-6 w-6 mx-auto text-noir/40" />
               <div className="mt-2 text-sm font-medium">Click to upload</div>
-              <div className="text-xs text-noir/50">JPG, PNG, WebP · up to 10 images</div>
+              <div className="text-xs text-noir/50">JPG, PNG, WebP · up to 15 images</div>
               <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => addFiles(e.target.files)} />
             </label>
             {previews.length > 0 && (
