@@ -87,3 +87,64 @@ export const updateHomeContent = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export type FeaturedProperty = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  city: string | null;
+  district: string | null;
+  price: number;
+  currency: string;
+  listing_type: string;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  area_sqm: number | null;
+  category: string;
+  cover: string | null;
+};
+
+export const getFeaturedProperties = createServerFn({ method: "GET" }).handler(async (): Promise<FeaturedProperty[]> => {
+  const supabase = publicClient();
+  const { data: settings } = await supabase
+    .from("app_settings")
+    .select("featured_property_ids")
+    .eq("id", true)
+    .maybeSingle();
+  const ids = ((settings as any)?.featured_property_ids as string[] | null) ?? [];
+  let query = supabase
+    .from("properties")
+    .select("id,slug,title,description,property_type,listing_type,price,currency,bedrooms,bathrooms,area_sqm,city,district,property_images(url,is_cover,position)")
+    .in("status", ["active", "sold", "maintenance"]);
+  if (ids.length > 0) query = query.in("id", ids);
+  else query = query.order("created_at", { ascending: false }).limit(6);
+  const { data } = await query;
+  const rows = (data ?? []) as any[];
+  const mapped: FeaturedProperty[] = rows.map((p) => {
+    const imgs = (p.property_images ?? []).slice().sort((a: any, b: any) =>
+      a.is_cover === b.is_cover ? (a.position ?? 0) - (b.position ?? 0) : a.is_cover ? -1 : 1,
+    );
+    return {
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      description: p.description,
+      city: p.city,
+      district: p.district,
+      price: Number(p.price) || 0,
+      currency: p.currency,
+      listing_type: p.listing_type,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      area_sqm: p.area_sqm,
+      category: p.property_type,
+      cover: imgs[0]?.url ?? null,
+    };
+  });
+  if (ids.length > 0) {
+    const order = new Map(ids.map((id, i) => [id, i]));
+    mapped.sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
+  }
+  return mapped;
+});
