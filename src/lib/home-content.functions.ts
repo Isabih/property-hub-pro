@@ -16,6 +16,7 @@ export type HomeContent = {
   category_images: Record<string, string>;
   hero_story_video_url: string;
   hero_video_bg_url: string | null;
+  featured_property_ids: string[];
 };
 
 function publicClient() {
@@ -31,13 +32,14 @@ const DEFAULTS: HomeContent = {
   category_images: {},
   hero_story_video_url: "https://www.youtube.com/watch?v=1uO3l3k7a34",
   hero_video_bg_url: null,
+  featured_property_ids: [],
 };
 
 export const getHomeContent = createServerFn({ method: "GET" }).handler(async (): Promise<HomeContent> => {
   const supabase = publicClient();
   const { data } = await supabase
     .from("app_settings")
-    .select("hero_slides,category_images,hero_story_video_url,hero_video_bg_url")
+    .select("hero_slides,category_images,hero_story_video_url,hero_video_bg_url,featured_property_ids")
     .eq("id", true)
     .maybeSingle();
   if (!data) return DEFAULTS;
@@ -46,21 +48,23 @@ export const getHomeContent = createServerFn({ method: "GET" }).handler(async ()
     category_images: (data.category_images as Record<string, string> | null) ?? {},
     hero_story_video_url: data.hero_story_video_url ?? DEFAULTS.hero_story_video_url,
     hero_video_bg_url: data.hero_video_bg_url ?? null,
+    featured_property_ids: ((data as any).featured_property_ids as string[] | null) ?? [],
   };
 });
 
 const HeroSlideSchema = z.object({
-  image: z.string().url(),
+  image: z.string().url().or(z.literal("")),
   title: z.string().min(1),
   titleAccent: z.string().min(1),
   subtitle: z.string().min(1),
 });
 
 const UpdateSchema = z.object({
-  hero_slides: z.array(HeroSlideSchema).min(1).max(8),
+  hero_slides: z.array(HeroSlideSchema).max(8),
   category_images: z.record(z.string(), z.string().url().or(z.literal(""))),
   hero_story_video_url: z.string().url(),
   hero_video_bg_url: z.string().url().nullable().or(z.literal("")),
+  featured_property_ids: z.array(z.string().uuid()).max(24).default([]),
 });
 
 export const updateHomeContent = createServerFn({ method: "POST" })
@@ -75,6 +79,7 @@ export const updateHomeContent = createServerFn({ method: "POST" })
       category_images: data.category_images,
       hero_story_video_url: data.hero_story_video_url,
       hero_video_bg_url: data.hero_video_bg_url || null,
+      featured_property_ids: data.featured_property_ids ?? [],
       updated_at: new Date().toISOString(),
       updated_by: context.userId,
     };
@@ -82,3 +87,64 @@ export const updateHomeContent = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export type FeaturedProperty = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  city: string | null;
+  district: string | null;
+  price: number;
+  currency: string;
+  listing_type: string;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  area_sqm: number | null;
+  category: string;
+  cover: string | null;
+};
+
+export const getFeaturedProperties = createServerFn({ method: "GET" }).handler(async (): Promise<FeaturedProperty[]> => {
+  const supabase = publicClient();
+  const { data: settings } = await supabase
+    .from("app_settings")
+    .select("featured_property_ids")
+    .eq("id", true)
+    .maybeSingle();
+  const ids = ((settings as any)?.featured_property_ids as string[] | null) ?? [];
+  let query = supabase
+    .from("properties")
+    .select("id,slug,title,description,property_type,listing_type,price,currency,bedrooms,bathrooms,area_sqm,city,district,property_images(url,is_cover,position)")
+    .in("status", ["active", "sold", "maintenance"]);
+  if (ids.length > 0) query = query.in("id", ids);
+  else query = query.order("created_at", { ascending: false }).limit(6);
+  const { data } = await query;
+  const rows = (data ?? []) as any[];
+  const mapped: FeaturedProperty[] = rows.map((p) => {
+    const imgs = (p.property_images ?? []).slice().sort((a: any, b: any) =>
+      a.is_cover === b.is_cover ? (a.position ?? 0) - (b.position ?? 0) : a.is_cover ? -1 : 1,
+    );
+    return {
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      description: p.description,
+      city: p.city,
+      district: p.district,
+      price: Number(p.price) || 0,
+      currency: p.currency,
+      listing_type: p.listing_type,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      area_sqm: p.area_sqm,
+      category: p.property_type,
+      cover: imgs[0]?.url ?? null,
+    };
+  });
+  if (ids.length > 0) {
+    const order = new Map(ids.map((id, i) => [id, i]));
+    mapped.sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
+  }
+  return mapped;
+});
