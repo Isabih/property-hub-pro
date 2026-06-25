@@ -21,7 +21,6 @@ const MAIN_LINKS = [
   { to: "/services", label: "What we do" },
   { to: "/investors", label: "Invest" },
   { to: "/portfolio", label: "Portfolio" },
-  { to: "/blog", label: "Blog" },
   { to: "/about", label: "Who we are" },
   { to: "/contact", label: "Contact" },
 ];
