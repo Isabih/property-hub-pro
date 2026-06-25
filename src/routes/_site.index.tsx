@@ -451,8 +451,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TRUST / STATS */}
-
       {/* PROPERTY OF THE DAY — featured below services per site arrangement */}
       {pod && (
         <section className="py-24 bg-gradient-to-b from-noir-deep via-noir to-noir-deep text-white relative overflow-hidden">
