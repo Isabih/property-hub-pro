@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, Image as ImageIcon, Plus, Trash2, Save, Loader2, Star, Building2 } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, Plus, Trash2, Save, Loader2, Star, Building2, Check } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
 import { getHomeContent, updateHomeContent, type HeroSlide } from "@/lib/home-content.functions";
+import { listPropertiesForPicker } from "@/lib/property-of-day.functions";
 import { CATEGORY_META, type PropertyCategory } from "@/lib/properties";
 import { toast } from "sonner";
 import { MediaInput } from "@/components/dashboard/MediaInput";
@@ -29,24 +30,29 @@ const NAV = [
 function Page() {
   const load = useServerFn(getHomeContent);
   const save = useServerFn(updateHomeContent);
+  const loadProps = useServerFn(listPropertiesForPicker);
 
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [cats, setCats] = useState<Record<string, string>>({});
   const [video, setVideo] = useState("");
   const [bg, setBg] = useState("");
+  const [featuredIds, setFeaturedIds] = useState<string[]>([]);
+  const [allProps, setAllProps] = useState<Array<{ id: string; title: string; city: string | null; district: string | null; cover: string | null; status: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    load()
-      .then((d) => {
+    Promise.all([load(), loadProps().catch(() => [])])
+      .then(([d, props]) => {
         setSlides(d.hero_slides);
         setCats(d.category_images);
         setVideo(d.hero_story_video_url);
         setBg(d.hero_video_bg_url ?? "");
+        setFeaturedIds(d.featured_property_ids ?? []);
+        setAllProps((props as any[]) ?? []);
       })
       .finally(() => setLoading(false));
-  }, [load]);
+  }, [load, loadProps]);
 
   const updateSlide = (i: number, k: keyof HeroSlide, v: string) =>
     setSlides((s) => s.map((x, idx) => (idx === i ? { ...x, [k]: v } : x)));
@@ -65,16 +71,37 @@ function Page() {
       toast.error("Hero background video URL is not supported");
       return;
     }
+    // Strip slides without an image — they cause "invalid_format url" errors
+    const cleanSlides = slides
+      .map((s) => ({ ...s, image: s.image?.trim() ?? "" }))
+      .filter((s) => s.image.length > 0);
+    if (cleanSlides.length !== slides.length) {
+      toast.info(`Skipped ${slides.length - cleanSlides.length} empty slide(s) without an image`);
+    }
     setSaving(true);
     try {
-      await save({ data: { hero_slides: slides, category_images: cats, hero_story_video_url: video, hero_video_bg_url: bg || "" } });
+      await save({ data: { hero_slides: cleanSlides, category_images: cats, hero_story_video_url: video, hero_video_bg_url: bg || "", featured_property_ids: featuredIds } });
+      setSlides(cleanSlides);
       toast.success("Homepage content saved");
     } catch (e: any) {
-      toast.error(e.message ?? "Failed to save");
+      const msg = typeof e?.message === "string" ? e.message : "Failed to save";
+      try {
+        const parsed = JSON.parse(msg);
+        if (Array.isArray(parsed) && parsed[0]?.message) {
+          toast.error(`${parsed[0].path?.join(".") ?? "field"}: ${parsed[0].message}`);
+        } else {
+          toast.error(msg);
+        }
+      } catch {
+        toast.error(msg);
+      }
     } finally {
       setSaving(false);
     }
   };
+
+  const toggleFeatured = (id: string) =>
+    setFeaturedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   return (
     <DashboardShell title="Homepage Content" subtitle="Manage hero images, category images and the Watch Story video" role="it" nav={NAV}>
@@ -109,6 +136,49 @@ function Page() {
                 <Plus className="w-4 h-4" /> Add slide
               </button>
             </div>
+          </Panel>
+
+          <Panel
+            title="Hand-Picked Residences"
+            subtitle={`Pick which registered properties show in 'Hand-Picked Residences' and the 'Building Rwanda' imagery. ${featuredIds.length} selected. Leave empty to auto-show the 6 newest.`}
+          >
+            {allProps.length === 0 ? (
+              <div className="text-sm text-noir/60">No registered properties yet. Add one from Properties → New.</div>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {allProps.map((p) => {
+                  const selected = featuredIds.includes(p.id);
+                  const order = featuredIds.indexOf(p.id);
+                  return (
+                    <button
+                      type="button"
+                      key={p.id}
+                      onClick={() => toggleFeatured(p.id)}
+                      className={`relative text-left rounded-lg overflow-hidden border bg-white transition ${
+                        selected ? "border-gold ring-2 ring-gold/40" : "border-noir/10 hover:border-noir/30"
+                      }`}
+                    >
+                      <div className="aspect-[4/3] bg-noir/5">
+                        {p.cover ? (
+                          <img src={p.cover} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-noir/30 text-xs">No image</div>
+                        )}
+                      </div>
+                      <div className="p-2.5">
+                        <div className="text-sm font-medium text-noir line-clamp-1">{p.title}</div>
+                        <div className="text-xs text-noir/50">{[p.district, p.city].filter(Boolean).join(", ") || "—"}</div>
+                      </div>
+                      {selected && (
+                        <div className="absolute top-2 right-2 inline-flex items-center gap-1 bg-gold text-noir-deep text-[10px] font-bold px-2 py-1 rounded-full">
+                          <Check className="w-3 h-3" /> #{order + 1}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </Panel>
 
           <Panel title="Explore Property Types — images" subtitle="Image shown on each category tile (leave empty to use icon only)">
