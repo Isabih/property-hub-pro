@@ -339,8 +339,10 @@ function HomePage() {
       </section>
 
       {/* BUILDING RWANDA'S REAL ESTATE FUTURE */}
-      <section className="py-24 bg-gradient-to-br from-noir-deep via-noir to-noir-deep text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_bottom_left,_var(--color-gold)_0%,_transparent_45%)]" />
+      <section className="py-24 bg-black text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-noir-deep to-black" />
+        <div className="absolute inset-0 opacity-[0.12] bg-[radial-gradient(circle_at_bottom_left,_var(--color-gold)_0%,_transparent_45%)]" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="container-luxe relative grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold">
@@ -453,8 +455,10 @@ function HomePage() {
 
       {/* PROPERTY OF THE DAY — featured below services per site arrangement */}
       {pod && (
-        <section className="py-24 bg-gradient-to-b from-noir-deep via-noir to-noir-deep text-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_var(--color-gold)_0%,_transparent_50%)]" />
+        <section className="py-24 bg-black text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-noir-deep to-black" />
+          <div className="absolute inset-0 opacity-[0.10] bg-[radial-gradient(circle_at_top_right,_var(--color-gold)_0%,_transparent_50%)]" />
+          <div className="absolute inset-0 bg-black/40" />
           <div className="container-luxe relative">
             <div className="text-center max-w-2xl mx-auto">
               <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold">
@@ -627,13 +631,21 @@ const TYPE_TO_CAT: Record<string, PropertyCategory> = {
 
 function featuredToProperty(p: FeaturedProperty): Property {
   const category = TYPE_TO_CAT[p.category] ?? "apartment";
+  const statusMap: Record<string, "available" | "sold" | "rented" | "maintenance"> = {
+    active: "available",
+    available: "available",
+    sold: "sold",
+    rented: "rented",
+    maintenance: "maintenance",
+  };
+  const status = statusMap[p.status] ?? "available";
   return {
     id: p.id,
     slug: p.slug,
     title: p.title,
     category,
     listing: (p.listing_type === "rent" ? "rent" : "sale"),
-    status: "available",
+    status,
     luxury: category === "luxury-apartment" || category === "villa",
     featured: true,
     price: p.price,
