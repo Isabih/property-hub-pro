@@ -68,6 +68,7 @@ export type Database = {
           contact_ceo: Json | null
           contact_info: Json | null
           contact_team: Json | null
+          featured_property_ids: string[]
           from_email: string
           hero_slides: Json
           hero_story_video_url: string
@@ -92,6 +93,7 @@ export type Database = {
           contact_ceo?: Json | null
           contact_info?: Json | null
           contact_team?: Json | null
+          featured_property_ids?: string[]
           from_email?: string
           hero_slides?: Json
           hero_story_video_url?: string
@@ -116,6 +118,7 @@ export type Database = {
           contact_ceo?: Json | null
           contact_info?: Json | null
           contact_team?: Json | null
+          featured_property_ids?: string[]
           from_email?: string
           hero_slides?: Json
           hero_story_video_url?: string
