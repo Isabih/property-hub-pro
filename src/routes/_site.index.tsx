@@ -382,7 +382,6 @@ function HomePage() {
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
             {(Object.keys(CATEGORY_META) as PropertyCategory[]).map((cat) => {
               const Icon = CATEGORY_ICONS[cat];
-              const count = featured.filter((p) => p.category === cat).length;
               const img = categoryImages[cat];
               return (
                 <Link
@@ -402,7 +401,7 @@ function HomePage() {
                           </span>
                           <span className="font-display text-lg">{CATEGORY_META[cat].plural}</span>
                         </div>
-                        <div className="text-xs text-white/70 mt-1">{count} listings</div>
+                        <div className="text-xs text-white/70 mt-1">Explore</div>
                       </div>
                       <ArrowRight className="absolute top-4 right-4 w-4 h-4 text-white/80 group-hover:text-gold group-hover:translate-x-1 transition-all" />
                     </div>
@@ -412,7 +411,7 @@ function HomePage() {
                         <Icon className="w-6 h-6" />
                       </div>
                       <div className="mt-5 font-display text-xl text-foreground">{CATEGORY_META[cat].plural}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{count} listings</div>
+                      <div className="text-xs text-muted-foreground mt-1">Explore</div>
                       <ArrowRight className="absolute top-6 right-6 w-4 h-4 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
                     </div>
                   )}
