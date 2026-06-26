@@ -63,6 +63,7 @@ export type Database = {
       }
       app_settings: {
         Row: {
+          auth_hero_image_url: string | null
           brand_color: string
           category_images: Json
           contact_ceo: Json | null
@@ -88,6 +89,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          auth_hero_image_url?: string | null
           brand_color?: string
           category_images?: Json
           contact_ceo?: Json | null
@@ -113,6 +115,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          auth_hero_image_url?: string | null
           brand_color?: string
           category_images?: Json
           contact_ceo?: Json | null
