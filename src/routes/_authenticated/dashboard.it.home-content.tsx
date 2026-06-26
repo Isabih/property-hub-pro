@@ -37,6 +37,7 @@ function Page() {
   const [video, setVideo] = useState("");
   const [bg, setBg] = useState("");
   const [featuredIds, setFeaturedIds] = useState<string[]>([]);
+  const [authHero, setAuthHero] = useState("");
   const [allProps, setAllProps] = useState<Array<{ id: string; title: string; city: string | null; district: string | null; cover: string | null; status: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -49,6 +50,7 @@ function Page() {
         setVideo(d.hero_story_video_url);
         setBg(d.hero_video_bg_url ?? "");
         setFeaturedIds(d.featured_property_ids ?? []);
+        setAuthHero(d.auth_hero_image_url ?? "");
         setAllProps((props as any[]) ?? []);
       })
       .finally(() => setLoading(false));
@@ -80,7 +82,7 @@ function Page() {
     }
     setSaving(true);
     try {
-      await save({ data: { hero_slides: cleanSlides, category_images: cats, hero_story_video_url: video, hero_video_bg_url: bg || "", featured_property_ids: featuredIds } });
+      await save({ data: { hero_slides: cleanSlides, category_images: cats, hero_story_video_url: video, hero_video_bg_url: bg || "", featured_property_ids: featuredIds, auth_hero_image_url: authHero || "" } });
       setSlides(cleanSlides);
       toast.success("Homepage content saved");
     } catch (e: any) {
@@ -115,6 +117,10 @@ function Page() {
 
           <Panel title="Hero background video (optional)" subtitle="If set, replaces the slideshow image with a looping muted video">
             <VideoUrlInput value={bg} onChange={setBg} placeholder="https://...mp4 (leave empty to use image slideshow)" />
+          </Panel>
+
+          <Panel title="Sign-in page background" subtitle="Image shown on the right side of the /auth sign-in page. Leave empty to use the default.">
+            <MediaInput value={authHero} onChange={setAuthHero} subdir="auth" aspect="aspect-[4/5]" label="Auth hero image" />
           </Panel>
 
           <Panel title="Hero slideshow" subtitle="These rotate on the homepage hero. Upload to replace — you'll see a before / after preview before it saves.">

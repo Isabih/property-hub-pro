@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
 import { VerifyOtpModal } from "@/components/auth/VerifyOtpModal";
+import { useServerFn } from "@tanstack/react-start";
+import { getHomeContent } from "@/lib/home-content.functions";
 
 export const Route = createFileRoute("/auth/")({
   head: () => ({
@@ -17,7 +19,7 @@ export const Route = createFileRoute("/auth/")({
   component: AuthPage,
 });
 
-const HERO_IMAGE = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=80";
+const DEFAULT_HERO_IMAGE = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=80";
 
 const signInSchema = z.object({
   email: z.string().trim().email("Enter a valid email").max(255),
@@ -40,6 +42,13 @@ function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [remember, setRemember] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState<string | null>(null);
+  const loadHome = useServerFn(getHomeContent);
+  const [heroImage, setHeroImage] = useState<string>(DEFAULT_HERO_IMAGE);
+  useEffect(() => {
+    loadHome().then((d) => {
+      if (d?.auth_hero_image_url) setHeroImage(d.auth_hero_image_url);
+    }).catch(() => {});
+  }, [loadHome]);
 
   // Sign-in fields
   const [siEmail, setSiEmail] = useState("");
@@ -290,18 +299,18 @@ function AuthPage() {
 
       {/* Right: hero */}
       <div className="relative hidden lg:block">
-        <img src={HERO_IMAGE} alt="Luxury property" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-noir-deep/55" />
-        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/60 to-noir-deep/30" />
+        <img src={heroImage} alt="Luxury property" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-noir-deep/75" />
+        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/80 to-noir-deep/50" />
         <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
           <blockquote className="font-display text-2xl italic leading-snug max-w-md">
             "NOVAWORKS made finding our dream home effortless. Their attention to detail and personalized service exceeded all our expectations."
           </blockquote>
           <div className="mt-6 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gold/30 text-white flex items-center justify-center text-xs font-semibold">JM</div>
+            <div className="h-10 w-10 rounded-full bg-gold/30 text-white flex items-center justify-center text-xs font-semibold">NW</div>
             <div>
-              <div className="font-semibold">Jean-Marie Uwimana</div>
-              <div className="text-xs text-white/70">Property Owner, Kigali</div>
+              <div className="font-semibold">NOVAWORKS</div>
+              <div className="text-xs text-white/70">Kigali, Rwanda</div>
             </div>
           </div>
         </div>
