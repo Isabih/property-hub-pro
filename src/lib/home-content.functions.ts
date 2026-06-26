@@ -17,6 +17,7 @@ export type HomeContent = {
   hero_story_video_url: string;
   hero_video_bg_url: string | null;
   featured_property_ids: string[];
+  auth_hero_image_url: string | null;
 };
 
 function publicClient() {
@@ -33,13 +34,14 @@ const DEFAULTS: HomeContent = {
   hero_story_video_url: "https://www.youtube.com/watch?v=1uO3l3k7a34",
   hero_video_bg_url: null,
   featured_property_ids: [],
+  auth_hero_image_url: null,
 };
 
 export const getHomeContent = createServerFn({ method: "GET" }).handler(async (): Promise<HomeContent> => {
   const supabase = publicClient();
   const { data } = await supabase
     .from("app_settings")
-    .select("hero_slides,category_images,hero_story_video_url,hero_video_bg_url,featured_property_ids")
+    .select("hero_slides,category_images,hero_story_video_url,hero_video_bg_url,featured_property_ids,auth_hero_image_url")
     .eq("id", true)
     .maybeSingle();
   if (!data) return DEFAULTS;
@@ -49,6 +51,7 @@ export const getHomeContent = createServerFn({ method: "GET" }).handler(async ()
     hero_story_video_url: data.hero_story_video_url ?? DEFAULTS.hero_story_video_url,
     hero_video_bg_url: data.hero_video_bg_url ?? null,
     featured_property_ids: ((data as any).featured_property_ids as string[] | null) ?? [],
+    auth_hero_image_url: ((data as any).auth_hero_image_url as string | null) ?? null,
   };
 });
 
@@ -65,6 +68,7 @@ const UpdateSchema = z.object({
   hero_story_video_url: z.string().url(),
   hero_video_bg_url: z.string().url().nullable().or(z.literal("")),
   featured_property_ids: z.array(z.string().uuid()).max(24).default([]),
+  auth_hero_image_url: z.string().url().or(z.literal("")).nullable().default(""),
 });
 
 export const updateHomeContent = createServerFn({ method: "POST" })
@@ -80,6 +84,7 @@ export const updateHomeContent = createServerFn({ method: "POST" })
       hero_story_video_url: data.hero_story_video_url,
       hero_video_bg_url: data.hero_video_bg_url || null,
       featured_property_ids: data.featured_property_ids ?? [],
+      auth_hero_image_url: data.auth_hero_image_url || null,
       updated_at: new Date().toISOString(),
       updated_by: context.userId,
     };
