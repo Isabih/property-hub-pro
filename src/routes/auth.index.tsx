@@ -300,8 +300,8 @@ function AuthPage() {
       {/* Right: hero */}
       <div className="relative hidden lg:block">
         <img src={heroImage} alt="Luxury property" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-noir-deep/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/80 to-noir-deep/50" />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/85 to-noir-deep/60" />
         <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
           <blockquote className="font-display text-2xl italic leading-snug max-w-md">
             "NOVAWORKS made finding our dream home effortless. Their attention to detail and personalized service exceeded all our expectations."
