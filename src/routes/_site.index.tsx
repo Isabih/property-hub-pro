@@ -148,6 +148,11 @@ function HomePage() {
               <ProgressiveImage
                 src={s.image}
                 alt={s.title}
+                priority={i === 0}
+                width={1920}
+                height={1080}
+                sizes="100vw"
+                widths={[800, 1200, 1600, 1920]}
                 containerClassName="absolute inset-0"
                 className="w-full h-full object-cover"
               />

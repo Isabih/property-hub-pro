@@ -21,7 +21,10 @@ export function PropertyCard({ property: p }: { property: Property }) {
         <ProgressiveImage
           src={p.image}
           alt={p.title}
-          loading="lazy"
+          width={800}
+          height={600}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          widths={[400, 600, 800, 1200]}
           containerClassName="absolute inset-0"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
