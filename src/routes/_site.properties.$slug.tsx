@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bed, Bath, Maximize2, Car, MapPin, Crown, Heart, Share2, Phone, Mail, MessageCircle,
   Check, ArrowLeft, Play, Image as ImageIcon, Box, FileText, Lock, Star, Printer,
@@ -50,9 +50,9 @@ function PropertyDetail() {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [gateOpen, setGateOpen] = useState(false);
   // Luxury gate: if property is luxury and visitor has no access token, block content
-  useState(() => {
-    if (typeof window !== "undefined" && p.luxury && !hasLuxuryAccess()) setGateOpen(true);
-  });
+  useEffect(() => {
+    if (p.luxury && !hasLuxuryAccess()) setGateOpen(true);
+  }, [p.luxury]);
   const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
   const lightboxImages = roomGallery.map((g) => ({ src: g.src, label: g.label ?? ROOM_META[g.room].label }));
   const openLightboxFor = (src: string) => {
