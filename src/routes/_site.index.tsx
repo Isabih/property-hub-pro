@@ -307,8 +307,18 @@ function HomePage() {
             <p className="mt-3 text-muted-foreground">From sun-drenched studios to private estates, find the home that matches your standard.</p>
           </div>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {(Object.keys(CATEGORY_META) as PropertyCategory[]).map((cat) => {
-              const Icon = CATEGORY_ICONS[cat];
+            {(dynCats
+              ? dynCats.filter((c) => c.enabled)
+              : (Object.keys(CATEGORY_META) as PropertyCategory[]).map((k) => ({
+                  key: k,
+                  label: CATEGORY_META[k].label,
+                  plural: CATEGORY_META[k].plural,
+                  description: CATEGORY_META[k].description,
+                  enabled: true,
+                }))
+            ).map((c) => {
+              const cat = c.key as PropertyCategory;
+              const Icon = CATEGORY_ICONS[cat] ?? Building2;
               const img = categoryImages[cat];
               return (
                 <Link
@@ -319,14 +329,14 @@ function HomePage() {
                 >
                   {img ? (
                     <div className="relative aspect-[4/3] overflow-hidden">
-                      <img src={img} alt={CATEGORY_META[cat].plural} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <img src={img} alt={c.plural} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/40 to-transparent" />
                       <div className="absolute inset-x-0 bottom-0 p-5">
                         <div className="inline-flex items-center gap-2 text-white">
                           <span className="w-8 h-8 rounded-md bg-gold/90 text-noir-deep flex items-center justify-center">
                             <Icon className="w-4 h-4" />
                           </span>
-                          <span className="font-display text-lg">{CATEGORY_META[cat].plural}</span>
+                          <span className="font-display text-lg">{c.plural}</span>
                         </div>
                         <div className="text-xs text-white/70 mt-1">Explore</div>
                       </div>
@@ -337,7 +347,7 @@ function HomePage() {
                       <div className="w-12 h-12 rounded-lg bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-noir-deep transition-colors">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <div className="mt-5 font-display text-xl text-foreground">{CATEGORY_META[cat].plural}</div>
+                      <div className="mt-5 font-display text-xl text-foreground">{c.plural}</div>
                       <div className="text-xs text-muted-foreground mt-1">Explore</div>
                       <ArrowRight className="absolute top-6 right-6 w-4 h-4 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
                     </div>
