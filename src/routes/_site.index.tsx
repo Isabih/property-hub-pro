@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Play, Pause, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown, ChevronDown } from "lucide-react";
 import { CATEGORY_META, type PropertyCategory, type Property } from "@/lib/properties";
+import { fetchPropertyCategories } from "@/lib/property-types-public";
+import type { PropertyTypeRow } from "@/lib/property-types.functions";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -58,6 +60,10 @@ function HomePage() {
   const [tab, setTab] = useState<"rent" | "sale" | "all">("rent");
   const [storyActive, setStoryActive] = useState(false);
   const [slide, setSlide] = useState(0);
+  const [dynCats, setDynCats] = useState<PropertyTypeRow[] | null>(null);
+  useEffect(() => {
+    fetchPropertyCategories().then((d) => setDynCats(d.length ? d : null)).catch(() => {});
+  }, []);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
