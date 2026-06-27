@@ -8,5 +8,5 @@ export async function fetchPropertyCategories(): Promise<PropertyTypeRow[]> {
     .eq("id", true)
     .maybeSingle();
   if (error || !data) return [];
-  return (data.property_categories as PropertyTypeRow[]) ?? [];
+  return (data.property_categories as unknown as PropertyTypeRow[]) ?? [];
 }
