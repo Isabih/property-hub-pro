@@ -12,6 +12,8 @@ import {
 import { fetchPropertyBySlug } from "@/lib/properties-public";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { VideoPlayer } from "@/components/site/VideoPlayer";
+import { Lightbox } from "@/components/site/Lightbox";
+import { LuxuryGate, hasLuxuryAccess } from "@/components/site/LuxuryGate";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
@@ -45,7 +47,18 @@ function PropertyDetail() {
   const rooms = Array.from(new Set(roomGallery.map((g) => g.room)));
   const [activeRoom, setActiveRoom] = useState<RoomCategory | "all">("all");
   const [mediaTab, setMediaTab] = useState<"photos" | "video" | "tour" | "floorplan">("photos");
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const [gateOpen, setGateOpen] = useState(false);
+  // Luxury gate: if property is luxury and visitor has no access token, block content
+  useState(() => {
+    if (typeof window !== "undefined" && p.luxury && !hasLuxuryAccess()) setGateOpen(true);
+  });
   const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
+  const lightboxImages = roomGallery.map((g) => ({ src: g.src, label: g.label ?? ROOM_META[g.room].label }));
+  const openLightboxFor = (src: string) => {
+    const i = roomGallery.findIndex((g) => g.src === src);
+    setLightboxIdx(i >= 0 ? i : 0);
+  };
   const related: Property[] = [];
   const heroMain = roomGallery[0];
   const heroSide = roomGallery.slice(1, 5);
@@ -53,6 +66,15 @@ function PropertyDetail() {
 
   return (
     <div className="bg-background">
+      {gateOpen && <LuxuryGate slug={p.slug} />}
+      {lightboxIdx !== null && (
+        <Lightbox
+          images={lightboxImages}
+          index={lightboxIdx}
+          onClose={() => setLightboxIdx(null)}
+          onIndexChange={setLightboxIdx}
+        />
+      )}
       {/* Hero collage */}
       <section className="bg-noir-deep pt-6">
         <div className="container-luxe">
@@ -61,7 +83,11 @@ function PropertyDetail() {
           </Link>
 
           <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[480px] rounded-2xl overflow-hidden">
-            <div className="col-span-2 row-span-2 relative">
+            <button
+              type="button"
+              onClick={() => openLightboxFor(heroMain.src)}
+              className="col-span-2 row-span-2 relative group cursor-zoom-in"
+            >
               <img src={heroMain.src} alt={heroMain.label ?? ROOM_META[heroMain.room].label} className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 flex gap-2">
                 {p.luxury && (
@@ -70,16 +96,21 @@ function PropertyDetail() {
                   </span>
                 )}
               </div>
-            </div>
+            </button>
             {heroSide.map((g, i) => (
-              <div key={i} className="relative">
+              <button
+                type="button"
+                key={i}
+                onClick={() => openLightboxFor(g.src)}
+                className="relative cursor-zoom-in group"
+              >
                 <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
                 {i === heroSide.length - 1 && extraCount > 0 && (
                   <div className="absolute inset-0 bg-noir-deep/55 flex items-center justify-center text-white">
                     <Maximize2 className="w-5 h-5 mr-1" /> +{extraCount} more
                   </div>
                 )}
-              </div>
+              </button>
             ))}
           </div>
 
@@ -149,7 +180,11 @@ function PropertyDetail() {
                   )}
                   <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
                     {filtered.map((g, i) => (
-                      <figure key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden group">
+                      <figure
+                        key={i}
+                        onClick={() => openLightboxFor(g.src)}
+                        className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-zoom-in"
+                      >
                         <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                         <figcaption className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider text-white bg-noir-deep/70 px-2 py-1 rounded">
                           {ROOM_META[g.room].label}
