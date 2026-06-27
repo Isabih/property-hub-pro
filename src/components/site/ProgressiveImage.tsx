@@ -1,12 +1,31 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { cfImage, cfImageSrcSet, type CfImageOpts } from "@/lib/cf-image";
 
-type Props = Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> & {
+type Props = Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "width" | "height"> & {
   src: string;
   alt: string;
   containerClassName?: string;
-  /** Set to "high" / eager for above-the-fold LCP images. */
+  /** Intrinsic dimensions — used for CLS prevention AND as the default resize width. */
+  width?: number;
+  height?: number;
+  /** Set to true for above-the-fold LCP images (eager + fetchpriority=high). */
   priority?: boolean;
+  /** Widths for srcset. Defaults to a sensible ladder around `width`. */
+  widths?: number[];
+  /** <img sizes> attribute. Required for srcset to work. */
+  sizes?: string;
+  /** Image quality (1-100). Default 80. */
+  quality?: number;
+  /** Fit mode for the Cloudflare resize. Default "cover". */
+  fit?: CfImageOpts["fit"];
 };
+
+function defaultLadder(w?: number): number[] {
+  if (!w) return [400, 800, 1200, 1600];
+  return Array.from(new Set([Math.round(w / 2), w, w * 2].filter((n) => n >= 200 && n <= 2400))).sort(
+    (a, b) => a - b,
+  );
+}
 
 /**
  * Lightweight image with skeleton + fade-in.
@@ -20,10 +39,22 @@ export function ProgressiveImage({
   containerClassName = "",
   priority = false,
   loading,
+  width,
+  height,
+  widths,
+  sizes,
+  quality = 80,
+  fit = "cover",
   ...rest
 }: Props) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
+  const [fallback, setFallback] = useState(false);
+
+  const ladder = useMemo(() => widths ?? defaultLadder(width), [widths, width]);
+  const opts: CfImageOpts = { quality, fit, format: "auto", height };
+  const resolvedSrc = fallback ? src : cfImage(src, { ...opts, width: width ?? ladder[ladder.length - 1] });
+  const srcSet = fallback ? undefined : cfImageSrcSet(src, ladder, opts) || undefined;
 
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
@@ -36,14 +67,26 @@ export function ProgressiveImage({
         </div>
       )}
       <img
-        src={src}
+        src={resolvedSrc}
+        srcSet={srcSet}
+        sizes={sizes}
+        width={width}
+        height={height}
         alt={alt}
         loading={loading ?? (priority ? "eager" : "lazy")}
         decoding="async"
         // @ts-expect-error - fetchpriority is valid HTML, not yet in React types in all versions
         fetchpriority={priority ? "high" : "auto"}
         onLoad={() => setLoaded(true)}
-        onError={() => setErrored(true)}
+        onError={() => {
+          // If the CF-resized URL failed (zone without Image Resizing, etc.),
+          // retry once with the original src before giving up.
+          if (!fallback && resolvedSrc !== src) {
+            setFallback(true);
+          } else {
+            setErrored(true);
+          }
+        }}
         className={`${className} ${loaded ? "animate-img-fade-in" : "opacity-0"}`}
         {...rest}
       />
