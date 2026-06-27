@@ -1,4 +1,4 @@
-import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, BarChart3, UserPlus, Bell, Wrench, Mail, Film, Plus, Server, Image as ImageIcon, Star } from "lucide-react";
+import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, BarChart3, UserPlus, Bell, Wrench, Mail, Film, Plus, Server, Image as ImageIcon, Star, Layers } from "lucide-react";
 import type { NavItem } from "./DashboardShell";
 import type { AppRole } from "@/lib/use-auth";
 
@@ -10,6 +10,7 @@ export const IT_NAV: NavItem[] = [
   { to: "/dashboard/it/media-verify", label: "Media Verification", icon: ShieldCheck, group: "Content" },
   { to: "/dashboard/it/home-content", label: "Homepage Content", icon: ImageIcon, group: "Content" },
   { to: "/dashboard/it/property-of-the-day", label: "Property of the Day", icon: Star, group: "Content" },
+  { to: "/dashboard/it/property-types", label: "Property Types", icon: Layers, group: "Content" },
   { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
