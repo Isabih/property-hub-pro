@@ -38,6 +38,23 @@ export function Lightbox({
     };
   }, [go, onClose]);
 
+  // Prefetch neighbouring images so prev/next feels instant within the current set.
+  useEffect(() => {
+    if (typeof window === "undefined" || !images.length) return;
+    const neighbours = [1, -1, 2, -2]
+      .map((d) => images[(index + d + total) % total]?.src)
+      .filter((src): src is string => !!src);
+    const preloaded: HTMLImageElement[] = neighbours.map((src) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = src;
+      return img;
+    });
+    return () => {
+      preloaded.forEach((img) => { img.src = ""; });
+    };
+  }, [index, images, total]);
+
   if (!images.length) return null;
   const current = images[index];
 
