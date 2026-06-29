@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Bed, Bath, Maximize2, Car, MapPin, Crown, Heart, Share2, Phone, Mail, MessageCircle,
   Check, ArrowLeft, Play, Image as ImageIcon, Box, FileText, Lock, Star, Printer,
@@ -9,7 +10,7 @@ import {
   formatPrice, CATEGORY_META, ROOM_META,
   type Property, type RoomCategory, type RoomImage, type NeighborhoodPlace,
 } from "@/lib/properties";
-import { fetchPropertyBySlug } from "@/lib/properties-public";
+import { fetchPropertyForView } from "@/lib/properties-view.functions";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { VideoPlayer } from "@/components/site/VideoPlayer";
 import { Lightbox } from "@/components/site/Lightbox";
@@ -17,7 +18,7 @@ import { LuxuryGate, hasLuxuryAccess } from "@/components/site/LuxuryGate";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
-    const property = await fetchPropertyBySlug(params.slug);
+    const property = await fetchPropertyForView({ data: { slug: params.slug } });
     if (!property) throw notFound();
     return { property };
   },
@@ -40,24 +41,40 @@ export const Route = createFileRoute("/_site/properties/$slug")({
 });
 
 function PropertyDetail() {
-  const { property: p } = Route.useLoaderData() as { property: Property };
+  const { property: initial } = Route.useLoaderData() as { property: Property & { locked?: boolean } };
+  const [p, setP] = useState<Property & { locked?: boolean }>(initial);
+  const unlock = useServerFn(fetchPropertyForView);
+  // If visitor has a luxury access token, re-fetch the unlocked version server-side.
+  useEffect(() => {
+    if (!p.luxury || !p.locked) return;
+    if (typeof window === "undefined") return;
+    const token = window.localStorage.getItem("nw_luxury_token");
+    if (!token) return;
+    unlock({ data: { slug: p.slug, luxuryToken: token } })
+      .then((fresh) => { if (fresh) setP(fresh); })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p.slug]);
   const roomGallery: RoomImage[] = p.roomGallery
     ?? (p.gallery?.map((g) => ({ room: "other" as RoomCategory, label: g.label, src: g.src })))
     ?? [{ room: "main", src: p.image }];
   const rooms = Array.from(new Set(roomGallery.map((g) => g.room)));
   const [activeRoom, setActiveRoom] = useState<RoomCategory | "all">("all");
   const [mediaTab, setMediaTab] = useState<"photos" | "video" | "tour" | "floorplan">("photos");
-  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<{ images: { src: string; label?: string }[]; idx: number } | null>(null);
   const [gateOpen, setGateOpen] = useState(false);
   // Luxury gate: if property is luxury and visitor has no access token, block content
   useEffect(() => {
-    if (p.luxury && !hasLuxuryAccess()) setGateOpen(true);
-  }, [p.luxury]);
+    if (p.luxury && p.locked && !hasLuxuryAccess()) setGateOpen(true);
+    else setGateOpen(false);
+  }, [p.luxury, p.locked]);
   const filtered = activeRoom === "all" ? roomGallery : roomGallery.filter((g) => g.room === activeRoom);
-  const lightboxImages = roomGallery.map((g) => ({ src: g.src, label: g.label ?? ROOM_META[g.room].label }));
-  const openLightboxFor = (src: string) => {
-    const i = roomGallery.findIndex((g) => g.src === src);
-    setLightboxIdx(i >= 0 ? i : 0);
+  const toLightboxImages = (set: RoomImage[]) =>
+    set.map((g) => ({ src: g.src, label: g.label ?? ROOM_META[g.room].label }));
+  const openLightbox = (set: RoomImage[], src: string) => {
+    const images = toLightboxImages(set);
+    const idx = Math.max(0, set.findIndex((g) => g.src === src));
+    setLightbox({ images, idx });
   };
   const related: Property[] = [];
   const heroMain = roomGallery[0];
@@ -67,12 +84,12 @@ function PropertyDetail() {
   return (
     <div className="bg-background">
       {gateOpen && <LuxuryGate slug={p.slug} />}
-      {lightboxIdx !== null && (
+      {lightbox && (
         <Lightbox
-          images={lightboxImages}
-          index={lightboxIdx}
-          onClose={() => setLightboxIdx(null)}
-          onIndexChange={setLightboxIdx}
+          images={lightbox.images}
+          index={lightbox.idx}
+          onClose={() => setLightbox(null)}
+          onIndexChange={(i) => setLightbox((l) => (l ? { ...l, idx: i } : l))}
         />
       )}
       {/* Hero collage */}
@@ -85,7 +102,7 @@ function PropertyDetail() {
           <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[480px] rounded-2xl overflow-hidden">
             <button
               type="button"
-              onClick={() => openLightboxFor(heroMain.src)}
+              onClick={() => openLightbox(roomGallery, heroMain.src)}
               className="col-span-2 row-span-2 relative group cursor-zoom-in"
             >
               <img src={heroMain.src} alt={heroMain.label ?? ROOM_META[heroMain.room].label} className="w-full h-full object-cover" />
@@ -101,7 +118,7 @@ function PropertyDetail() {
               <button
                 type="button"
                 key={i}
-                onClick={() => openLightboxFor(g.src)}
+                onClick={() => openLightbox(roomGallery, g.src)}
                 className="relative cursor-zoom-in group"
               >
                 <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
@@ -182,7 +199,7 @@ function PropertyDetail() {
                     {filtered.map((g, i) => (
                       <figure
                         key={i}
-                        onClick={() => openLightboxFor(g.src)}
+                        onClick={() => openLightbox(filtered, g.src)}
                         className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-zoom-in"
                       >
                         <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
