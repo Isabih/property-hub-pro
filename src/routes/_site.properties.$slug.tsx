@@ -443,6 +443,16 @@ function MediaTab({ active, disabled, onClick, icon, label }: { active: boolean;
   );
 }
 
+function MediaEmpty({ icon, title, hint }: { icon: React.ReactNode; title: string; hint: string }) {
+  return (
+    <div className="rounded-xl border border-dashed border-border bg-card/60 p-10 text-center">
+      <div className="w-12 h-12 mx-auto rounded-full bg-gold/10 text-gold flex items-center justify-center">{icon}</div>
+      <div className="mt-3 font-medium">{title}</div>
+      <div className="mt-1 text-sm text-muted-foreground">{hint}</div>
+    </div>
+  );
+}
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
