@@ -61,7 +61,7 @@ export const fetchPropertyForView = createServerFn({ method: "POST" })
     const sb = serverClient();
     const { data: row, error } = await sb
       .from("properties")
-      .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,property_images(url,position,is_cover,section)")
+      .select("id,slug,title,description,property_type,listing_type,status,price,currency,bedrooms,bathrooms,area_sqm,address,city,district,lat,lng,amenities,featured,video_url,property_images(url,position,is_cover,section)")
       .eq("slug", data.slug)
       .maybeSingle();
     if (error || !row) return null;
@@ -108,6 +108,7 @@ export const fetchPropertyForView = createServerFn({ method: "POST" })
       address: locked ? undefined : (row.address ?? undefined),
       lat: locked ? undefined : (row.lat ?? undefined),
       lng: locked ? undefined : (row.lng ?? undefined),
+      videoUrl: locked ? undefined : ((row as any).video_url ?? undefined),
       locked,
     };
     return property;

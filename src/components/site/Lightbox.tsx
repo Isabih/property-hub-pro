@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { prefetchImages } from "@/lib/image-prefetch";
+import { prefetchImages, isImageReady } from "@/lib/image-prefetch";
 
 export interface LightboxImage {
   src: string;
@@ -50,8 +50,14 @@ export function Lightbox({
     prefetchImages(neighbours);
   }, [index, images, total]);
 
-  if (!images.length) return null;
   const current = images[index];
+  const currentSrc = current?.src ?? "";
+  const [loaded, setLoaded] = useState<boolean>(() => (currentSrc ? isImageReady(currentSrc) : false));
+  useEffect(() => {
+    setLoaded(currentSrc ? isImageReady(currentSrc) : false);
+  }, [currentSrc]);
+
+  if (!images.length || !current) return null;
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col" role="dialog" aria-modal="true">
@@ -80,12 +86,24 @@ export function Lightbox({
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <img
-          src={current.src}
-          alt={current.label ?? `Image ${index + 1}`}
-          className="max-h-full max-w-full object-contain select-none"
-          draggable={false}
-        />
+        <div className="relative max-h-full max-w-full flex items-center justify-center">
+          {!loaded && (
+            <div
+              aria-hidden
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="w-[70vw] max-w-3xl aspect-[3/2] rounded-xl bg-white/5 animate-pulse" />
+            </div>
+          )}
+          <img
+            key={current.src}
+            src={current.src}
+            alt={current.label ?? `Image ${index + 1}`}
+            onLoad={() => setLoaded(true)}
+            className={`max-h-[80vh] max-w-full object-contain select-none transition-opacity duration-200 ${loaded ? "opacity-100" : "opacity-0"}`}
+            draggable={false}
+          />
+        </div>
         <button
           onClick={() => go(1)}
           aria-label="Next image"
