@@ -15,6 +15,7 @@ import { PropertyCard } from "@/components/site/PropertyCard";
 import { VideoPlayer } from "@/components/site/VideoPlayer";
 import { Lightbox } from "@/components/site/Lightbox";
 import { LuxuryGate, hasLuxuryAccess } from "@/components/site/LuxuryGate";
+import { prefetchImage, prefetchImages } from "@/lib/image-prefetch";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
@@ -76,6 +77,24 @@ function PropertyDetail() {
     const idx = Math.max(0, set.findIndex((g) => g.src === src));
     setLightbox({ images, idx });
   };
+  // Warm the cache with the first few images of a given section.
+  const warmSection = (room: RoomCategory | "all") => {
+    const set = room === "all" ? roomGallery : roomGallery.filter((g) => g.room === room);
+    prefetchImages(set.slice(0, 4).map((g) => g.src));
+  };
+  // When a section is active, also warm the first images of adjacent sections
+  // so switching tabs feels instant.
+  useEffect(() => {
+    if (rooms.length <= 1) return;
+    const order: (RoomCategory | "all")[] = ["all", ...rooms];
+    const i = order.indexOf(activeRoom);
+    if (i === -1) return;
+    const prev = order[(i - 1 + order.length) % order.length];
+    const next = order[(i + 1) % order.length];
+    warmSection(prev);
+    warmSection(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRoom]);
   const related: Property[] = [];
   const heroMain = roomGallery[0];
   const heroSide = roomGallery.slice(1, 5);
