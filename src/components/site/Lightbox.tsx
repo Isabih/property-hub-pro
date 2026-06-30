@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { prefetchImages } from "@/lib/image-prefetch";
 
 export interface LightboxImage {
   src: string;
@@ -39,20 +40,14 @@ export function Lightbox({
   }, [go, onClose]);
 
   // Prefetch neighbouring images so prev/next feels instant within the current set.
+  // Uses the shared cache + concurrency-capped queue so reopening the same
+  // section reuses already-decoded images and we never hammer the network.
   useEffect(() => {
-    if (typeof window === "undefined" || !images.length) return;
-    const neighbours = [1, -1, 2, -2]
+    if (!images.length) return;
+    const neighbours = [1, -1, 2, -2, 3, -3]
       .map((d) => images[(index + d + total) % total]?.src)
       .filter((src): src is string => !!src);
-    const preloaded: HTMLImageElement[] = neighbours.map((src) => {
-      const img = new Image();
-      img.decoding = "async";
-      img.src = src;
-      return img;
-    });
-    return () => {
-      preloaded.forEach((img) => { img.src = ""; });
-    };
+    prefetchImages(neighbours);
   }, [index, images, total]);
 
   if (!images.length) return null;
