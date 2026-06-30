@@ -15,6 +15,7 @@ import { PropertyCard } from "@/components/site/PropertyCard";
 import { VideoPlayer } from "@/components/site/VideoPlayer";
 import { Lightbox } from "@/components/site/Lightbox";
 import { LuxuryGate, hasLuxuryAccess } from "@/components/site/LuxuryGate";
+import { prefetchImage, prefetchImages } from "@/lib/image-prefetch";
 
 export const Route = createFileRoute("/_site/properties/$slug")({
   loader: async ({ params }) => {
@@ -76,6 +77,24 @@ function PropertyDetail() {
     const idx = Math.max(0, set.findIndex((g) => g.src === src));
     setLightbox({ images, idx });
   };
+  // Warm the cache with the first few images of a given section.
+  const warmSection = (room: RoomCategory | "all") => {
+    const set = room === "all" ? roomGallery : roomGallery.filter((g) => g.room === room);
+    prefetchImages(set.slice(0, 4).map((g) => g.src));
+  };
+  // When a section is active, also warm the first images of adjacent sections
+  // so switching tabs feels instant.
+  useEffect(() => {
+    if (rooms.length <= 1) return;
+    const order: (RoomCategory | "all")[] = ["all", ...rooms];
+    const i = order.indexOf(activeRoom);
+    if (i === -1) return;
+    const prev = order[(i - 1 + order.length) % order.length];
+    const next = order[(i + 1) % order.length];
+    warmSection(prev);
+    warmSection(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRoom]);
   const related: Property[] = [];
   const heroMain = roomGallery[0];
   const heroSide = roomGallery.slice(1, 5);
@@ -189,7 +208,13 @@ function PropertyDetail() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <RoomChip active={activeRoom === "all"} onClick={() => setActiveRoom("all")}>All ({roomGallery.length})</RoomChip>
                       {rooms.map((r) => (
-                        <RoomChip key={r} active={activeRoom === r} onClick={() => setActiveRoom(r)}>
+                        <RoomChip
+                          key={r}
+                          active={activeRoom === r}
+                          onClick={() => setActiveRoom(r)}
+                          onMouseEnter={() => warmSection(r)}
+                          onFocus={() => warmSection(r)}
+                        >
                           {ROOM_META[r].label} ({roomGallery.filter((g) => g.room === r).length})
                         </RoomChip>
                       ))}
@@ -200,6 +225,14 @@ function PropertyDetail() {
                       <figure
                         key={i}
                         onClick={() => openLightbox(filtered, g.src)}
+                        onMouseEnter={() => {
+                          prefetchImage(g.src);
+                          // Also warm the next couple of images in this section
+                          // so opening the lightbox here is instant.
+                          prefetchImages(filtered.slice(i, i + 3).map((x) => x.src));
+                        }}
+                        onFocus={() => prefetchImage(g.src)}
+                        tabIndex={0}
                         className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-zoom-in"
                       >
                         <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -365,10 +398,12 @@ function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.Reac
   );
 }
 
-function RoomChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function RoomChip({ active, onClick, onMouseEnter, onFocus, children }: { active: boolean; onClick: () => void; onMouseEnter?: () => void; onFocus?: () => void; children: React.ReactNode }) {
   return (
     <button
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onFocus={onFocus}
       className={`text-xs uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors ${
         active
           ? "bg-gold text-noir-deep border-gold"
