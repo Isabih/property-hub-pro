@@ -197,9 +197,9 @@ function PropertyDetail() {
             <Section title="Media & Tours">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1.5 rounded-xl bg-muted">
                 <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
-                <MediaTab active={mediaTab === "video"} disabled={!p.videoUrl} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />
-                <MediaTab active={mediaTab === "tour"} disabled={!p.tourUrl} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />
-                <MediaTab active={mediaTab === "floorplan"} disabled={!p.floorPlanUrl} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />
+                <MediaTab active={mediaTab === "video"} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />
+                <MediaTab active={mediaTab === "tour"} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />
+                <MediaTab active={mediaTab === "floorplan"} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />
               </div>
 
               {mediaTab === "photos" && (
@@ -244,14 +244,24 @@ function PropertyDetail() {
                   </div>
                 </>
               )}
-              {mediaTab === "video" && p.videoUrl && (
+              {mediaTab === "video" && (
                 <div className="mt-5">
-                  <VideoPlayer url={p.videoUrl} title={p.title} />
+                  {p.videoUrl ? (
+                    <VideoPlayer url={p.videoUrl} title={p.title} />
+                  ) : (
+                    <MediaEmpty icon={<Play className="w-5 h-5" />} title="Video walkthrough coming soon" hint="The agent hasn’t uploaded a video tour for this property yet." />
+                  )}
                 </div>
               )}
-              {mediaTab === "tour" && p.tourUrl && (
-                <div className="mt-5 aspect-video rounded-xl overflow-hidden bg-noir">
-                  <iframe src={p.tourUrl} className="w-full h-full" allowFullScreen title="3D tour" />
+              {mediaTab === "tour" && (
+                <div className="mt-5">
+                  {p.tourUrl ? (
+                    <div className="aspect-video rounded-xl overflow-hidden bg-noir">
+                      <iframe src={p.tourUrl} className="w-full h-full" allowFullScreen title="3D tour" />
+                    </div>
+                  ) : (
+                    <MediaEmpty icon={<Box className="w-5 h-5" />} title="3D tour coming soon" hint="A virtual walkthrough will be published here once it’s ready." />
+                  )}
                 </div>
               )}
               {mediaTab === "floorplan" && (
