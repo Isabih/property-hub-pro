@@ -398,10 +398,12 @@ function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.Reac
   );
 }
 
-function RoomChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function RoomChip({ active, onClick, onMouseEnter, onFocus, children }: { active: boolean; onClick: () => void; onMouseEnter?: () => void; onFocus?: () => void; children: React.ReactNode }) {
   return (
     <button
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onFocus={onFocus}
       className={`text-xs uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors ${
         active
           ? "bg-gold text-noir-deep border-gold"
