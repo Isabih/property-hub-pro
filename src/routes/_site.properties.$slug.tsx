@@ -208,7 +208,13 @@ function PropertyDetail() {
                     <div className="mt-5 flex flex-wrap gap-2">
                       <RoomChip active={activeRoom === "all"} onClick={() => setActiveRoom("all")}>All ({roomGallery.length})</RoomChip>
                       {rooms.map((r) => (
-                        <RoomChip key={r} active={activeRoom === r} onClick={() => setActiveRoom(r)}>
+                        <RoomChip
+                          key={r}
+                          active={activeRoom === r}
+                          onClick={() => setActiveRoom(r)}
+                          onMouseEnter={() => warmSection(r)}
+                          onFocus={() => warmSection(r)}
+                        >
                           {ROOM_META[r].label} ({roomGallery.filter((g) => g.room === r).length})
                         </RoomChip>
                       ))}
@@ -219,6 +225,14 @@ function PropertyDetail() {
                       <figure
                         key={i}
                         onClick={() => openLightbox(filtered, g.src)}
+                        onMouseEnter={() => {
+                          prefetchImage(g.src);
+                          // Also warm the next couple of images in this section
+                          // so opening the lightbox here is instant.
+                          prefetchImages(filtered.slice(i, i + 3).map((x) => x.src));
+                        }}
+                        onFocus={() => prefetchImage(g.src)}
+                        tabIndex={0}
                         className="relative aspect-[4/3] rounded-xl overflow-hidden group cursor-zoom-in"
                       >
                         <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
