@@ -50,12 +50,14 @@ export function Lightbox({
     prefetchImages(neighbours);
   }, [index, images, total]);
 
-  if (!images.length) return null;
   const current = images[index];
-  const [loaded, setLoaded] = useState<boolean>(() => isImageReady(current.src));
+  const currentSrc = current?.src ?? "";
+  const [loaded, setLoaded] = useState<boolean>(() => (currentSrc ? isImageReady(currentSrc) : false));
   useEffect(() => {
-    setLoaded(isImageReady(current.src));
-  }, [current.src]);
+    setLoaded(currentSrc ? isImageReady(currentSrc) : false);
+  }, [currentSrc]);
+
+  if (!images.length || !current) return null;
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col" role="dialog" aria-modal="true">
