@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { LogOut, Menu, X, Bell, Search, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useAuth, type AppRole } from "@/lib/use-auth";
+import { ADMIN_NAV, IT_NAV } from "./nav-config";
 
 export interface NavItem {
   to: string;
@@ -39,7 +40,7 @@ export function DashboardShell({
   title: string;
   subtitle?: string;
   role: AppRole;
-  nav: NavItem[];
+  nav?: NavItem[];
   actions?: HeaderAction[];
   children: ReactNode;
 }) {
@@ -49,7 +50,10 @@ export function DashboardShell({
   const name = profile?.full_name ?? user?.email ?? "Demo User";
   const initial = name.trim().charAt(0).toUpperCase();
   const path = router.state.location.pathname;
-  const groups = Array.from(new Set(nav.map((n) => n.group ?? "Overview")));
+  // Sidebar is LOCKED per role: staff always see the same navigation on every
+  // page, so it can never shrink to a page-specific subset.
+  const resolvedNav: NavItem[] = role === "it" ? IT_NAV : role === "admin" ? ADMIN_NAV : (nav ?? []);
+  const groups = Array.from(new Set(resolvedNav.map((n) => n.group ?? "Overview")));
 
   return (
     <div className="min-h-screen bg-[#f7f6f2] text-noir-deep">
@@ -70,9 +74,9 @@ export function DashboardShell({
             <div key={g}>
               <div className="px-3 mb-2 text-[10px] uppercase tracking-[0.18em] text-white/40">{g}</div>
               <div className="space-y-1">
-                {nav.filter((n) => (n.group ?? "Overview") === g).map((item) => {
+                {resolvedNav.filter((n) => (n.group ?? "Overview") === g).map((item) => {
                   const Icon = item.icon;
-                  const active = path === item.to;
+                  const active = path === item.to || path === `${item.to}/`;
                   return (
                     <Link
                       key={`${g}-${item.to}-${item.label}`}
