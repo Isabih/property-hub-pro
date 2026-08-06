@@ -11,15 +11,18 @@ import { toast } from "sonner";
  */
 export function RoleGate({
   allow,
+  exclusive = false,
   children,
 }: {
   allow: AppRole[];
+  /** When true, only the listed roles pass — admin/IT get no implicit override. */
+  exclusive?: boolean;
   children: ReactNode;
 }) {
   const { roles, primaryRole, rolesLoaded, session } = useAuth();
   const navigate = useNavigate();
   const customerOnly = allow.length === 1 && allow[0] === "buyer";
-  const systemOverride = !customerOnly && (roles.includes("admin") || roles.includes("it"));
+  const systemOverride = !exclusive && !customerOnly && (roles.includes("admin") || roles.includes("it"));
   const allowed = systemOverride || allow.some((r) => roles.includes(r));
   const toasted = useRef(false);
 

@@ -13,6 +13,15 @@ function pickPrimary(roles: AppRole[]): AppRole | null {
  * Admin and IT pass for every prefix EXCEPT customer-only /dashboard/buyer.
  */
 function canAccess(pathname: string, roles: AppRole[]): boolean {
+  // IT-exclusive areas — admin does NOT inherit these.
+  const IT_ONLY = [
+    "/dashboard/it/home-content",
+    "/dashboard/it/password-resets",
+    "/dashboard/it/settings",
+    "/dashboard/it/system-health",
+  ];
+  if (IT_ONLY.some((p) => pathname.startsWith(p))) return roles.includes("it");
+
   // Shared sub-areas open to multiple roles
   if (pathname.startsWith("/dashboard/properties")) {
     return roles.some((r) => ["it", "admin", "owner", "agent"].includes(r));
@@ -27,7 +36,7 @@ function canAccess(pathname: string, roles: AppRole[]): boolean {
 
   // Role-prefixed dashboards
   if (pathname.startsWith("/dashboard/buyer")) return roles.includes("buyer");
-  if (pathname.startsWith("/dashboard/it")) return roles.includes("it");
+  if (pathname.startsWith("/dashboard/it")) return roles.includes("it") || roles.includes("admin");
   if (pathname.startsWith("/dashboard/admin")) return roles.includes("admin") || roles.includes("it");
   if (pathname.startsWith("/dashboard/receptionist")) return roles.some((r) => ["receptionist", "it", "admin"].includes(r));
   if (pathname.startsWith("/dashboard/agent")) return roles.some((r) => ["agent", "it", "admin"].includes(r));
