@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/dashboard/it/system-health")({
   head: () => ({ meta: [{ title: "System Health — NOVAWORKS" }] }),
   component: () => (
-    <RoleGate allow={["it"]}>
+    <RoleGate allow={["it"]} exclusive>
       <SystemHealth />
     </RoleGate>
   ),
