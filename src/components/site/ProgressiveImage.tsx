@@ -67,6 +67,11 @@ export function ProgressiveImage({
         </div>
       )}
       <img
+        ref={(el) => {
+          // Images restored from cache / SSR markup can already be complete
+          // before React attaches onLoad — otherwise they'd stay at opacity-0.
+          if (el && el.complete && el.naturalWidth > 0) setLoaded(true);
+        }}
         src={resolvedSrc}
         srcSet={srcSet}
         sizes={sizes}

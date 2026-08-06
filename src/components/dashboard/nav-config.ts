@@ -21,22 +21,34 @@ export const IT_NAV: NavItem[] = [
   { to: "/dashboard/it/settings", label: "Email Settings", icon: Settings, group: "System" },
 ];
 
+/**
+ * Pages only IT may open. Admin has every other IT privilege.
+ * Enforced in three places: this nav, RoleGate (`exclusive`), and the
+ * /_authenticated beforeLoad gate.
+ */
+export const IT_ONLY_PATHS = [
+  "/dashboard/it/home-content",
+  "/dashboard/it/password-resets",
+  "/dashboard/it/settings",
+  "/dashboard/it/system-health",
+];
+
 export const ADMIN_NAV: NavItem[] = [
   { to: "/dashboard/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-  { to: "/dashboard/admin", label: "Analytics", icon: BarChart3, group: "Overview" },
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell, group: "Overview" },
   { to: "/dashboard/properties", label: "Properties", icon: Building2, group: "Content" },
-  { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
+  { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
   { to: "/dashboard/it/media-verify", label: "Media Verification", icon: ShieldCheck, group: "Content" },
+  { to: "/dashboard/it/property-of-the-day", label: "Property of the Day", icon: Star, group: "Content" },
+  { to: "/dashboard/it/property-types", label: "Property Types", icon: Layers, group: "Content" },
   { to: "/dashboard/admin/contact-edit", label: "Contact Page", icon: Mail, group: "Content" },
   { to: "/dashboard/admin/portfolio-videos", label: "Portfolio Videos", icon: Film, group: "Content" },
-  { to: "/dashboard/it/staff/new", label: "Add Owner / Agent / Receptionist", icon: UserPlus, group: "Management" },
-  { to: "/dashboard/admin", label: "Users", icon: Users, group: "Management" },
-  { to: "/dashboard/admin", label: "Verifications", icon: FileCheck, group: "Management" },
-  { to: "/dashboard/admin", label: "Revenue", icon: DollarSign, group: "Management" },
-  { to: "/dashboard/admin", label: "Approvals", icon: ShieldCheck, group: "Management" },
-  { to: "/dashboard/admin", label: "Activity", icon: Activity, group: "System" },
-  { to: "/dashboard/admin", label: "Settings", icon: Settings, group: "System" },
+  { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
+  { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
+  { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
+  { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
+  { to: "/dashboard/it/luxury", label: "Luxury Access", icon: FileCheck, group: "Management" },
+  { to: "/dashboard/inquiries", label: "Inquiries", icon: BarChart3, group: "Management" },
 ];
 
 /** Pick the right NAV + shell role based on the user's roles. IT takes precedence. */
