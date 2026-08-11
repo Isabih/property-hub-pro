@@ -17,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/receptionist")({
 const NAV = [
   { to: "/dashboard/receptionist", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
   { to: "/dashboard/receptionist", label: "Customers", icon: Users, group: "Reception" },
+  { to: "/dashboard/bookings", label: "Bookings & Payments", icon: CalendarCheck, group: "Reception" },
   { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Reception" },
 ];
 
