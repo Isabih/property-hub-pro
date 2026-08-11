@@ -36,6 +36,7 @@ import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
+import { Route as AuthenticatedDashboardBookingsRouteImport } from './routes/_authenticated/dashboard.bookings'
 import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
@@ -52,6 +53,7 @@ import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './route
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
 import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
 import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
+import { Route as AuthenticatedDashboardBuyerBookingsRouteImport } from './routes/_authenticated/dashboard.buyer.bookings'
 import { Route as AuthenticatedDashboardAdminPortfolioVideosRouteImport } from './routes/_authenticated/dashboard.admin.portfolio-videos'
 import { Route as AuthenticatedDashboardAdminContactEditRouteImport } from './routes/_authenticated/dashboard.admin.contact-edit'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
@@ -195,6 +197,12 @@ const AuthenticatedDashboardBuyerRoute =
     path: '/dashboard/buyer',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardBookingsRoute =
+  AuthenticatedDashboardBookingsRouteImport.update({
+    id: '/dashboard/bookings',
+    path: '/dashboard/bookings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardAgentRoute =
   AuthenticatedDashboardAgentRouteImport.update({
     id: '/dashboard/agent',
@@ -291,6 +299,12 @@ const AuthenticatedDashboardBuyerServiceRequestsRoute =
     path: '/service-requests',
     getParentRoute: () => AuthenticatedDashboardBuyerRoute,
   } as any)
+const AuthenticatedDashboardBuyerBookingsRoute =
+  AuthenticatedDashboardBuyerBookingsRouteImport.update({
+    id: '/bookings',
+    path: '/bookings',
+    getParentRoute: () => AuthenticatedDashboardBuyerRoute,
+  } as any)
 const AuthenticatedDashboardAdminPortfolioVideosRoute =
   AuthenticatedDashboardAdminPortfolioVideosRouteImport.update({
     id: '/portfolio-videos',
@@ -329,6 +343,7 @@ export interface FileRoutesByFullPath {
   '/auth/': typeof AuthIndexRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
+  '/dashboard/bookings': typeof AuthenticatedDashboardBookingsRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
@@ -340,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
+  '/dashboard/buyer/bookings': typeof AuthenticatedDashboardBuyerBookingsRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -374,6 +390,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthIndexRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
+  '/dashboard/bookings': typeof AuthenticatedDashboardBookingsRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
@@ -385,6 +402,7 @@ export interface FileRoutesByTo {
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
+  '/dashboard/buyer/bookings': typeof AuthenticatedDashboardBuyerBookingsRoute
   '/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -423,6 +441,7 @@ export interface FileRoutesById {
   '/auth/': typeof AuthIndexRoute
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
+  '/_authenticated/dashboard/bookings': typeof AuthenticatedDashboardBookingsRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
@@ -434,6 +453,7 @@ export interface FileRoutesById {
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/_authenticated/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
+  '/_authenticated/dashboard/buyer/bookings': typeof AuthenticatedDashboardBuyerBookingsRoute
   '/_authenticated/dashboard/buyer/service-requests': typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   '/_authenticated/dashboard/it/home-content': typeof AuthenticatedDashboardItHomeContentRoute
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
@@ -471,6 +491,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/dashboard/admin'
     | '/dashboard/agent'
+    | '/dashboard/bookings'
     | '/dashboard/buyer'
     | '/dashboard/notifications'
     | '/dashboard/owner'
@@ -482,6 +503,7 @@ export interface FileRouteTypes {
     | '/properties/'
     | '/dashboard/admin/contact-edit'
     | '/dashboard/admin/portfolio-videos'
+    | '/dashboard/buyer/bookings'
     | '/dashboard/buyer/service-requests'
     | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
@@ -516,6 +538,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard/admin'
     | '/dashboard/agent'
+    | '/dashboard/bookings'
     | '/dashboard/buyer'
     | '/dashboard/notifications'
     | '/dashboard/owner'
@@ -527,6 +550,7 @@ export interface FileRouteTypes {
     | '/properties'
     | '/dashboard/admin/contact-edit'
     | '/dashboard/admin/portfolio-videos'
+    | '/dashboard/buyer/bookings'
     | '/dashboard/buyer/service-requests'
     | '/dashboard/it/home-content'
     | '/dashboard/it/luxury'
@@ -564,6 +588,7 @@ export interface FileRouteTypes {
     | '/auth/'
     | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/agent'
+    | '/_authenticated/dashboard/bookings'
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/owner'
@@ -575,6 +600,7 @@ export interface FileRouteTypes {
     | '/_site/properties/'
     | '/_authenticated/dashboard/admin/contact-edit'
     | '/_authenticated/dashboard/admin/portfolio-videos'
+    | '/_authenticated/dashboard/buyer/bookings'
     | '/_authenticated/dashboard/buyer/service-requests'
     | '/_authenticated/dashboard/it/home-content'
     | '/_authenticated/dashboard/it/luxury'
@@ -791,6 +817,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/bookings': {
+      id: '/_authenticated/dashboard/bookings'
+      path: '/dashboard/bookings'
+      fullPath: '/dashboard/bookings'
+      preLoaderRoute: typeof AuthenticatedDashboardBookingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/agent': {
       id: '/_authenticated/dashboard/agent'
       path: '/dashboard/agent'
@@ -903,6 +936,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
       parentRoute: typeof AuthenticatedDashboardBuyerRoute
     }
+    '/_authenticated/dashboard/buyer/bookings': {
+      id: '/_authenticated/dashboard/buyer/bookings'
+      path: '/bookings'
+      fullPath: '/dashboard/buyer/bookings'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerBookingsRouteImport
+      parentRoute: typeof AuthenticatedDashboardBuyerRoute
+    }
     '/_authenticated/dashboard/admin/portfolio-videos': {
       id: '/_authenticated/dashboard/admin/portfolio-videos'
       path: '/portfolio-videos'
@@ -946,11 +986,14 @@ const AuthenticatedDashboardAdminRouteWithChildren =
   )
 
 interface AuthenticatedDashboardBuyerRouteChildren {
+  AuthenticatedDashboardBuyerBookingsRoute: typeof AuthenticatedDashboardBuyerBookingsRoute
   AuthenticatedDashboardBuyerServiceRequestsRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRoute
 }
 
 const AuthenticatedDashboardBuyerRouteChildren: AuthenticatedDashboardBuyerRouteChildren =
   {
+    AuthenticatedDashboardBuyerBookingsRoute:
+      AuthenticatedDashboardBuyerBookingsRoute,
     AuthenticatedDashboardBuyerServiceRequestsRoute:
       AuthenticatedDashboardBuyerServiceRequestsRoute,
   }
@@ -963,6 +1006,7 @@ const AuthenticatedDashboardBuyerRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRouteWithChildren
   AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
+  AuthenticatedDashboardBookingsRoute: typeof AuthenticatedDashboardBookingsRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRouteWithChildren
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
@@ -988,6 +1032,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardAdminRoute:
     AuthenticatedDashboardAdminRouteWithChildren,
   AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
+  AuthenticatedDashboardBookingsRoute: AuthenticatedDashboardBookingsRoute,
   AuthenticatedDashboardBuyerRoute:
     AuthenticatedDashboardBuyerRouteWithChildren,
   AuthenticatedDashboardNotificationsRoute:
