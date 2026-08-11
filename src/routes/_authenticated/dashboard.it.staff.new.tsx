@@ -34,7 +34,7 @@ function AddStaff() {
   const [pending, setPending] = useState<{ id: string; email: string } | null>(null);
 
   const allowedRoles = isIT
-    ? ["admin", "owner", "agent", "receptionist"]
+    ? ["it", "admin", "owner", "agent", "receptionist"]
     : ["owner", "agent", "receptionist"];
 
   const submit = async () => {
@@ -52,7 +52,7 @@ function AddStaff() {
   return (
     <DashboardShell
       title="Add Staff Member"
-      subtitle={isIT ? "Create owners, agents, receptionists, or admins" : "Create owners, agents, or receptionists"}
+      subtitle={isIT ? "Create IT, admins, owners, agents or receptionists" : "Create owners, agents, or receptionists"}
       role={shell.role}
       nav={shell.nav}
     >
