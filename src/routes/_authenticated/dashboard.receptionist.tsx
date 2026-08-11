@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { RoleGate } from "@/components/dashboard/RoleGate";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, UserPlus, Users, CheckCircle2, Loader2, X, Wrench } from "lucide-react";
+import { LayoutDashboard, UserPlus, Users, CheckCircle2, Loader2, X, Wrench, CalendarCheck } from "lucide-react";
 import { DashboardShell, Panel, StatCard } from "@/components/dashboard/DashboardShell";
 import { useAuth } from "@/lib/use-auth";
 import { createCustomer, listCustomers, listPropertiesForBooking, listStaffForAssignment } from "@/lib/customers.functions";
