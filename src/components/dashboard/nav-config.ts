@@ -1,4 +1,4 @@
-import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, BarChart3, UserPlus, Bell, Wrench, Mail, Film, Plus, Server, Image as ImageIcon, Star, Layers } from "lucide-react";
+import { Users, Building2, ShieldCheck, DollarSign, LayoutDashboard, Activity, Settings, FileCheck, BarChart3, UserPlus, Bell, Wrench, Mail, Film, Plus, Server, Image as ImageIcon, Star, Layers, CalendarCheck, Search, Heart, MessageSquare, AlertCircle, CreditCard } from "lucide-react";
 import type { NavItem } from "./DashboardShell";
 import type { AppRole } from "@/lib/use-auth";
 
@@ -15,6 +15,7 @@ export const IT_NAV: NavItem[] = [
   { to: "/dashboard/it/property-types", label: "Property Types", icon: Layers, group: "Content" },
   { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
+  { to: "/dashboard/bookings", label: "Bookings & Payments", icon: CalendarCheck, group: "Management" },
   { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
   { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it/luxury", label: "Luxury Access", icon: FileCheck, group: "Management" },
@@ -47,6 +48,7 @@ export const ADMIN_NAV: NavItem[] = [
   { to: "/dashboard/admin/portfolio-videos", label: "Portfolio Videos", icon: Film, group: "Content" },
   { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
   { to: "/dashboard/receptionist", label: "Reception", icon: UserPlus, group: "Management" },
+  { to: "/dashboard/bookings", label: "Bookings & Payments", icon: CalendarCheck, group: "Management" },
   { to: "/dashboard/it/users", label: "Users", icon: Users, group: "Management" },
   { to: "/dashboard/it/staff/new", label: "Add Staff", icon: UserPlus, group: "Management" },
   { to: "/dashboard/it/luxury", label: "Luxury Access", icon: FileCheck, group: "Management" },
@@ -57,4 +59,25 @@ export const ADMIN_NAV: NavItem[] = [
 export function shellForStaff(roles: AppRole[]): { role: AppRole; nav: NavItem[] } {
   if (roles.includes("it")) return { role: "it", nav: IT_NAV };
   return { role: "admin", nav: ADMIN_NAV };
+}
+
+export const RECEPTIONIST_NAV: NavItem[] = [
+  { to: "/dashboard/receptionist", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/dashboard/bookings", label: "Bookings & Payments", icon: CalendarCheck, group: "Reception" },
+  { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Reception" },
+];
+
+export const BUYER_NAV: NavItem[] = [
+  { to: "/dashboard/buyer", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
+  { to: "/properties", label: "Browse", icon: Search, group: "Overview" },
+  { to: "/dashboard/buyer/bookings", label: "Book & Pay", icon: CreditCard, group: "Activity" },
+  { to: "/dashboard/buyer/service-requests", label: "Service Requests", icon: AlertCircle, group: "Activity" },
+];
+
+/** Resolve the shell role + nav for any role set (staff, reception or customer). */
+export function navForRoles(roles: AppRole[]): { role: AppRole; nav: NavItem[] } {
+  if (roles.includes("it")) return { role: "it", nav: IT_NAV };
+  if (roles.includes("admin")) return { role: "admin", nav: ADMIN_NAV };
+  if (roles.includes("receptionist")) return { role: "receptionist", nav: RECEPTIONIST_NAV };
+  return { role: "buyer", nav: BUYER_NAV };
 }

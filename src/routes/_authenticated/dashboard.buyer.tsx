@@ -18,6 +18,7 @@ const NAV = [
   { to: "/dashboard/buyer", label: "Saved", icon: Heart, group: "Activity" },
   { to: "/dashboard/buyer", label: "Visits", icon: CalendarCheck, group: "Activity" },
   { to: "/dashboard/buyer", label: "Messages", icon: MessageSquare, group: "Activity" },
+  { to: "/dashboard/buyer/bookings", label: "Book & Pay", icon: CalendarCheck, group: "Activity" },
   { to: "/dashboard/buyer/service-requests", label: "Service Requests", icon: AlertCircle, group: "Activity" },
   { to: "/dashboard/buyer", label: "Settings", icon: Settings, group: "System" },
 ];

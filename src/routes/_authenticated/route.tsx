@@ -32,6 +32,9 @@ function canAccess(pathname: string, roles: AppRole[]): boolean {
   if (pathname.startsWith("/dashboard/inquiries")) {
     return roles.some((r) => ["it", "admin", "agent", "receptionist"].includes(r));
   }
+  if (pathname.startsWith("/dashboard/bookings")) {
+    return roles.some((r) => ["it", "admin", "receptionist"].includes(r));
+  }
   if (pathname.startsWith("/dashboard/notifications")) return roles.length > 0;
 
   // Role-prefixed dashboards
