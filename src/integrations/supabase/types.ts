@@ -145,6 +145,105 @@ export type Database = {
         }
         Relationships: []
       }
+      bookings: {
+        Row: {
+          amount: number
+          apartment_id: string | null
+          check_in: string
+          check_out: string
+          confirmed_at: string | null
+          confirmed_by: string | null
+          created_at: string
+          currency: string
+          email: string
+          full_name: string
+          gateway_tx_id: string | null
+          id: string
+          nightly_rate: number
+          nights: number
+          notes: string | null
+          payment_method: string
+          payment_reference: string | null
+          payment_status: string
+          phone: string
+          property_id: string
+          status: string
+          stay_end: string | null
+          stay_start: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number
+          apartment_id?: string | null
+          check_in: string
+          check_out: string
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          currency?: string
+          email: string
+          full_name: string
+          gateway_tx_id?: string | null
+          id?: string
+          nightly_rate?: number
+          nights?: number
+          notes?: string | null
+          payment_method?: string
+          payment_reference?: string | null
+          payment_status?: string
+          phone: string
+          property_id: string
+          status?: string
+          stay_end?: string | null
+          stay_start?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          apartment_id?: string | null
+          check_in?: string
+          check_out?: string
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          currency?: string
+          email?: string
+          full_name?: string
+          gateway_tx_id?: string | null
+          id?: string
+          nightly_rate?: number
+          nights?: number
+          notes?: string | null
+          payment_method?: string
+          payment_reference?: string | null
+          payment_status?: string
+          phone?: string
+          property_id?: string
+          status?: string
+          stay_end?: string | null
+          stay_start?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_apartment_id_fkey"
+            columns: ["apartment_id"]
+            isOneToOne: false
+            referencedRelation: "apartments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           agent_id: string | null
