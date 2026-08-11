@@ -28,6 +28,7 @@ import { Route as SiteContactRouteImport } from './routes/_site.contact'
 import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
+import { Route as ApiPublicFlutterwaveWebhookRouteImport } from './routes/api/public/flutterwave-webhook'
 import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
 import { Route as SitePortfolioVideosRouteImport } from './routes/_site.portfolio.videos'
 import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './routes/_authenticated/dashboard.service-requests'
@@ -148,6 +149,12 @@ const SitePropertiesIndexRoute = SitePropertiesIndexRouteImport.update({
   path: '/properties/',
   getParentRoute: () => SiteRoute,
 } as any)
+const ApiPublicFlutterwaveWebhookRoute =
+  ApiPublicFlutterwaveWebhookRouteImport.update({
+    id: '/api/public/flutterwave-webhook',
+    path: '/api/public/flutterwave-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
   id: '/properties/$slug',
   path: '/properties/$slug',
@@ -329,6 +336,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/portfolio/videos': typeof SitePortfolioVideosRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
+  '/api/public/flutterwave-webhook': typeof ApiPublicFlutterwaveWebhookRoute
   '/properties/': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
@@ -373,6 +381,7 @@ export interface FileRoutesByTo {
   '/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/portfolio/videos': typeof SitePortfolioVideosRoute
   '/properties/$slug': typeof SitePropertiesSlugRoute
+  '/api/public/flutterwave-webhook': typeof ApiPublicFlutterwaveWebhookRoute
   '/properties': typeof SitePropertiesIndexRoute
   '/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
@@ -421,6 +430,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/service-requests': typeof AuthenticatedDashboardServiceRequestsRoute
   '/_site/portfolio/videos': typeof SitePortfolioVideosRoute
   '/_site/properties/$slug': typeof SitePropertiesSlugRoute
+  '/api/public/flutterwave-webhook': typeof ApiPublicFlutterwaveWebhookRoute
   '/_site/properties/': typeof SitePropertiesIndexRoute
   '/_authenticated/dashboard/admin/contact-edit': typeof AuthenticatedDashboardAdminContactEditRoute
   '/_authenticated/dashboard/admin/portfolio-videos': typeof AuthenticatedDashboardAdminPortfolioVideosRoute
@@ -468,6 +478,7 @@ export interface FileRouteTypes {
     | '/dashboard/service-requests'
     | '/portfolio/videos'
     | '/properties/$slug'
+    | '/api/public/flutterwave-webhook'
     | '/properties/'
     | '/dashboard/admin/contact-edit'
     | '/dashboard/admin/portfolio-videos'
@@ -512,6 +523,7 @@ export interface FileRouteTypes {
     | '/dashboard/service-requests'
     | '/portfolio/videos'
     | '/properties/$slug'
+    | '/api/public/flutterwave-webhook'
     | '/properties'
     | '/dashboard/admin/contact-edit'
     | '/dashboard/admin/portfolio-videos'
@@ -559,6 +571,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/service-requests'
     | '/_site/portfolio/videos'
     | '/_site/properties/$slug'
+    | '/api/public/flutterwave-webhook'
     | '/_site/properties/'
     | '/_authenticated/dashboard/admin/contact-edit'
     | '/_authenticated/dashboard/admin/portfolio-videos'
@@ -584,6 +597,7 @@ export interface RootRouteChildren {
   SiteRoute: typeof SiteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   ApiChatRoute: typeof ApiChatRoute
+  ApiPublicFlutterwaveWebhookRoute: typeof ApiPublicFlutterwaveWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -720,6 +734,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/properties/'
       preLoaderRoute: typeof SitePropertiesIndexRouteImport
       parentRoute: typeof SiteRoute
+    }
+    '/api/public/flutterwave-webhook': {
+      id: '/api/public/flutterwave-webhook'
+      path: '/api/public/flutterwave-webhook'
+      fullPath: '/api/public/flutterwave-webhook'
+      preLoaderRoute: typeof ApiPublicFlutterwaveWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_site/properties/$slug': {
       id: '/_site/properties/$slug'
@@ -1069,17 +1090,8 @@ const rootRouteChildren: RootRouteChildren = {
   SiteRoute: SiteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   ApiChatRoute: ApiChatRoute,
+  ApiPublicFlutterwaveWebhookRoute: ApiPublicFlutterwaveWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
