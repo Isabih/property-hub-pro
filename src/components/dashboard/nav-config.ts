@@ -9,6 +9,8 @@ export const IT_NAV: NavItem[] = [
   { to: "/dashboard/properties/new", label: "Add Property", icon: Plus, group: "Content" },
   { to: "/dashboard/it/media-verify", label: "Media Verification", icon: ShieldCheck, group: "Content" },
   { to: "/dashboard/it/home-content", label: "Homepage Content", icon: ImageIcon, group: "Content" },
+  { to: "/dashboard/admin/contact-edit", label: "Contact Page", icon: Mail, group: "Content" },
+  { to: "/dashboard/admin/portfolio-videos", label: "Portfolio Videos", icon: Film, group: "Content" },
   { to: "/dashboard/it/property-of-the-day", label: "Property of the Day", icon: Star, group: "Content" },
   { to: "/dashboard/it/property-types", label: "Property Types", icon: Layers, group: "Content" },
   { to: "/dashboard/service-requests", label: "Service Requests", icon: Wrench, group: "Content" },
