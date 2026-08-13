@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { sampleAnalytics } from "@/lib/sample-analytics";
 import { RoleGate } from "@/components/dashboard/RoleGate";
 
-export const Route = createFileRoute("/_authenticated/dashboard/admin")({
+export const Route = createFileRoute("/_authenticated/dashboard/admin/")({
   head: () => ({ meta: [{ title: "Admin Dashboard — NOVAWORKS" }] }),
   component: () => (
     <RoleGate allow={["admin"]}>

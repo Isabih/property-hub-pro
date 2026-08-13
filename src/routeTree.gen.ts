@@ -35,13 +35,13 @@ import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './rou
 import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes/_authenticated/dashboard.receptionist'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
-import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardBookingsRouteImport } from './routes/_authenticated/dashboard.bookings'
 import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
-import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
 import { Route as AuthenticatedDashboardItIndexRouteImport } from './routes/_authenticated/dashboard.it.index'
 import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
+import { Route as AuthenticatedDashboardBuyerIndexRouteImport } from './routes/_authenticated/dashboard.buyer.index'
+import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
 import { Route as AuthenticatedDashboardItSystemHealthRouteImport } from './routes/_authenticated/dashboard.it.system-health'
@@ -191,12 +191,6 @@ const AuthenticatedDashboardNotificationsRoute =
     path: '/dashboard/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardBuyerRoute =
-  AuthenticatedDashboardBuyerRouteImport.update({
-    id: '/dashboard/buyer',
-    path: '/dashboard/buyer',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedDashboardBookingsRoute =
   AuthenticatedDashboardBookingsRouteImport.update({
     id: '/dashboard/bookings',
@@ -207,12 +201,6 @@ const AuthenticatedDashboardAgentRoute =
   AuthenticatedDashboardAgentRouteImport.update({
     id: '/dashboard/agent',
     path: '/dashboard/agent',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardAdminRoute =
-  AuthenticatedDashboardAdminRouteImport.update({
-    id: '/dashboard/admin',
-    path: '/dashboard/admin',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardPropertiesIndexRoute =
@@ -231,6 +219,18 @@ const AuthenticatedDashboardInquiriesIndexRoute =
   AuthenticatedDashboardInquiriesIndexRouteImport.update({
     id: '/dashboard/inquiries/',
     path: '/dashboard/inquiries/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardBuyerIndexRoute =
+  AuthenticatedDashboardBuyerIndexRouteImport.update({
+    id: '/dashboard/buyer/',
+    path: '/dashboard/buyer/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardAdminIndexRoute =
+  AuthenticatedDashboardAdminIndexRouteImport.update({
+    id: '/dashboard/admin/',
+    path: '/dashboard/admin/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardPropertiesNewRoute =
@@ -295,27 +295,27 @@ const AuthenticatedDashboardItHomeContentRoute =
   } as any)
 const AuthenticatedDashboardBuyerServiceRequestsRoute =
   AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
-    id: '/service-requests',
-    path: '/service-requests',
-    getParentRoute: () => AuthenticatedDashboardBuyerRoute,
+    id: '/dashboard/buyer/service-requests',
+    path: '/dashboard/buyer/service-requests',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardBuyerBookingsRoute =
   AuthenticatedDashboardBuyerBookingsRouteImport.update({
-    id: '/bookings',
-    path: '/bookings',
-    getParentRoute: () => AuthenticatedDashboardBuyerRoute,
+    id: '/dashboard/buyer/bookings',
+    path: '/dashboard/buyer/bookings',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardAdminPortfolioVideosRoute =
   AuthenticatedDashboardAdminPortfolioVideosRouteImport.update({
-    id: '/portfolio-videos',
-    path: '/portfolio-videos',
-    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+    id: '/dashboard/admin/portfolio-videos',
+    path: '/dashboard/admin/portfolio-videos',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardAdminContactEditRoute =
   AuthenticatedDashboardAdminContactEditRouteImport.update({
-    id: '/contact-edit',
-    path: '/contact-edit',
-    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+    id: '/dashboard/admin/contact-edit',
+    path: '/dashboard/admin/contact-edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItStaffNewRoute =
   AuthenticatedDashboardItStaffNewRouteImport.update({
@@ -341,10 +341,8 @@ export interface FileRoutesByFullPath {
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth/': typeof AuthIndexRoute
-  '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/bookings': typeof AuthenticatedDashboardBookingsRoute
-  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
@@ -367,6 +365,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
+  '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
+  '/dashboard/buyer/': typeof AuthenticatedDashboardBuyerIndexRoute
   '/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/it/': typeof AuthenticatedDashboardItIndexRoute
   '/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -388,10 +388,8 @@ export interface FileRoutesByTo {
   '/auth/verify': typeof AuthVerifyRoute
   '/auth/welcome': typeof AuthWelcomeRoute
   '/auth': typeof AuthIndexRoute
-  '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/dashboard/bookings': typeof AuthenticatedDashboardBookingsRoute
-  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
@@ -414,6 +412,8 @@ export interface FileRoutesByTo {
   '/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
+  '/dashboard/buyer': typeof AuthenticatedDashboardBuyerIndexRoute
   '/dashboard/inquiries': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/dashboard/it': typeof AuthenticatedDashboardItIndexRoute
   '/dashboard/properties': typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -439,10 +439,8 @@ export interface FileRoutesById {
   '/auth/welcome': typeof AuthWelcomeRoute
   '/_site/': typeof SiteIndexRoute
   '/auth/': typeof AuthIndexRoute
-  '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
   '/_authenticated/dashboard/agent': typeof AuthenticatedDashboardAgentRoute
   '/_authenticated/dashboard/bookings': typeof AuthenticatedDashboardBookingsRoute
-  '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRouteWithChildren
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/receptionist': typeof AuthenticatedDashboardReceptionistRoute
@@ -465,6 +463,8 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/it/system-health': typeof AuthenticatedDashboardItSystemHealthRoute
   '/_authenticated/dashboard/it/users': typeof AuthenticatedDashboardItUsersRoute
   '/_authenticated/dashboard/properties/new': typeof AuthenticatedDashboardPropertiesNewRoute
+  '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
+  '/_authenticated/dashboard/buyer/': typeof AuthenticatedDashboardBuyerIndexRoute
   '/_authenticated/dashboard/inquiries/': typeof AuthenticatedDashboardInquiriesIndexRoute
   '/_authenticated/dashboard/it/': typeof AuthenticatedDashboardItIndexRoute
   '/_authenticated/dashboard/properties/': typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -489,10 +489,8 @@ export interface FileRouteTypes {
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth/'
-    | '/dashboard/admin'
     | '/dashboard/agent'
     | '/dashboard/bookings'
-    | '/dashboard/buyer'
     | '/dashboard/notifications'
     | '/dashboard/owner'
     | '/dashboard/receptionist'
@@ -515,6 +513,8 @@ export interface FileRouteTypes {
     | '/dashboard/it/system-health'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
+    | '/dashboard/admin/'
+    | '/dashboard/buyer/'
     | '/dashboard/inquiries/'
     | '/dashboard/it/'
     | '/dashboard/properties/'
@@ -536,10 +536,8 @@ export interface FileRouteTypes {
     | '/auth/verify'
     | '/auth/welcome'
     | '/auth'
-    | '/dashboard/admin'
     | '/dashboard/agent'
     | '/dashboard/bookings'
-    | '/dashboard/buyer'
     | '/dashboard/notifications'
     | '/dashboard/owner'
     | '/dashboard/receptionist'
@@ -562,6 +560,8 @@ export interface FileRouteTypes {
     | '/dashboard/it/system-health'
     | '/dashboard/it/users'
     | '/dashboard/properties/new'
+    | '/dashboard/admin'
+    | '/dashboard/buyer'
     | '/dashboard/inquiries'
     | '/dashboard/it'
     | '/dashboard/properties'
@@ -586,10 +586,8 @@ export interface FileRouteTypes {
     | '/auth/welcome'
     | '/_site/'
     | '/auth/'
-    | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/agent'
     | '/_authenticated/dashboard/bookings'
-    | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/receptionist'
@@ -612,6 +610,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/it/system-health'
     | '/_authenticated/dashboard/it/users'
     | '/_authenticated/dashboard/properties/new'
+    | '/_authenticated/dashboard/admin/'
+    | '/_authenticated/dashboard/buyer/'
     | '/_authenticated/dashboard/inquiries/'
     | '/_authenticated/dashboard/it/'
     | '/_authenticated/dashboard/properties/'
@@ -810,13 +810,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/buyer': {
-      id: '/_authenticated/dashboard/buyer'
-      path: '/dashboard/buyer'
-      fullPath: '/dashboard/buyer'
-      preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard/bookings': {
       id: '/_authenticated/dashboard/bookings'
       path: '/dashboard/bookings'
@@ -829,13 +822,6 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/agent'
       fullPath: '/dashboard/agent'
       preLoaderRoute: typeof AuthenticatedDashboardAgentRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/admin': {
-      id: '/_authenticated/dashboard/admin'
-      path: '/dashboard/admin'
-      fullPath: '/dashboard/admin'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/properties/': {
@@ -857,6 +843,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/inquiries'
       fullPath: '/dashboard/inquiries/'
       preLoaderRoute: typeof AuthenticatedDashboardInquiriesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/buyer/': {
+      id: '/_authenticated/dashboard/buyer/'
+      path: '/dashboard/buyer'
+      fullPath: '/dashboard/buyer/'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/admin/': {
+      id: '/_authenticated/dashboard/admin/'
+      path: '/dashboard/admin'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/properties/new': {
@@ -931,31 +931,31 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/dashboard/buyer/service-requests': {
       id: '/_authenticated/dashboard/buyer/service-requests'
-      path: '/service-requests'
+      path: '/dashboard/buyer/service-requests'
       fullPath: '/dashboard/buyer/service-requests'
       preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
-      parentRoute: typeof AuthenticatedDashboardBuyerRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/buyer/bookings': {
       id: '/_authenticated/dashboard/buyer/bookings'
-      path: '/bookings'
+      path: '/dashboard/buyer/bookings'
       fullPath: '/dashboard/buyer/bookings'
       preLoaderRoute: typeof AuthenticatedDashboardBuyerBookingsRouteImport
-      parentRoute: typeof AuthenticatedDashboardBuyerRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/admin/portfolio-videos': {
       id: '/_authenticated/dashboard/admin/portfolio-videos'
-      path: '/portfolio-videos'
+      path: '/dashboard/admin/portfolio-videos'
       fullPath: '/dashboard/admin/portfolio-videos'
       preLoaderRoute: typeof AuthenticatedDashboardAdminPortfolioVideosRouteImport
-      parentRoute: typeof AuthenticatedDashboardAdminRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/admin/contact-edit': {
       id: '/_authenticated/dashboard/admin/contact-edit'
-      path: '/contact-edit'
+      path: '/dashboard/admin/contact-edit'
       fullPath: '/dashboard/admin/contact-edit'
       preLoaderRoute: typeof AuthenticatedDashboardAdminContactEditRouteImport
-      parentRoute: typeof AuthenticatedDashboardAdminRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/staff/new': {
       id: '/_authenticated/dashboard/it/staff/new'
@@ -967,51 +967,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedDashboardAdminRouteChildren {
-  AuthenticatedDashboardAdminContactEditRoute: typeof AuthenticatedDashboardAdminContactEditRoute
-  AuthenticatedDashboardAdminPortfolioVideosRoute: typeof AuthenticatedDashboardAdminPortfolioVideosRoute
-}
-
-const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren =
-  {
-    AuthenticatedDashboardAdminContactEditRoute:
-      AuthenticatedDashboardAdminContactEditRoute,
-    AuthenticatedDashboardAdminPortfolioVideosRoute:
-      AuthenticatedDashboardAdminPortfolioVideosRoute,
-  }
-
-const AuthenticatedDashboardAdminRouteWithChildren =
-  AuthenticatedDashboardAdminRoute._addFileChildren(
-    AuthenticatedDashboardAdminRouteChildren,
-  )
-
-interface AuthenticatedDashboardBuyerRouteChildren {
-  AuthenticatedDashboardBuyerBookingsRoute: typeof AuthenticatedDashboardBuyerBookingsRoute
-  AuthenticatedDashboardBuyerServiceRequestsRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRoute
-}
-
-const AuthenticatedDashboardBuyerRouteChildren: AuthenticatedDashboardBuyerRouteChildren =
-  {
-    AuthenticatedDashboardBuyerBookingsRoute:
-      AuthenticatedDashboardBuyerBookingsRoute,
-    AuthenticatedDashboardBuyerServiceRequestsRoute:
-      AuthenticatedDashboardBuyerServiceRequestsRoute,
-  }
-
-const AuthenticatedDashboardBuyerRouteWithChildren =
-  AuthenticatedDashboardBuyerRoute._addFileChildren(
-    AuthenticatedDashboardBuyerRouteChildren,
-  )
-
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRouteWithChildren
   AuthenticatedDashboardAgentRoute: typeof AuthenticatedDashboardAgentRoute
   AuthenticatedDashboardBookingsRoute: typeof AuthenticatedDashboardBookingsRoute
-  AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRouteWithChildren
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardReceptionistRoute: typeof AuthenticatedDashboardReceptionistRoute
   AuthenticatedDashboardServiceRequestsRoute: typeof AuthenticatedDashboardServiceRequestsRoute
+  AuthenticatedDashboardAdminContactEditRoute: typeof AuthenticatedDashboardAdminContactEditRoute
+  AuthenticatedDashboardAdminPortfolioVideosRoute: typeof AuthenticatedDashboardAdminPortfolioVideosRoute
+  AuthenticatedDashboardBuyerBookingsRoute: typeof AuthenticatedDashboardBuyerBookingsRoute
+  AuthenticatedDashboardBuyerServiceRequestsRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRoute
   AuthenticatedDashboardItHomeContentRoute: typeof AuthenticatedDashboardItHomeContentRoute
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
@@ -1022,6 +988,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardItSystemHealthRoute: typeof AuthenticatedDashboardItSystemHealthRoute
   AuthenticatedDashboardItUsersRoute: typeof AuthenticatedDashboardItUsersRoute
   AuthenticatedDashboardPropertiesNewRoute: typeof AuthenticatedDashboardPropertiesNewRoute
+  AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
+  AuthenticatedDashboardBuyerIndexRoute: typeof AuthenticatedDashboardBuyerIndexRoute
   AuthenticatedDashboardInquiriesIndexRoute: typeof AuthenticatedDashboardInquiriesIndexRoute
   AuthenticatedDashboardItIndexRoute: typeof AuthenticatedDashboardItIndexRoute
   AuthenticatedDashboardPropertiesIndexRoute: typeof AuthenticatedDashboardPropertiesIndexRoute
@@ -1029,12 +997,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardAdminRoute:
-    AuthenticatedDashboardAdminRouteWithChildren,
   AuthenticatedDashboardAgentRoute: AuthenticatedDashboardAgentRoute,
   AuthenticatedDashboardBookingsRoute: AuthenticatedDashboardBookingsRoute,
-  AuthenticatedDashboardBuyerRoute:
-    AuthenticatedDashboardBuyerRouteWithChildren,
   AuthenticatedDashboardNotificationsRoute:
     AuthenticatedDashboardNotificationsRoute,
   AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
@@ -1042,6 +1006,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardReceptionistRoute,
   AuthenticatedDashboardServiceRequestsRoute:
     AuthenticatedDashboardServiceRequestsRoute,
+  AuthenticatedDashboardAdminContactEditRoute:
+    AuthenticatedDashboardAdminContactEditRoute,
+  AuthenticatedDashboardAdminPortfolioVideosRoute:
+    AuthenticatedDashboardAdminPortfolioVideosRoute,
+  AuthenticatedDashboardBuyerBookingsRoute:
+    AuthenticatedDashboardBuyerBookingsRoute,
+  AuthenticatedDashboardBuyerServiceRequestsRoute:
+    AuthenticatedDashboardBuyerServiceRequestsRoute,
   AuthenticatedDashboardItHomeContentRoute:
     AuthenticatedDashboardItHomeContentRoute,
   AuthenticatedDashboardItLuxuryRoute: AuthenticatedDashboardItLuxuryRoute,
@@ -1059,6 +1031,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardItUsersRoute: AuthenticatedDashboardItUsersRoute,
   AuthenticatedDashboardPropertiesNewRoute:
     AuthenticatedDashboardPropertiesNewRoute,
+  AuthenticatedDashboardAdminIndexRoute: AuthenticatedDashboardAdminIndexRoute,
+  AuthenticatedDashboardBuyerIndexRoute: AuthenticatedDashboardBuyerIndexRoute,
   AuthenticatedDashboardInquiriesIndexRoute:
     AuthenticatedDashboardInquiriesIndexRoute,
   AuthenticatedDashboardItIndexRoute: AuthenticatedDashboardItIndexRoute,
