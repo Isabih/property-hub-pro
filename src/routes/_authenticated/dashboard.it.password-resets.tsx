@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/it/password-rese
 function PasswordResets() {
   const { roles, primaryRole } = useAuth();
   const navigate = useNavigate();
-  const allowed = roles.includes("it") || roles.includes("admin");
+  const allowed = roles.includes("it");
   useEffect(() => { if (roles.length && !allowed) navigate({ to: dashboardPathFor(primaryRole) }); }, [roles, allowed, primaryRole, navigate]);
 
   const list = useServerFn(listPasswordResetRequests);
@@ -38,11 +38,7 @@ function PasswordResets() {
     <DashboardShell
       title="Password Reset Queue"
       subtitle="Email-verified users awaiting a one-time password"
-      role={roles.includes("it") ? "it" : "admin"}
-      nav={[
-        { to: roles.includes("it") ? "/dashboard/it" : "/dashboard/admin", label: "Dashboard", icon: LayoutDashboard, group: "Overview" },
-        { to: "/dashboard/it/password-resets", label: "Password Resets", icon: KeyRound, group: "Management" },
-      ]}
+      role="it"
     >
       <Panel title={`Requests (${rows.length})`}>
         <div className="overflow-x-auto">
