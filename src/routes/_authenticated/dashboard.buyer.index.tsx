@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
 import { sampleAnalytics } from "@/lib/sample-analytics";
 
-export const Route = createFileRoute("/_authenticated/dashboard/buyer")({
+export const Route = createFileRoute("/_authenticated/dashboard/buyer/")({
   head: () => ({ meta: [{ title: "Customer Dashboard — NOVAWORKS" }] }),
   component: () => (<RoleGate allow={["buyer"]}><BuyerDashboard /></RoleGate>),
 });
