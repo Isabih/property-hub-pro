@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { Crown, Check, LayoutDashboard, Mail, Star } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
+import { navForRoles } from "@/components/dashboard/nav-config";
+import { useAuth } from "@/lib/use-auth";
 import { listPropertiesForPicker, getPropertyOfTheDay, setPropertyOfTheDay } from "@/lib/property-of-day.functions";
 import { toast } from "sonner";
 
@@ -24,6 +26,8 @@ const NAV = [
 ];
 
 function Page() {
+  const { roles } = useAuth();
+  const shell = navForRoles(roles);
   const list = useServerFn(listPropertiesForPicker);
   const get = useServerFn(getPropertyOfTheDay);
   const set = useServerFn(setPropertyOfTheDay);
@@ -56,7 +60,7 @@ function Page() {
   };
 
   return (
-    <DashboardShell title="Property of the Day" subtitle="Choose which property is featured on the homepage" role="it" nav={NAV}>
+    <DashboardShell title="Property of the Day" subtitle="Choose which property is featured on the homepage" role={shell.role} nav={shell.nav}>
       <Panel title="Current selection" subtitle="Stays on the homepage until you replace it">
         {loading ? (
           <p className="text-noir/60">Loading…</p>

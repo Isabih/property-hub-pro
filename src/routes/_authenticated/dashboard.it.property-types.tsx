@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { LayoutDashboard, Layers, Plus, Trash2, Save, Loader2, ArrowUp, ArrowDown, AlertTriangle } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { useAuth, dashboardPathFor } from "@/lib/use-auth";
-import { IT_NAV } from "@/components/dashboard/nav-config";
+import { navForRoles } from "@/components/dashboard/nav-config";
 import { fetchPropertyCategories } from "@/lib/property-types-public";
 import { updatePropertyCategories, type PropertyTypeRow } from "@/lib/property-types.functions";
 import { toast } from "sonner";
@@ -16,8 +16,9 @@ export const Route = createFileRoute("/_authenticated/dashboard/it/property-type
 
 function PropertyTypesAdmin() {
   const { roles, primaryRole } = useAuth();
+  const shell = navForRoles(roles);
   const navigate = useNavigate();
-  const canEdit = roles.includes("it");
+  const canEdit = roles.includes("it") || roles.includes("admin");
   useEffect(() => {
     if (roles.length && !canEdit) navigate({ to: dashboardPathFor(primaryRole) });
   }, [roles, canEdit, primaryRole, navigate]);
@@ -93,8 +94,8 @@ function PropertyTypesAdmin() {
     <DashboardShell
       title="Property Types"
       subtitle="Add, edit, enable or remove the property categories shown across the site"
-      role="it"
-      nav={IT_NAV}
+      role={shell.role}
+      nav={shell.nav}
     >
       {loading ? (
         <div className="flex items-center justify-center py-20 text-noir/40">

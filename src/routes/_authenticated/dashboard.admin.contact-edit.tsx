@@ -5,6 +5,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { LayoutDashboard, Mail, Save, Plus, Trash2, Users, Eye, EyeOff, Phone, MapPin, Clock, Quote, Film } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
+import { navForRoles } from "@/components/dashboard/nav-config";
+import { useAuth } from "@/lib/use-auth";
 import { MediaInput } from "@/components/dashboard/MediaInput";
 import {
   getContactContent,
@@ -28,39 +30,41 @@ export const Route = createFileRoute("/_authenticated/dashboard/admin/contact-ed
 });
 
 function ContactEditPage() {
+  const { roles } = useAuth();
+  const shell = navForRoles(roles);
   const load = useServerFn(getContactContent);
   const save = useServerFn(updateContactContent);
   const [content, setContent] = useState<ContactContent | null>(null);
   const [original, setOriginal] = useState<string>("");
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(true);
   const [pendingRemove, setPendingRemove] = useState<number | null>(null);
   const [pendingRevert, setPendingRevert] = useState(false);
-  const navBlocker = useRef<{ proceed: () => void; reset: () => void } | null>(null);
-  const [navPrompt, setNavPrompt] = useState(false);
 
   useEffect(() => {
-    load().then((c) => {
-      setContent(c);
-      setOriginal(JSON.stringify(c));
-    });
+    let alive = true;
+    load()
+      .then((c) => {
+        if (!alive) return;
+        setContent(c);
+        setOriginal(JSON.stringify(c));
+      })
+      .catch((e: any) => {
+        if (!alive) return;
+        setLoadError(e?.message ?? "Could not load contact content");
+      });
+    return () => { alive = false; };
   }, []);
 
   const dirty = !!content && JSON.stringify(content) !== original;
 
   // Block in-app navigation when there are unsaved changes
-  useBlocker({
-    shouldBlockFn: ({ next }: any) => {
-      if (!dirty) return false;
-      // Allow staying on the same route
-      return next.pathname !== "/dashboard/admin/contact-edit";
-    },
+  const blocker = useBlocker({
+    shouldBlockFn: ({ next }: any) => dirty && next.pathname !== "/dashboard/admin/contact-edit",
     withResolver: true,
-    blockerFn: ({ resolve }: any) => {
-      navBlocker.current = { proceed: () => resolve(true), reset: () => resolve(false) };
-      setNavPrompt(true);
-    },
-  } as any);
+  });
+  const navPrompt = blocker.status === "blocked";
 
   // Warn on browser tab close / hard refresh
   useEffect(() => {
@@ -72,8 +76,17 @@ function ContactEditPage() {
 
   if (!content) {
     return (
-      <DashboardShell title="Edit Contact" role="admin" nav={nav}>
-        <Panel title="Loading…"><div className="py-12 text-center text-noir/50 text-sm">Fetching contact content…</div></Panel>
+      <DashboardShell title="Edit Contact Page" role={shell.role} nav={shell.nav}>
+        {loadError ? (
+          <Panel title="Couldn't load contact content">
+            <div className="py-8 text-center space-y-3">
+              <p className="text-sm text-red-600">{loadError}</p>
+              <button onClick={() => window.location.reload()} className="px-4 py-2 rounded-md bg-noir-deep text-white text-sm">Retry</button>
+            </div>
+          </Panel>
+        ) : (
+          <Panel title="Loading…"><div className="py-12 text-center text-noir/50 text-sm">Fetching contact content…</div></Panel>
+        )}
       </DashboardShell>
     );
   }
@@ -126,8 +139,8 @@ function ContactEditPage() {
     <DashboardShell
       title="Edit Contact Page"
       subtitle={dirty ? "Unsaved changes" : "Update CEO, team members and contact details shown on /contact"}
-      role="admin"
-      nav={nav}
+      role={shell.role}
+      nav={shell.nav}
       actions={[
         { label: preview ? "Hide preview" : "Show preview", icon: preview ? EyeOff : Eye, onClick: () => setPreview((v) => !v) },
         { label: "Revert", icon: Trash2, onClick: () => dirty ? setPendingRevert(true) : toast.info("Nothing to revert") },
@@ -239,7 +252,7 @@ function ContactEditPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog open={navPrompt} onOpenChange={(o) => { if (!o) { navBlocker.current?.reset(); setNavPrompt(false); } }}>
+      <AlertDialog open={navPrompt} onOpenChange={(o) => { if (!o) blocker.reset?.(); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Leave with unsaved changes?</AlertDialogTitle>
@@ -248,8 +261,8 @@ function ContactEditPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => { navBlocker.current?.reset(); setNavPrompt(false); }}>Stay</AlertDialogCancel>
-            <AlertDialogAction onClick={() => { navBlocker.current?.proceed(); setNavPrompt(false); }} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogCancel onClick={() => blocker.reset?.()}>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={() => blocker.proceed?.()} className="bg-red-600 hover:bg-red-700">
               Discard & leave
             </AlertDialogAction>
           </AlertDialogFooter>
