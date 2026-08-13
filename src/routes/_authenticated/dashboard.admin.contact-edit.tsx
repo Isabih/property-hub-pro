@@ -5,6 +5,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { LayoutDashboard, Mail, Save, Plus, Trash2, Users, Eye, EyeOff, Phone, MapPin, Clock, Quote, Film } from "lucide-react";
 import { DashboardShell, Panel } from "@/components/dashboard/DashboardShell";
 import { RoleGate } from "@/components/dashboard/RoleGate";
+import { navForRoles } from "@/components/dashboard/nav-config";
+import { useAuth } from "@/lib/use-auth";
 import { MediaInput } from "@/components/dashboard/MediaInput";
 import {
   getContactContent,
