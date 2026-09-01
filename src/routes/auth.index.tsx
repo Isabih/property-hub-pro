@@ -348,7 +348,7 @@ function Field({ label, right, children }: { label: string; right?: React.ReactN
   return (
     <label className="block">
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs font-medium text-noir-deep">{label}</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">{label}</span>
         {right}
       </div>
       {children}
@@ -358,12 +358,13 @@ function Field({ label, right, children }: { label: string; right?: React.ReactN
 
 function InputWithIcon({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="glass-field flex items-center gap-2 rounded-md px-3 py-2.5">
-      <span className="text-noir/40">{icon}</span>
+    <div className="glass flex items-center gap-2 rounded-xl px-4 py-3 focus-within:border-gold transition">
+      <span className="text-white/45">{icon}</span>
       {children}
     </div>
   );
 }
+
 
 function GoogleIcon() {
   return (
