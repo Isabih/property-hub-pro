@@ -140,185 +140,195 @@ function AuthPage() {
     if (result.error) setError((result.error as Error).message ?? "Google sign-in failed");
   };
 
+  const formCard = (
+    <div className="glass-dark w-full max-w-md rounded-3xl p-7 sm:p-9 text-white shadow-[0_40px_120px_-40px_rgba(0,0,0,0.9)]">
+      <h1 className="font-display text-3xl">
+        {mode === "signin" ? "Welcome back" : "Create your account"}
+      </h1>
+      <p className="mt-2 text-sm text-white/65">
+        {mode === "signin"
+          ? "Sign in to manage your properties, bookings and saved listings."
+          : "Join NOVAWORKS to save listings, schedule visits, and list your own properties."}
+      </p>
+
+      {error && (
+        <div className="mt-4 rounded-lg border border-red-400/40 bg-red-500/15 px-3 py-2 text-sm text-red-100">
+          {error}
+        </div>
+      )}
+
+      {mode === "signin" ? (
+        <form onSubmit={handleSignIn} className="mt-7 space-y-4">
+          <Field label="Email address">
+            <InputWithIcon icon={<Mail className="h-4 w-4" />}>
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                value={siEmail}
+                onChange={(e) => setSiEmail(e.target.value)}
+                placeholder="name@example.com"
+                className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40"
+              />
+            </InputWithIcon>
+          </Field>
+          <Field
+            label="Password"
+            right={
+              <button type="button" className="text-xs font-medium text-gold hover:underline">
+                Forgot password?
+              </button>
+            }
+          >
+            <InputWithIcon icon={<Lock className="h-4 w-4" />}>
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                autoComplete="current-password"
+                value={siPassword}
+                onChange={(e) => setSiPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40"
+              />
+              <button type="button" onClick={() => setShowPassword((v) => !v)} className="text-white/50 hover:text-white">
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </InputWithIcon>
+          </Field>
+          <label className="flex items-center gap-2 text-sm text-white/70">
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="accent-[color:var(--color-gold)]" />
+            Remember me for 30 days
+          </label>
+          <button
+            disabled={submitting}
+            className="btn-luxury w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold text-noir-deep font-semibold py-3.5 uppercase tracking-[0.12em] text-sm disabled:opacity-60"
+          >
+            {submitting ? "Signing in…" : <>Sign in <ArrowRight className="h-4 w-4" /></>}
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleSignUp} className="mt-7 space-y-4">
+          <Field label="Full name">
+            <InputWithIcon icon={<UserIcon className="h-4 w-4" />}>
+              <input required value={suName} onChange={(e) => setSuName(e.target.value)} placeholder="Your full name" className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40" />
+            </InputWithIcon>
+          </Field>
+          <Field label="Email address">
+            <InputWithIcon icon={<Mail className="h-4 w-4" />}>
+              <input required type="email" autoComplete="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} placeholder="name@example.com" className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40" />
+            </InputWithIcon>
+          </Field>
+          <Field label="Phone (optional)">
+            <InputWithIcon icon={<Phone className="h-4 w-4" />}>
+              <input value={suPhone} onChange={(e) => setSuPhone(e.target.value)} placeholder="+250 7XX XXX XXX" className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40" />
+            </InputWithIcon>
+          </Field>
+          <Field label="Password">
+            <InputWithIcon icon={<Lock className="h-4 w-4" />}>
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                autoComplete="new-password"
+                value={suPassword}
+                onChange={(e) => setSuPassword(e.target.value)}
+                placeholder="At least 8 characters"
+                className="w-full bg-transparent outline-none text-sm text-white placeholder:text-white/40"
+              />
+              <button type="button" onClick={() => setShowPassword((v) => !v)} className="text-white/50 hover:text-white">
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </InputWithIcon>
+          </Field>
+          <button
+            disabled={submitting}
+            className="btn-luxury w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold text-noir-deep font-semibold py-3.5 uppercase tracking-[0.12em] text-sm disabled:opacity-60"
+          >
+            {submitting ? "Creating account…" : <>Create account <ArrowRight className="h-4 w-4" /></>}
+          </button>
+          <p className="text-xs text-white/50">
+            By creating an account you agree to our terms and privacy policy. We'll email you a 6-digit code to verify your address.
+          </p>
+        </form>
+      )}
+
+      <div className="my-6 flex items-center gap-3">
+        <div className="h-px flex-1 bg-white/15" />
+        <span className="text-[10px] uppercase tracking-[0.2em] text-white/40">Or continue with</span>
+        <div className="h-px flex-1 bg-white/15" />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <button onClick={handleGoogle} className="glass inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-white hover:bg-white/15 transition">
+          <GoogleIcon /> Google
+        </button>
+        <button disabled className="glass inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-white/40">
+          Apple
+        </button>
+      </div>
+
+      <p className="mt-6 text-center text-sm text-white/60">
+        {mode === "signin" ? (
+          <>Don't have an account?{" "}
+            <button type="button" onClick={() => { setError(null); setMode("signup"); }} className="text-gold font-medium hover:underline">
+              Create account
+            </button>
+          </>
+        ) : (
+          <>Already have an account?{" "}
+            <button type="button" onClick={() => { setError(null); setMode("signin"); }} className="text-gold font-medium hover:underline">
+              Sign in
+            </button>
+          </>
+        )}
+      </p>
+    </div>
+  );
+
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      {/* Left: form */}
-      <div className="relative flex flex-col px-6 sm:px-12 lg:px-20 py-10 lg:py-16 overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full bg-gold/25 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-40 -right-20 h-[28rem] w-[28rem] rounded-full bg-noir/10 blur-3xl" />
-        <div className="relative z-10 flex flex-col flex-1">
-        <Link to="/" className="inline-flex items-center gap-3 group w-fit">
-          <div className="h-10 w-10 rounded-md bg-noir-deep text-gold flex items-center justify-center">
+    <div className="relative min-h-screen w-full overflow-hidden bg-noir-deep">
+      {/* Full-bleed cinematic background */}
+      <img src={heroImage} alt="Luxury NOVAWORKS property at dusk" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-noir-deep/70" />
+      <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/70 to-noir-deep/40" />
+      <div aria-hidden className="pointer-events-none absolute -top-40 -left-32 h-[32rem] w-[32rem] rounded-full bg-gold/20 blur-3xl" />
+
+      {/* Floating glass nav */}
+      <header className="relative z-20 flex items-center justify-between px-6 sm:px-10 lg:px-16 py-6">
+        <Link to="/" className="inline-flex items-center gap-3 w-fit">
+          <div className="h-10 w-10 rounded-xl bg-gold text-noir-deep flex items-center justify-center">
             <Home className="h-5 w-5" />
           </div>
-          <div className="leading-tight">
-            <div className="font-display text-xl tracking-wide text-noir-deep">NOVAWORKS</div>
-            <div className="text-[10px] uppercase tracking-[0.25em] text-noir/50">Where Prime Property Meets Peace of Mind</div>
+          <div className="leading-tight text-white">
+            <div className="font-display text-xl tracking-wide">NOVAWORKS</div>
+            <div className="text-[9px] uppercase tracking-[0.25em] text-white/50">Where Prime Property Meets Peace of Mind</div>
           </div>
         </Link>
+        <Link to="/" className="glass hidden sm:inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-white hover:bg-white/15 transition">
+          Back to site
+        </Link>
+      </header>
 
-        <div className="my-auto max-w-sm w-full mx-auto glass-panel rounded-2xl p-8">
-          <h1 className="font-display text-4xl text-noir-deep">
-            {mode === "signin" ? "Welcome back" : "Create your account"}
-          </h1>
-          <p className="mt-2 text-sm text-noir/60">
-            {mode === "signin"
-              ? "Sign in to access your account and manage your properties"
-              : "Join NOVAWORKS to save listings, schedule visits, and list your own properties."}
-          </p>
-
-          {error && (
-            <div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error}
-            </div>
-          )}
-
-          {mode === "signin" ? (
-            <form onSubmit={handleSignIn} className="mt-8 space-y-5">
-              <Field label="Email address">
-                <InputWithIcon icon={<Mail className="h-4 w-4" />}>
-                  <input
-                    type="email"
-                    required
-                    autoComplete="email"
-                    value={siEmail}
-                    onChange={(e) => setSiEmail(e.target.value)}
-                    placeholder="name@example.com"
-                    className="w-full bg-transparent outline-none text-sm"
-                  />
-                </InputWithIcon>
-              </Field>
-              <Field
-                label="Password"
-                right={
-                  <button type="button" className="text-xs font-medium text-gold hover:underline">
-                    Forgot password?
-                  </button>
-                }
-              >
-                <InputWithIcon icon={<Lock className="h-4 w-4" />}>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    required
-                    autoComplete="current-password"
-                    value={siPassword}
-                    onChange={(e) => setSiPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full bg-transparent outline-none text-sm"
-                  />
-                  <button type="button" onClick={() => setShowPassword((v) => !v)} className="text-noir/50 hover:text-noir">
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </InputWithIcon>
-              </Field>
-              <label className="flex items-center gap-2 text-sm text-noir/70">
-                <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="accent-[color:var(--color-gold)]" />
-                Remember me for 30 days
-              </label>
-              <button
-                disabled={submitting}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-gold text-noir-deep font-semibold py-3 hover:bg-gold-soft transition disabled:opacity-60"
-              >
-                {submitting ? "Signing in…" : <>Sign in <ArrowRight className="h-4 w-4" /></>}
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={handleSignUp} className="mt-8 space-y-5">
-              <Field label="Full name">
-                <InputWithIcon icon={<UserIcon className="h-4 w-4" />}>
-                  <input required value={suName} onChange={(e) => setSuName(e.target.value)} placeholder="Jean-Marie Uwimana" className="w-full bg-transparent outline-none text-sm" />
-                </InputWithIcon>
-              </Field>
-              <Field label="Email address">
-                <InputWithIcon icon={<Mail className="h-4 w-4" />}>
-                  <input required type="email" autoComplete="email" value={suEmail} onChange={(e) => setSuEmail(e.target.value)} placeholder="name@example.com" className="w-full bg-transparent outline-none text-sm" />
-                </InputWithIcon>
-              </Field>
-              <Field label="Phone (optional)">
-                <InputWithIcon icon={<Phone className="h-4 w-4" />}>
-                  <input value={suPhone} onChange={(e) => setSuPhone(e.target.value)} placeholder="+250 7XX XXX XXX" className="w-full bg-transparent outline-none text-sm" />
-                </InputWithIcon>
-              </Field>
-              <Field label="Password">
-                <InputWithIcon icon={<Lock className="h-4 w-4" />}>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    required
-                    autoComplete="new-password"
-                    value={suPassword}
-                    onChange={(e) => setSuPassword(e.target.value)}
-                    placeholder="At least 8 characters"
-                    className="w-full bg-transparent outline-none text-sm"
-                  />
-                  <button type="button" onClick={() => setShowPassword((v) => !v)} className="text-noir/50 hover:text-noir">
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </InputWithIcon>
-              </Field>
-              <button
-                disabled={submitting}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-gold text-noir-deep font-semibold py-3 hover:bg-gold-soft transition disabled:opacity-60"
-              >
-                {submitting ? "Creating account…" : <>Create account <ArrowRight className="h-4 w-4" /></>}
-              </button>
-              <p className="text-xs text-noir/50">
-                By creating an account you agree to our terms and privacy policy. We'll email you a 6-digit code to verify your address.
-              </p>
-            </form>
-          )}
-
-          <div className="my-6 flex items-center gap-3">
-            <div className="h-px flex-1 bg-noir/10" />
-            <span className="text-xs uppercase tracking-wider text-noir/40">Or continue with</span>
-            <div className="h-px flex-1 bg-noir/10" />
+      {/* Split content */}
+      <div className="relative z-10 mx-auto grid max-w-[1400px] items-center gap-12 px-6 sm:px-10 lg:px-16 pb-16 pt-4 lg:grid-cols-2 lg:pt-10">
+        <div className="hidden lg:block text-white">
+          <div className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+            Premium Real Estate
           </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button onClick={handleGoogle} className="glass-field inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-noir-deep hover:bg-noir/5">
-              <GoogleIcon /> Google
-            </button>
-            <button disabled className="glass-field inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-noir/40">
-               Apple
-            </button>
-          </div>
-
-          <p className="mt-6 text-center text-sm text-noir/60">
-            {mode === "signin" ? (
-              <>Don't have an account?{" "}
-                <button type="button" onClick={() => { setError(null); setMode("signup"); }} className="text-gold font-medium hover:underline">
-                  Create account
-                </button>
-              </>
-            ) : (
-              <>Already have an account?{" "}
-                <button type="button" onClick={() => { setError(null); setMode("signin"); }} className="text-gold font-medium hover:underline">
-                  Sign in
-                </button>
-              </>
-            )}
+          <h2 className="mt-7 font-display text-5xl xl:text-6xl leading-[1.05]">
+            Discover Your <span className="gold-text">Perfect</span><br />Address
+          </h2>
+          <p className="mt-6 max-w-md text-white/70 leading-relaxed">
+            Sign in to access exclusive listings, manage your bookings and follow your property journey with NOVAWORKS — Kigali's trusted luxury real estate atelier.
           </p>
+          <div className="mt-10 flex items-center gap-8 text-sm text-white/70">
+            <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-gold" /> Verified listings</div>
+            <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-gold" /> Secure payments</div>
+          </div>
         </div>
-        </div>
+
+        <div className="flex justify-center lg:justify-end">{formCard}</div>
       </div>
 
-      {/* Right: hero */}
-      <div className="relative hidden lg:block">
-        <img src={heroImage} alt="Luxury property" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/85 to-noir-deep/60" />
-        <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
-          <blockquote className="font-display text-2xl italic leading-snug max-w-md">
-            "NOVAWORKS made finding our dream home effortless. Their attention to detail and personalized service exceeded all our expectations."
-          </blockquote>
-          <div className="mt-6 flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gold/30 text-white flex items-center justify-center text-xs font-semibold">NW</div>
-            <div>
-              <div className="font-semibold">NOVAWORKS</div>
-              <div className="text-xs text-white/70">Kigali, Rwanda</div>
-            </div>
-          </div>
-        </div>
-      </div>
       {verifyEmail && (
         <VerifyOtpModal
           email={verifyEmail}
@@ -333,11 +343,12 @@ function AuthPage() {
   );
 }
 
+
 function Field({ label, right, children }: { label: string; right?: React.ReactNode; children: React.ReactNode }) {
   return (
     <label className="block">
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs font-medium text-noir-deep">{label}</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">{label}</span>
         {right}
       </div>
       {children}
@@ -347,12 +358,13 @@ function Field({ label, right, children }: { label: string; right?: React.ReactN
 
 function InputWithIcon({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="glass-field flex items-center gap-2 rounded-md px-3 py-2.5">
-      <span className="text-noir/40">{icon}</span>
+    <div className="glass flex items-center gap-2 rounded-xl px-4 py-3 focus-within:border-gold transition">
+      <span className="text-white/45">{icon}</span>
       {children}
     </div>
   );
 }
+
 
 function GoogleIcon() {
   return (
