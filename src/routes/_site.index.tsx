@@ -265,7 +265,7 @@ function HomePage() {
       {/* SEARCH SECTION */}
       <section className="bg-background py-12 lg:py-16 border-b border-border">
         <div className="container-luxe">
-          <div className="bg-card rounded-2xl shadow-xl overflow-hidden border border-border">
+          <div className="glass-panel rounded-2xl overflow-hidden">
             <div className="flex border-b border-border">
               {(["rent", "sale", "all"] as const).map((t) => (
                 <button
@@ -285,7 +285,7 @@ function HomePage() {
               <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
               <div className="flex flex-col gap-1.5 min-w-0">
                 <label className="text-xs text-muted-foreground">Keyword</label>
-                <input className="bg-muted rounded-md px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold/30 w-full min-w-0" placeholder="Search by name..." />
+                <input className="glass-field rounded-md px-4 py-3 text-sm outline-none w-full min-w-0" placeholder="Search by name..." />
               </div>
               <Link
                 to="/properties"

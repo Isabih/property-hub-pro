@@ -152,7 +152,7 @@ function PropertyDetail() {
 
           {/* Title + price band */}
           <div className="relative -mb-12 mt-8">
-            <div className="bg-card text-foreground rounded-2xl shadow-2xl p-7 grid lg:grid-cols-[1fr_auto] gap-6 items-start border border-border">
+            <div className="glass-panel text-foreground rounded-2xl p-7 grid lg:grid-cols-[1fr_auto] gap-6 items-start">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   {p.luxury && <Pill icon={<Crown className="w-3 h-3" />} className="bg-gold/15 text-gold">Luxury</Pill>}
@@ -195,7 +195,7 @@ function PropertyDetail() {
 
             {/* Media & Tours */}
             <Section title="Media & Tours">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1.5 rounded-xl bg-muted">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1.5 rounded-xl glass-panel">
                 <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
                 <MediaTab active={mediaTab === "video"} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />
                 <MediaTab active={mediaTab === "tour"} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />
@@ -265,7 +265,7 @@ function PropertyDetail() {
                 </div>
               )}
               {mediaTab === "floorplan" && (
-                <div className="mt-5 rounded-xl border border-border bg-card p-6">
+                <div className="mt-5 rounded-xl glass-panel p-6">
                   {p.floorPlanUrl ? (
                     <>
                       <iframe src={p.floorPlanUrl} className="w-full h-[600px] rounded" title="Floor plan" />
@@ -307,7 +307,7 @@ function PropertyDetail() {
               <Section title="Amenities & Features">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {p.amenities.map((a) => (
-                    <div key={a} className="flex items-center gap-3 bg-card border border-border p-3 rounded-lg">
+                    <div key={a} className="flex items-center gap-3 glass-panel p-3 rounded-lg">
                       <span className="w-7 h-7 rounded-md bg-gold/15 text-gold flex items-center justify-center">
                         <Check className="w-4 h-4" />
                       </span>
@@ -400,7 +400,7 @@ function PropertyDetail() {
 
 function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-5 text-center">
+    <div className="glass-panel rounded-xl p-5 text-center">
       <div className="w-10 h-10 mx-auto rounded-md bg-gold/10 text-gold flex items-center justify-center">{icon}</div>
       <div className="mt-2 font-display text-2xl text-foreground">{value}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
@@ -502,7 +502,7 @@ const PLACE_ICON: Record<NeighborhoodPlace["type"], React.ReactNode> = {
 
 function NeighborCard({ place }: { place: NeighborhoodPlace }) {
   return (
-    <div className="flex items-start gap-3 bg-card border border-border rounded-xl p-4">
+    <div className="flex items-start gap-3 glass-panel rounded-xl p-4">
       <div className="w-10 h-10 rounded-lg bg-gold/15 text-gold flex items-center justify-center shrink-0">
         {PLACE_ICON[place.type]}
       </div>
@@ -517,7 +517,7 @@ function NeighborCard({ place }: { place: NeighborhoodPlace }) {
 
 function AgentCard({ agent }: { agent: NonNullable<Property["agent"]> }) {
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+    <div className="glass-panel rounded-2xl p-6">
       <div className="flex items-center gap-3">
         <img src={agent.avatar} alt={agent.name} className="w-14 h-14 rounded-full object-cover" />
         <div>
@@ -553,7 +553,7 @@ function AgentCard({ agent }: { agent: NonNullable<Property["agent"]> }) {
 function ScheduleVisitCard() {
   const [sent, setSent] = useState(false);
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+    <div className="glass-panel rounded-2xl p-6">
       <h3 className="font-display text-xl mb-4">Schedule a Visit</h3>
       {sent ? (
         <div className="text-sm text-muted-foreground py-6 text-center">

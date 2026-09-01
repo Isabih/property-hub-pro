@@ -154,7 +154,7 @@ function AuthPage() {
           </div>
         </Link>
 
-        <div className="my-auto max-w-sm w-full mx-auto py-10">
+        <div className="my-auto max-w-sm w-full mx-auto glass-panel rounded-2xl p-8">
           <h1 className="font-display text-4xl text-noir-deep">
             {mode === "signin" ? "Welcome back" : "Create your account"}
           </h1>
@@ -271,10 +271,10 @@ function AuthPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <button onClick={handleGoogle} className="inline-flex items-center justify-center gap-2 rounded-md border border-noir/15 bg-white px-4 py-2.5 text-sm font-medium text-noir-deep hover:bg-noir/5">
+            <button onClick={handleGoogle} className="glass-field inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-noir-deep hover:bg-noir/5">
               <GoogleIcon /> Google
             </button>
-            <button disabled className="inline-flex items-center justify-center gap-2 rounded-md border border-noir/15 bg-white px-4 py-2.5 text-sm font-medium text-noir/40">
+            <button disabled className="glass-field inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-noir/40">
                Apple
             </button>
           </div>
@@ -343,7 +343,7 @@ function Field({ label, right, children }: { label: string; right?: React.ReactN
 
 function InputWithIcon({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 rounded-md border border-noir/15 bg-white px-3 py-2.5 focus-within:border-gold focus-within:ring-2 focus-within:ring-gold/20">
+    <div className="glass-field flex items-center gap-2 rounded-md px-3 py-2.5">
       <span className="text-noir/40">{icon}</span>
       {children}
     </div>
