@@ -227,9 +227,48 @@
   .glass {
     background: oklch(1 0 0 / 0.08);
     backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
     border: 1px solid oklch(1 0 0 / 0.12);
   }
+
+  /* Frosted panel that adapts to light/dark theme */
+  .glass-panel {
+    background: color-mix(in oklab, var(--card) 62%, transparent);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+    box-shadow:
+      0 20px 60px -25px oklch(0.16 0.01 60 / 0.45),
+      inset 0 1px 0 oklch(1 0 0 / 0.35);
+  }
+  .dark .glass-panel {
+    background: oklch(1 0 0 / 0.06);
+    border-color: oklch(1 0 0 / 0.12);
+    box-shadow:
+      0 24px 70px -30px oklch(0 0 0 / 0.8),
+      inset 0 1px 0 oklch(1 0 0 / 0.08);
+  }
+
+  /* Glass form field */
+  .glass-field {
+    background: color-mix(in oklab, var(--card) 55%, transparent);
+    backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .glass-field:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px oklch(0.78 0.13 75 / 0.18);
+    background: color-mix(in oklab, var(--card) 75%, transparent);
+  }
+  .dark .glass-field { background: oklch(1 0 0 / 0.05); border-color: oklch(1 0 0 / 0.14); }
+
+  /* Dark glass over imagery */
+  .glass-dark {
+    background: oklch(0.10 0.008 60 / 0.45);
+    backdrop-filter: blur(18px) saturate(150%);
+    border: 1px solid oklch(1 0 0 / 0.14);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.10);
+  }
+
 
   /* Gold gradient text — luxury accent headlines */
   .gold-text {
