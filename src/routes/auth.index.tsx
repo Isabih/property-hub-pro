@@ -143,7 +143,10 @@ function AuthPage() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       {/* Left: form */}
-      <div className="flex flex-col px-6 sm:px-12 lg:px-20 py-10 lg:py-16">
+      <div className="relative flex flex-col px-6 sm:px-12 lg:px-20 py-10 lg:py-16 overflow-hidden">
+        <div aria-hidden className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full bg-gold/25 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-40 -right-20 h-[28rem] w-[28rem] rounded-full bg-noir/10 blur-3xl" />
+        <div className="relative z-10 flex flex-col flex-1">
         <Link to="/" className="inline-flex items-center gap-3 group w-fit">
           <div className="h-10 w-10 rounded-md bg-noir-deep text-gold flex items-center justify-center">
             <Home className="h-5 w-5" />
@@ -294,6 +297,7 @@ function AuthPage() {
               </>
             )}
           </p>
+        </div>
         </div>
       </div>
 
