@@ -111,75 +111,107 @@ function PropertyDetail() {
           onIndexChange={(i) => setLightbox((l) => (l ? { ...l, idx: i } : l))}
         />
       )}
-      {/* Hero collage */}
-      <section className="bg-noir-deep pt-6">
-        <div className="container-luxe">
-          <Link to="/properties" className="inline-flex items-center gap-2 text-white/60 hover:text-gold text-sm mb-4">
-            <ArrowLeft className="w-4 h-4" /> Back to properties
-          </Link>
+      {/* Cinematic hero */}
+      <section className="relative">
+        <div className="relative h-[68vh] min-h-[460px] w-full overflow-hidden">
+          <img
+            src={heroMain.src}
+            alt={heroMain.label ?? ROOM_META[heroMain.room].label}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-noir-deep/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/25 to-noir-deep/60" />
 
-          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[480px] rounded-2xl overflow-hidden">
-            <button
-              type="button"
-              onClick={() => openLightbox(roomGallery, heroMain.src)}
-              className="col-span-2 row-span-2 relative group cursor-zoom-in"
-            >
-              <img src={heroMain.src} alt={heroMain.label ?? ROOM_META[heroMain.room].label} className="w-full h-full object-cover" />
-              <div className="absolute top-4 left-4 flex gap-2">
+          <div className="relative h-full container-luxe flex flex-col justify-between py-7">
+            <div className="flex items-start justify-between gap-4">
+              <Link to="/properties" className="inline-flex items-center gap-2 glass-dark text-white/85 hover:text-gold text-sm px-4 py-2 rounded-full">
+                <ArrowLeft className="w-4 h-4" /> Back to properties
+              </Link>
+              <div className="flex gap-2">
+                <GlassIconBtn label="Save"><Heart className="w-4 h-4" /></GlassIconBtn>
+                <GlassIconBtn label="Share"><Share2 className="w-4 h-4" /></GlassIconBtn>
+                <GlassIconBtn label="Print"><Printer className="w-4 h-4" /></GlassIconBtn>
+              </div>
+            </div>
+
+            <div className="max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
                 {p.luxury && (
-                  <span className="inline-flex items-center gap-1 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-md">
+                  <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full">
                     <Crown className="w-3 h-3" /> Luxury
                   </span>
                 )}
+                <span className="glass-dark text-white/85 text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                  {CATEGORY_META[p.category].label}
+                </span>
+                <span className="glass-dark text-white/85 text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full capitalize">
+                  {p.status}
+                </span>
               </div>
-            </button>
-            {heroSide.map((g, i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => openLightbox(roomGallery, g.src)}
-                className="relative cursor-zoom-in group"
-              >
-                <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
-                {i === heroSide.length - 1 && extraCount > 0 && (
-                  <div className="absolute inset-0 bg-noir-deep/55 flex items-center justify-center text-white">
-                    <Maximize2 className="w-5 h-5 mr-1" /> +{extraCount} more
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
+              <h1 className="font-display text-4xl md:text-6xl text-white leading-[1.05]">{p.title}</h1>
+              <div className="mt-3 flex items-center gap-1.5 text-white/70 text-sm">
+                <MapPin className="w-4 h-4 text-gold" /> {p.address ?? p.location}, {p.district}
+              </div>
+            </div>
 
-          {/* Title + price band */}
-          <div className="relative -mb-12 mt-8">
-            <div className="glass-panel text-foreground rounded-2xl p-7 grid lg:grid-cols-[1fr_auto] gap-6 items-start">
+            {/* Floating glass bar */}
+            <div className="glass-dark rounded-2xl px-6 py-5 flex flex-wrap items-center gap-6 justify-between">
               <div>
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  {p.luxury && <Pill icon={<Crown className="w-3 h-3" />} className="bg-gold/15 text-gold">Luxury</Pill>}
-                  <Pill className="bg-muted text-foreground">{CATEGORY_META[p.category].label}</Pill>
-                  <Pill className="bg-emerald-500/15 text-emerald-600 capitalize">{p.status}</Pill>
+                <div className="text-[11px] uppercase tracking-wider text-white/55">
+                  {p.priceUnit === "month" ? "Monthly rent" : "Sale price"}
                 </div>
-                <h1 className="font-display text-3xl md:text-4xl">{p.title}</h1>
-                <div className="mt-2 flex items-center gap-1.5 text-muted-foreground text-sm">
-                  <MapPin className="w-4 h-4 text-gold" /> {p.address}, {p.district}
-                </div>
+                <div className="font-display text-3xl text-white">{formatPrice(p)}</div>
               </div>
-              <div className="lg:text-right">
-                <div className="font-display text-3xl">{formatPrice(p)}</div>
-                <div className="text-xs text-muted-foreground">{p.priceUnit === "month" ? "Monthly" : "Sale Price"}</div>
-                <div className="mt-4 flex lg:justify-end gap-2">
-                  <IconBtn><Heart className="w-4 h-4" /></IconBtn>
-                  <IconBtn><Share2 className="w-4 h-4" /></IconBtn>
-                  <IconBtn><Printer className="w-4 h-4" /></IconBtn>
-                  <a href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`} className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-sm font-medium px-5 py-2 rounded-md">
-                    <Mail className="w-4 h-4" /> Inquire Now
-                  </a>
-                </div>
+              <div className="flex flex-wrap items-center gap-5 text-white/80 text-sm">
+                {p.beds != null && <HeroFact icon={<Bed className="w-4 h-4" />} value={`${p.beds} Beds`} />}
+                {p.baths != null && <HeroFact icon={<Bath className="w-4 h-4" />} value={`${p.baths} Baths`} />}
+                <HeroFact icon={<Maximize2 className="w-4 h-4" />} value={`${p.area} m²`} />
+                {p.parking != null && p.parking > 0 && <HeroFact icon={<Car className="w-4 h-4" />} value={`${p.parking} Parking`} />}
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => openLightbox(roomGallery, heroMain.src)}
+                  className="inline-flex items-center gap-2 glass text-white text-sm px-4 py-2.5 rounded-full hover:text-gold"
+                >
+                  <ImageIcon className="w-4 h-4" /> View all {roomGallery.length} photos
+                </button>
+                <a
+                  href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`}
+                  className="btn-luxury inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-sm font-medium px-5 py-2.5 rounded-full"
+                >
+                  <Mail className="w-4 h-4" /> Inquire Now
+                </a>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Thumbnail strip */}
+        {heroSide.length > 0 && (
+          <div className="container-luxe -mt-8 relative z-10">
+            <div className="glass-panel rounded-2xl p-2 grid grid-cols-4 gap-2">
+              {heroSide.map((g, i) => (
+                <button
+                  type="button"
+                  key={i}
+                  onClick={() => openLightbox(roomGallery, g.src)}
+                  onMouseEnter={() => prefetchImage(g.src)}
+                  className="relative aspect-[4/3] rounded-xl overflow-hidden cursor-zoom-in group"
+                >
+                  <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  {i === heroSide.length - 1 && extraCount > 0 && (
+                    <div className="absolute inset-0 bg-noir-deep/60 flex items-center justify-center text-white text-sm">
+                      <Maximize2 className="w-4 h-4 mr-1.5" /> +{extraCount} more
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
+
 
       <section className="pt-20 pb-8">
         <div className="container-luxe grid lg:grid-cols-[1fr_380px] gap-10">
