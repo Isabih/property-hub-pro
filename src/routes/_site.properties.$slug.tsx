@@ -111,96 +111,121 @@ function PropertyDetail() {
           onIndexChange={(i) => setLightbox((l) => (l ? { ...l, idx: i } : l))}
         />
       )}
-      {/* Hero collage */}
-      <section className="bg-noir-deep pt-6">
-        <div className="container-luxe">
-          <Link to="/properties" className="inline-flex items-center gap-2 text-white/60 hover:text-gold text-sm mb-4">
-            <ArrowLeft className="w-4 h-4" /> Back to properties
-          </Link>
+      {/* Cinematic hero */}
+      <section className="relative">
+        <div className="relative h-[76vh] min-h-[560px] w-full overflow-hidden">
+          <img
+            src={heroMain.src}
+            alt={heroMain.label ?? ROOM_META[heroMain.room].label}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-noir-deep/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/25 to-noir-deep/60" />
 
-          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[480px] rounded-2xl overflow-hidden">
-            <button
-              type="button"
-              onClick={() => openLightbox(roomGallery, heroMain.src)}
-              className="col-span-2 row-span-2 relative group cursor-zoom-in"
-            >
-              <img src={heroMain.src} alt={heroMain.label ?? ROOM_META[heroMain.room].label} className="w-full h-full object-cover" />
-              <div className="absolute top-4 left-4 flex gap-2">
+          <div className="relative h-full container-luxe flex flex-col justify-between pt-28 pb-7">
+            <div className="flex items-start justify-between gap-4">
+              <Link to="/properties" className="inline-flex items-center gap-2 glass-dark text-white/85 hover:text-gold text-sm px-4 py-2 rounded-full">
+                <ArrowLeft className="w-4 h-4" /> Back to properties
+              </Link>
+              <div className="flex gap-2">
+                <GlassIconBtn label="Save"><Heart className="w-4 h-4" /></GlassIconBtn>
+                <GlassIconBtn label="Share"><Share2 className="w-4 h-4" /></GlassIconBtn>
+                <GlassIconBtn label="Print"><Printer className="w-4 h-4" /></GlassIconBtn>
+              </div>
+            </div>
+
+            <div className="max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
                 {p.luxury && (
-                  <span className="inline-flex items-center gap-1 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-md">
+                  <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full">
                     <Crown className="w-3 h-3" /> Luxury
                   </span>
                 )}
+                <span className="glass-dark text-white/85 text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                  {CATEGORY_META[p.category].label}
+                </span>
+                <span className="glass-dark text-white/85 text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full capitalize">
+                  {p.status}
+                </span>
               </div>
-            </button>
-            {heroSide.map((g, i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => openLightbox(roomGallery, g.src)}
-                className="relative cursor-zoom-in group"
-              >
-                <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover" />
-                {i === heroSide.length - 1 && extraCount > 0 && (
-                  <div className="absolute inset-0 bg-noir-deep/55 flex items-center justify-center text-white">
-                    <Maximize2 className="w-5 h-5 mr-1" /> +{extraCount} more
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
+              <h1 className="font-display text-4xl md:text-6xl text-white leading-[1.05]">{p.title}</h1>
+              <div className="mt-3 flex items-center gap-1.5 text-white/70 text-sm">
+                <MapPin className="w-4 h-4 text-gold" /> {p.address ?? p.location}, {p.district}
+              </div>
+            </div>
 
-          {/* Title + price band */}
-          <div className="relative -mb-12 mt-8">
-            <div className="glass-panel text-foreground rounded-2xl p-7 grid lg:grid-cols-[1fr_auto] gap-6 items-start">
+            {/* Floating glass bar */}
+            <div className="glass-dark rounded-2xl px-6 py-5 flex flex-wrap items-center gap-6 justify-between">
               <div>
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  {p.luxury && <Pill icon={<Crown className="w-3 h-3" />} className="bg-gold/15 text-gold">Luxury</Pill>}
-                  <Pill className="bg-muted text-foreground">{CATEGORY_META[p.category].label}</Pill>
-                  <Pill className="bg-emerald-500/15 text-emerald-600 capitalize">{p.status}</Pill>
+                <div className="text-[11px] uppercase tracking-wider text-white/55">
+                  {p.priceUnit === "month" ? "Monthly rent" : "Sale price"}
                 </div>
-                <h1 className="font-display text-3xl md:text-4xl">{p.title}</h1>
-                <div className="mt-2 flex items-center gap-1.5 text-muted-foreground text-sm">
-                  <MapPin className="w-4 h-4 text-gold" /> {p.address}, {p.district}
-                </div>
+                <div className="font-display text-3xl text-white">{formatPrice(p)}</div>
               </div>
-              <div className="lg:text-right">
-                <div className="font-display text-3xl">{formatPrice(p)}</div>
-                <div className="text-xs text-muted-foreground">{p.priceUnit === "month" ? "Monthly" : "Sale Price"}</div>
-                <div className="mt-4 flex lg:justify-end gap-2">
-                  <IconBtn><Heart className="w-4 h-4" /></IconBtn>
-                  <IconBtn><Share2 className="w-4 h-4" /></IconBtn>
-                  <IconBtn><Printer className="w-4 h-4" /></IconBtn>
-                  <a href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`} className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-sm font-medium px-5 py-2 rounded-md">
-                    <Mail className="w-4 h-4" /> Inquire Now
-                  </a>
-                </div>
+              <div className="flex flex-wrap items-center gap-5 text-white/80 text-sm">
+                {p.beds != null && <HeroFact icon={<Bed className="w-4 h-4" />} value={`${p.beds} Beds`} />}
+                {p.baths != null && <HeroFact icon={<Bath className="w-4 h-4" />} value={`${p.baths} Baths`} />}
+                <HeroFact icon={<Maximize2 className="w-4 h-4" />} value={`${p.area} m²`} />
+                {p.parking != null && p.parking > 0 && <HeroFact icon={<Car className="w-4 h-4" />} value={`${p.parking} Parking`} />}
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => openLightbox(roomGallery, heroMain.src)}
+                  className="inline-flex items-center gap-2 glass text-white text-sm px-4 py-2.5 rounded-full hover:text-gold"
+                >
+                  <ImageIcon className="w-4 h-4" /> View all {roomGallery.length} photos
+                </button>
+                <a
+                  href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`}
+                  className="btn-luxury inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep text-sm font-medium px-5 py-2.5 rounded-full"
+                >
+                  <Mail className="w-4 h-4" /> Inquire Now
+                </a>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Thumbnail strip */}
+        {heroSide.length > 0 && (
+          <div className="container-luxe -mt-8 relative z-10">
+            <div className="glass-panel rounded-2xl p-2 grid grid-cols-4 gap-2">
+              {heroSide.map((g, i) => (
+                <button
+                  type="button"
+                  key={i}
+                  onClick={() => openLightbox(roomGallery, g.src)}
+                  onMouseEnter={() => prefetchImage(g.src)}
+                  className="relative aspect-[4/3] rounded-xl overflow-hidden cursor-zoom-in group"
+                >
+                  <img src={g.src} alt={g.label ?? ROOM_META[g.room].label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  {i === heroSide.length - 1 && extraCount > 0 && (
+                    <div className="absolute inset-0 bg-noir-deep/60 flex items-center justify-center text-white text-sm">
+                      <Maximize2 className="w-4 h-4 mr-1.5" /> +{extraCount} more
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
-      <section className="pt-20 pb-8">
+
+      <section className="pt-14 pb-8">
         <div className="container-luxe grid lg:grid-cols-[1fr_380px] gap-10">
           {/* MAIN */}
           <div className="space-y-12">
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {p.beds != null && <Stat icon={<Bed className="w-5 h-5" />} value={p.beds} label="Bedrooms" />}
-              {p.baths != null && <Stat icon={<Bath className="w-5 h-5" />} value={p.baths} label="Bathrooms" />}
-              <Stat icon={<Maximize2 className="w-5 h-5" />} value={p.area} label="Sq. Meters" />
-              {p.parking != null && p.parking > 0 && <Stat icon={<Car className="w-5 h-5" />} value={p.parking} label="Parking" />}
-            </div>
-
             {/* Media & Tours */}
             <Section title="Media & Tours">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1.5 rounded-xl glass-panel">
+              <div className="inline-flex flex-wrap gap-1.5 p-1.5 rounded-full glass-panel">
                 <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
                 <MediaTab active={mediaTab === "video"} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />
                 <MediaTab active={mediaTab === "tour"} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />
                 <MediaTab active={mediaTab === "floorplan"} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />
               </div>
+
 
               {mediaTab === "photos" && (
                 <>
@@ -372,9 +397,11 @@ function PropertyDetail() {
           </div>
 
           {/* SIDEBAR */}
-          <aside className="space-y-5 lg:sticky lg:top-28 self-start">
+          <aside className="space-y-5 lg:sticky lg:top-24 self-start">
+            <BookingCard p={p} />
             {p.agent && <AgentCard agent={p.agent} />}
             <ScheduleVisitCard />
+
             <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
               <button className="inline-flex items-center gap-1.5 hover:text-gold"><Download className="w-3.5 h-3.5" /> Brochure</button>
               <button className="inline-flex items-center gap-1.5 hover:text-gold"><Bell className="w-3.5 h-3.5" /> Alerts</button>
@@ -398,15 +425,79 @@ function PropertyDetail() {
   );
 }
 
-function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
+function HeroFact({ icon, value }: { icon: React.ReactNode; value: string }) {
   return (
-    <div className="glass-panel rounded-xl p-5 text-center">
-      <div className="w-10 h-10 mx-auto rounded-md bg-gold/10 text-gold flex items-center justify-center">{icon}</div>
-      <div className="mt-2 font-display text-2xl text-foreground">{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
+    <span className="inline-flex items-center gap-2">
+      <span className="text-gold">{icon}</span> {value}
+    </span>
+  );
+}
+
+function GlassIconBtn({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      className="glass-dark w-10 h-10 inline-flex items-center justify-center rounded-full text-white/85 hover:text-gold transition-colors"
+    >
+      {children}
+    </button>
+  );
+}
+
+function BookingCard({ p }: { p: Property }) {
+  return (
+    <div className="glass-panel rounded-3xl p-6">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+            {p.priceUnit === "month" ? "From / month" : "Sale price"}
+          </div>
+          <div className="font-display text-3xl text-foreground">{formatPrice(p)}</div>
+        </div>
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider bg-gold/15 text-gold px-2.5 py-1 rounded-full capitalize">
+          {p.status}
+        </span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+        {p.beds != null && <MiniFact icon={<Bed className="w-4 h-4" />} value={p.beds} label="Beds" />}
+        {p.baths != null && <MiniFact icon={<Bath className="w-4 h-4" />} value={p.baths} label="Baths" />}
+        <MiniFact icon={<Maximize2 className="w-4 h-4" />} value={p.area} label="m²" />
+      </div>
+
+      <div className="mt-5 grid gap-2">
+        <Link
+          to="/contact"
+          className="btn-luxury flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep font-medium py-3 rounded-full text-sm"
+        >
+          Book a viewing
+        </Link>
+        <a
+          href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`}
+          className="glass-field flex items-center justify-center gap-2 rounded-full py-3 text-sm font-medium hover:text-gold transition-colors"
+        >
+          <Mail className="w-4 h-4" /> Ask a question
+        </a>
+      </div>
+
+      <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
+        <Check className="w-3.5 h-3.5 text-gold" /> Verified NOVAWORKS listing
+      </div>
     </div>
   );
 }
+
+function MiniFact({ icon, value, label }: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
+  return (
+    <div className="glass-field rounded-2xl py-3">
+      <div className="text-gold flex justify-center">{icon}</div>
+      <div className="mt-1 text-sm font-medium text-foreground">{value}</div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+    </div>
+  );
+}
+
 
 function RoomChip({ active, onClick, onMouseEnter, onFocus, children }: { active: boolean; onClick: () => void; onMouseEnter?: () => void; onFocus?: () => void; children: React.ReactNode }) {
   return (
@@ -430,12 +521,12 @@ function MediaTab({ active, disabled, onClick, icon, label }: { active: boolean;
     <button
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      className={`inline-flex items-center justify-center gap-2 text-sm px-4 py-2.5 rounded-lg transition-colors ${
+      className={`inline-flex items-center justify-center gap-2 text-sm px-5 py-2.5 rounded-full transition-all ${
         active
-          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep shadow"
+          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep shadow-lg"
           : disabled
             ? "text-muted-foreground/50 cursor-not-allowed"
-            : "text-foreground hover:bg-background"
+            : "text-muted-foreground hover:text-foreground"
       }`}
     >
       {icon} {label}
@@ -471,22 +562,6 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }) 
       <span className="text-muted-foreground">{label}</span>
       <span className="font-medium text-foreground">{value}</span>
     </div>
-  );
-}
-
-function Pill({ icon, className = "", children }: { icon?: React.ReactNode; className?: string; children: React.ReactNode }) {
-  return (
-    <span className={`inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md ${className}`}>
-      {icon} {children}
-    </span>
-  );
-}
-
-function IconBtn({ children }: { children: React.ReactNode }) {
-  return (
-    <button className="w-9 h-9 inline-flex items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-gold/50">
-      {children}
-    </button>
   );
 }
 
