@@ -213,26 +213,19 @@ function PropertyDetail() {
       </section>
 
 
-      <section className="pt-20 pb-8">
+      <section className="pt-14 pb-8">
         <div className="container-luxe grid lg:grid-cols-[1fr_380px] gap-10">
           {/* MAIN */}
           <div className="space-y-12">
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {p.beds != null && <Stat icon={<Bed className="w-5 h-5" />} value={p.beds} label="Bedrooms" />}
-              {p.baths != null && <Stat icon={<Bath className="w-5 h-5" />} value={p.baths} label="Bathrooms" />}
-              <Stat icon={<Maximize2 className="w-5 h-5" />} value={p.area} label="Sq. Meters" />
-              {p.parking != null && p.parking > 0 && <Stat icon={<Car className="w-5 h-5" />} value={p.parking} label="Parking" />}
-            </div>
-
             {/* Media & Tours */}
             <Section title="Media & Tours">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1.5 rounded-xl glass-panel">
+              <div className="inline-flex flex-wrap gap-1.5 p-1.5 rounded-full glass-panel">
                 <MediaTab active={mediaTab === "photos"} onClick={() => setMediaTab("photos")} icon={<ImageIcon className="w-4 h-4" />} label="Photos" />
                 <MediaTab active={mediaTab === "video"} onClick={() => setMediaTab("video")} icon={<Play className="w-4 h-4" />} label="Video" />
                 <MediaTab active={mediaTab === "tour"} onClick={() => setMediaTab("tour")} icon={<Box className="w-4 h-4" />} label="3D Tour" />
                 <MediaTab active={mediaTab === "floorplan"} onClick={() => setMediaTab("floorplan")} icon={<FileText className="w-4 h-4" />} label="Floor Plan" />
               </div>
+
 
               {mediaTab === "photos" && (
                 <>
