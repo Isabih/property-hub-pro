@@ -425,15 +425,79 @@ function PropertyDetail() {
   );
 }
 
-function Stat({ icon, value, label }: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
+function HeroFact({ icon, value }: { icon: React.ReactNode; value: string }) {
   return (
-    <div className="glass-panel rounded-xl p-5 text-center">
-      <div className="w-10 h-10 mx-auto rounded-md bg-gold/10 text-gold flex items-center justify-center">{icon}</div>
-      <div className="mt-2 font-display text-2xl text-foreground">{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
+    <span className="inline-flex items-center gap-2">
+      <span className="text-gold">{icon}</span> {value}
+    </span>
+  );
+}
+
+function GlassIconBtn({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      className="glass-dark w-10 h-10 inline-flex items-center justify-center rounded-full text-white/85 hover:text-gold transition-colors"
+    >
+      {children}
+    </button>
+  );
+}
+
+function BookingCard({ p }: { p: Property }) {
+  return (
+    <div className="glass-panel rounded-3xl p-6">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+            {p.priceUnit === "month" ? "From / month" : "Sale price"}
+          </div>
+          <div className="font-display text-3xl text-foreground">{formatPrice(p)}</div>
+        </div>
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider bg-gold/15 text-gold px-2.5 py-1 rounded-full capitalize">
+          {p.status}
+        </span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+        {p.beds != null && <MiniFact icon={<Bed className="w-4 h-4" />} value={p.beds} label="Beds" />}
+        {p.baths != null && <MiniFact icon={<Bath className="w-4 h-4" />} value={p.baths} label="Baths" />}
+        <MiniFact icon={<Maximize2 className="w-4 h-4" />} value={p.area} label="m²" />
+      </div>
+
+      <div className="mt-5 grid gap-2">
+        <Link
+          to="/contact"
+          className="btn-luxury flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep font-medium py-3 rounded-full text-sm"
+        >
+          Book a viewing
+        </Link>
+        <a
+          href={`mailto:${p.agent?.email ?? "info@novaworks.rw"}`}
+          className="glass-field flex items-center justify-center gap-2 rounded-full py-3 text-sm font-medium hover:text-gold transition-colors"
+        >
+          <Mail className="w-4 h-4" /> Ask a question
+        </a>
+      </div>
+
+      <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-muted-foreground">
+        <Check className="w-3.5 h-3.5 text-gold" /> Verified NOVAWORKS listing
+      </div>
     </div>
   );
 }
+
+function MiniFact({ icon, value, label }: { icon: React.ReactNode; value: React.ReactNode; label: string }) {
+  return (
+    <div className="glass-field rounded-2xl py-3">
+      <div className="text-gold flex justify-center">{icon}</div>
+      <div className="mt-1 text-sm font-medium text-foreground">{value}</div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+    </div>
+  );
+}
+
 
 function RoomChip({ active, onClick, onMouseEnter, onFocus, children }: { active: boolean; onClick: () => void; onMouseEnter?: () => void; onFocus?: () => void; children: React.ReactNode }) {
   return (
