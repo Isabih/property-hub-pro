@@ -565,22 +565,6 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }) 
   );
 }
 
-function Pill({ icon, className = "", children }: { icon?: React.ReactNode; className?: string; children: React.ReactNode }) {
-  return (
-    <span className={`inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md ${className}`}>
-      {icon} {children}
-    </span>
-  );
-}
-
-function IconBtn({ children }: { children: React.ReactNode }) {
-  return (
-    <button className="w-9 h-9 inline-flex items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-gold/50">
-      {children}
-    </button>
-  );
-}
-
 const PLACE_ICON: Record<NeighborhoodPlace["type"], React.ReactNode> = {
   shopping: <ShoppingBag className="w-4 h-4" />,
   dining: <Utensils className="w-4 h-4" />,
