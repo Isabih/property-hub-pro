@@ -521,12 +521,12 @@ function MediaTab({ active, disabled, onClick, icon, label }: { active: boolean;
     <button
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      className={`inline-flex items-center justify-center gap-2 text-sm px-4 py-2.5 rounded-lg transition-colors ${
+      className={`inline-flex items-center justify-center gap-2 text-sm px-5 py-2.5 rounded-full transition-all ${
         active
-          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep shadow"
+          ? "bg-gradient-to-r from-gold-soft to-gold text-noir-deep shadow-lg"
           : disabled
             ? "text-muted-foreground/50 cursor-not-allowed"
-            : "text-foreground hover:bg-background"
+            : "text-muted-foreground hover:text-foreground"
       }`}
     >
       {icon} {label}
