@@ -397,9 +397,11 @@ function PropertyDetail() {
           </div>
 
           {/* SIDEBAR */}
-          <aside className="space-y-5 lg:sticky lg:top-28 self-start">
+          <aside className="space-y-5 lg:sticky lg:top-24 self-start">
+            <BookingCard p={p} />
             {p.agent && <AgentCard agent={p.agent} />}
             <ScheduleVisitCard />
+
             <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
               <button className="inline-flex items-center gap-1.5 hover:text-gold"><Download className="w-3.5 h-3.5" /> Brochure</button>
               <button className="inline-flex items-center gap-1.5 hover:text-gold"><Bell className="w-3.5 h-3.5" /> Alerts</button>
