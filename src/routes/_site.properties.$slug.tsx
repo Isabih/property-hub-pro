@@ -113,7 +113,7 @@ function PropertyDetail() {
       )}
       {/* Cinematic hero */}
       <section className="relative">
-        <div className="relative h-[68vh] min-h-[460px] w-full overflow-hidden">
+        <div className="relative h-[76vh] min-h-[560px] w-full overflow-hidden">
           <img
             src={heroMain.src}
             alt={heroMain.label ?? ROOM_META[heroMain.room].label}
@@ -122,7 +122,7 @@ function PropertyDetail() {
           <div className="absolute inset-0 bg-noir-deep/45" />
           <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/25 to-noir-deep/60" />
 
-          <div className="relative h-full container-luxe flex flex-col justify-between py-7">
+          <div className="relative h-full container-luxe flex flex-col justify-between pt-28 pb-7">
             <div className="flex items-start justify-between gap-4">
               <Link to="/properties" className="inline-flex items-center gap-2 glass-dark text-white/85 hover:text-gold text-sm px-4 py-2 rounded-full">
                 <ArrowLeft className="w-4 h-4" /> Back to properties
