@@ -57,8 +57,8 @@
   --color-gold-dark: var(--gold-dark);
   --color-noir: var(--noir);
   --color-ivory: var(--ivory);
-  --font-display: "Playfair Display", "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Karla", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -301,4 +301,30 @@
   }
   .btn-luxury:hover::before { transform: translateX(120%); }
   .btn-luxury:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -12px oklch(0.78 0.13 75 / 0.55); }
+
+  .cinematic-surface {
+    background: oklch(0.10 0.008 60 / 0.72);
+    backdrop-filter: blur(24px) saturate(145%);
+    border: 1px solid oklch(1 0 0 / 0.14);
+    box-shadow: 0 30px 80px -35px oklch(0 0 0 / 0.9), inset 0 1px 0 oklch(1 0 0 / 0.09);
+  }
+  .cinematic-field {
+    background: oklch(1 0 0 / 0.055);
+    border: 1px solid oklch(1 0 0 / 0.11);
+    color: oklch(0.985 0.008 80);
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cinematic-field::placeholder { color: oklch(1 0 0 / 0.42); }
+  .cinematic-field:focus, .cinematic-field:focus-within {
+    outline: none;
+    border-color: var(--gold);
+    background: oklch(1 0 0 / 0.085);
+    box-shadow: 0 0 0 3px oklch(0.78 0.13 75 / 0.14);
+  }
+  .cinematic-label {
+    color: oklch(1 0 0 / 0.58);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
 }

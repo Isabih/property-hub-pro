@@ -15,9 +15,9 @@ export function PropertyCard({ property: p }: { property: Property }) {
     <Link
       to="/properties/$slug"
       params={{ slug: p.slug }}
-      className="group block bg-card rounded-xl overflow-hidden border border-border hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
+      className="group relative block min-h-[440px] overflow-hidden rounded-2xl border border-white/10 bg-noir-deep shadow-2xl hover:-translate-y-1 hover:border-gold/40 transition-all duration-500"
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden">
         <ProgressiveImage
           src={p.image}
           alt={p.title}
@@ -35,7 +35,7 @@ export function PropertyCard({ property: p }: { property: Property }) {
             </span>
           )}
           {p.featured && (
-            <span className="bg-noir-deep text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md">
+            <span className="glass-dark text-white text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md">
               Featured
             </span>
           )}
@@ -46,28 +46,28 @@ export function PropertyCard({ property: p }: { property: Property }) {
         <button
           aria-label="Save"
           onClick={(e) => e.preventDefault()}
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-white transition-colors"
+          className="absolute top-3 right-3 w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-white/20 transition-colors"
         >
-          <Heart className="w-4 h-4 text-noir-deep" />
+          <Heart className="w-4 h-4 text-white" />
         </button>
-        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-md text-xs font-medium text-noir-deep">
+        <div className="absolute top-14 left-3 glass-dark px-3 py-1.5 rounded-md text-xs font-medium text-white/80">
           {CATEGORY_META[p.category].label} · For {p.listing === "rent" ? "Rent" : "Sale"}
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="absolute inset-x-0 bottom-0 p-5 pt-28 bg-gradient-to-t from-noir-deep via-noir-deep/90 to-transparent text-white">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-xl text-foreground leading-snug group-hover:text-gold transition-colors">
+          <h3 className="font-display text-2xl text-white leading-snug group-hover:text-gold transition-colors">
             {p.title}
           </h3>
           <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors shrink-0 mt-1" />
         </div>
-        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-white/60">
           <MapPin className="w-3 h-3 text-gold" />
           {p.location}, {p.district}
         </div>
-        <div className="mt-3 font-display text-2xl text-foreground">{formatPrice(p)}</div>
-        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+        <div className="mt-3 font-display text-2xl text-white">{formatPrice(p)}</div>
+        <div className="mt-4 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-white/65">
           <div className="flex items-center gap-3">
             {p.beds != null && (
               <span className="flex items-center gap-1.5"><Bed className="w-3.5 h-3.5 text-gold" /> {p.beds} Beds</span>
