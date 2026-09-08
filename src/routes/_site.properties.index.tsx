@@ -17,6 +17,10 @@ export const Route = createFileRoute("/_site/properties/")({
     meta: [
       { title: "Browse Properties — NOVAWORKS" },
       { name: "description", content: "Browse premium apartments, villas, offices, lands and luxury residences across Rwanda." },
+      { property: "og:title", content: "Browse Properties — NOVAWORKS" },
+      { property: "og:description", content: "Browse premium apartments, villas, offices, lands and luxury residences across Rwanda." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PropertiesPage,
@@ -52,8 +56,11 @@ function PropertiesPage() {
   return (
     <div>
       {/* Page hero */}
-      <section className="bg-noir-deep text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "24px 24px" }} />
+      <section className="bg-noir-deep text-white pt-20 pb-28 relative overflow-hidden">
+        {dbProps[0]?.image && (
+          <img src={dbProps[0].image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/90 to-noir-deep/60" />
         <div className="container-luxe relative">
           <div className="text-xs text-white/50 mb-6">
             <Link to="/" className="hover:text-gold">Home</Link>
@@ -62,7 +69,7 @@ function PropertiesPage() {
             {category && (<><span className="mx-2">/</span><span className="text-white">{CATEGORY_META[category].plural}</span></>)}
           </div>
           <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-xl bg-gold/15 text-gold flex items-center justify-center">
+            <div className="glass w-16 h-16 rounded-xl text-gold flex items-center justify-center">
               {category ? (() => { const I = CAT_ICONS[category as PropertyCategory]; return <I className="w-7 h-7" />; })() : <Crown className="w-7 h-7" />}
             </div>
             <div>
@@ -95,33 +102,35 @@ function PropertiesPage() {
       </section>
 
       {/* Search/filter bar */}
-      <section className="border-b border-border bg-background sticky top-[88px] z-30">
-        <div className="container-luxe py-4 flex items-center gap-3 flex-wrap">
-          <div className="flex-1 flex items-center gap-2 bg-muted rounded-md px-4 py-2.5 min-w-[260px]">
-            <Search className="w-4 h-4 text-muted-foreground" />
+      <section className="relative -mt-16 z-30 pb-4">
+        <div className="container-luxe">
+          <div className="cinematic-surface rounded-2xl p-4 flex items-center gap-3 flex-wrap text-white">
+          <div className="cinematic-field flex-1 flex items-center gap-2 rounded-md px-4 py-2.5 min-w-[260px]">
+            <Search className="w-4 h-4 text-gold" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name, location..."
-              className="bg-transparent outline-none text-sm flex-1"
+              className="bg-transparent outline-none text-sm flex-1 text-white placeholder:text-white/40"
             />
           </div>
-          <button className="inline-flex items-center gap-2 bg-card border border-border rounded-md px-4 py-2.5 text-sm hover:border-gold/50">
+          <button className="cinematic-field inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm hover:border-gold">
             <SlidersHorizontal className="w-4 h-4" /> Filters
             {category && <span className="bg-gold text-noir-deep text-xs font-semibold px-1.5 rounded">1</span>}
           </button>
-          <select className="bg-card border border-border rounded-md px-3 py-2.5 text-sm">
+          <select className="cinematic-field rounded-md px-3 py-2.5 text-sm">
             <option>Newest First</option>
             <option>Price: Low to High</option>
             <option>Price: High to Low</option>
           </select>
-          <div className="flex border border-border rounded-md overflow-hidden">
-            <button onClick={() => setView("grid")} className={`p-2.5 ${view === "grid" ? "bg-noir-deep text-white" : "bg-card text-muted-foreground"}`}><LayoutGrid className="w-4 h-4" /></button>
-            <button onClick={() => setView("list")} className={`p-2.5 ${view === "list" ? "bg-noir-deep text-white" : "bg-card text-muted-foreground"}`}><List className="w-4 h-4" /></button>
+          <div className="cinematic-field flex rounded-md overflow-hidden">
+            <button onClick={() => setView("grid")} aria-label="Grid view" className={`p-2.5 ${view === "grid" ? "bg-gold text-noir-deep" : "text-white/60"}`}><LayoutGrid className="w-4 h-4" /></button>
+            <button onClick={() => setView("list")} aria-label="List view" className={`p-2.5 ${view === "list" ? "bg-gold text-noir-deep" : "text-white/60"}`}><List className="w-4 h-4" /></button>
+          </div>
           </div>
         </div>
         {category && (
-          <div className="container-luxe pb-4 flex items-center gap-3 text-sm">
+          <div className="container-luxe pt-4 flex items-center gap-3 text-sm">
             <span className="text-muted-foreground">Active filters:</span>
             <button
               onClick={() => navigate({ search: {} })}
@@ -133,7 +142,7 @@ function PropertiesPage() {
         )}
       </section>
 
-      <section className="py-12">
+      <section className="py-12 bg-gradient-to-b from-background via-muted/25 to-background">
         <div className="container-luxe">
           <div className="text-sm text-muted-foreground mb-6">
             Showing <span className="font-semibold text-foreground">{filtered.length}</span> properties
@@ -144,7 +153,7 @@ function PropertiesPage() {
               <p className="mt-4">No properties match your filters yet.</p>
             </div>
           ) : view === "grid" ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
               {filtered.map((p) => <PropertyCard key={p.id} property={p} />)}
             </div>
           ) : (

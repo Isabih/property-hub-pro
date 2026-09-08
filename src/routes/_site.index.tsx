@@ -19,6 +19,8 @@ export const Route = createFileRoute("/_site/")({
       { name: "description", content: "Premium apartments, villas and investment properties in Kigali's most prestigious locations. Curated by NOVAWORKS, Rwanda's leading luxury real estate platform." },
       { property: "og:title", content: "NOVAWORKS — Luxury Real Estate Rwanda" },
       { property: "og:description", content: "Where prime property meets peace of mind." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: HomePage,
@@ -263,16 +265,16 @@ function HomePage() {
       </section>
 
       {/* SEARCH SECTION */}
-      <section className="bg-background py-12 lg:py-16 border-b border-border">
+      <section className="relative -mt-24 z-20 pb-14 lg:pb-20">
         <div className="container-luxe">
-          <div className="glass-panel rounded-2xl overflow-hidden">
-            <div className="flex border-b border-border">
+          <div className="cinematic-surface rounded-2xl overflow-hidden text-white">
+            <div className="flex border-b border-white/10 bg-white/[0.025]">
               {(["rent", "sale", "all"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
                   className={`flex-1 py-4 text-sm font-medium transition-colors ${
-                    tab === t ? "text-foreground border-b-2 border-gold" : "text-muted-foreground hover:text-foreground"
+                    tab === t ? "text-gold border-b-2 border-gold bg-white/[0.04]" : "text-white/55 hover:text-white"
                   }`}
                 >
                   {t === "rent" ? "For Rent" : t === "sale" ? "For Sale" : "All Properties"}
@@ -284,8 +286,8 @@ function HomePage() {
               <Field icon={<Home className="w-4 h-4" />} label="Property Type" placeholder="Select type" />
               <Field icon={<span className="text-base leading-none">$</span>} label="Price Range" placeholder="Select range" />
               <div className="flex flex-col gap-1.5 min-w-0">
-                <label className="text-xs text-muted-foreground">Keyword</label>
-                <input className="glass-field rounded-md px-4 py-3 text-sm outline-none w-full min-w-0" placeholder="Search by name..." />
+                <label className="cinematic-label">Keyword</label>
+                <input className="cinematic-field rounded-md px-4 py-3 text-sm outline-none w-full min-w-0" placeholder="Search by name..." />
               </div>
               <Link
                 to="/properties"
@@ -476,10 +478,18 @@ function HomePage() {
 
       {/* PROPERTY OF THE DAY — featured below services per site arrangement */}
       {pod && (
-        <section className="py-24 bg-black text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-noir-deep to-black" />
-          <div className="absolute inset-0 opacity-[0.10] bg-[radial-gradient(circle_at_top_right,_var(--color-gold)_0%,_transparent_50%)]" />
-          <div className="absolute inset-0 bg-black/40" />
+        <section className="py-24 bg-noir-deep text-white relative overflow-hidden">
+          <ProgressiveImage
+            src={pod.cover ?? "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=85"}
+            alt=""
+            width={1920}
+            height={1080}
+            sizes="100vw"
+            widths={[800, 1200, 1600, 1920]}
+            containerClassName="absolute inset-0"
+            className="h-full w-full object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/90 to-noir-deep/65" />
           <div className="container-luxe relative">
             <div className="text-center max-w-2xl mx-auto">
               <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold">
@@ -489,17 +499,25 @@ function HomePage() {
               <p className="mt-4 text-white/60">Experience unparalleled elegance with our curated selection of premium properties</p>
             </div>
 
-            <div className="mt-14 grid lg:grid-cols-2 gap-10 items-center">
-              <div className="relative">
-                <div className="absolute -inset-2 bg-gradient-to-br from-gold/30 to-transparent rounded-3xl blur-xl" />
-                <div className="relative rounded-2xl overflow-hidden ring-1 ring-gold/20">
-                  <img src={pod.cover ?? "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=85"} alt={pod.title} className="w-full aspect-[4/3] object-cover" />
+            <div className="cinematic-surface mt-14 grid lg:grid-cols-[1.15fr_0.85fr] overflow-hidden rounded-2xl">
+              <div className="relative min-h-[420px] lg:min-h-[600px]">
+                <ProgressiveImage
+                  src={pod.cover ?? "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=85"}
+                  alt={pod.title}
+                  width={1200}
+                  height={900}
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  widths={[600, 900, 1200, 1600]}
+                  containerClassName="absolute inset-0"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/90 via-transparent to-noir-deep/10" />
                   <div className="absolute top-4 left-4">
                     <span className="inline-flex items-center gap-1.5 bg-gold/95 text-noir-deep text-xs uppercase tracking-wider font-semibold px-3 py-1.5 rounded-md">
                       <Crown className="w-3.5 h-3.5" /> Luxury Property
                     </span>
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-noir-deep via-noir-deep/80 to-transparent p-6 flex items-end justify-between">
+                   <div className="absolute inset-x-0 bottom-0 p-6 flex items-end justify-between gap-4">
                     <div>
                       <div className="text-xs text-white/60">Starting from</div>
                       <div className="font-display text-2xl text-white">
@@ -507,14 +525,13 @@ function HomePage() {
                         {pod.listing_type === "rent" && <span className="text-base text-white/60">/mo</span>}
                       </div>
                     </div>
-                    <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 bg-white text-noir-deep text-sm font-medium px-4 py-2.5 rounded-md hover:bg-gold transition-colors">
-                      View Details <ArrowRight className="w-4 h-4" />
+                     <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 glass-dark text-white text-sm font-medium px-4 py-2.5 rounded-md hover:border-gold transition-colors">
+                       View photos <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
-                </div>
               </div>
 
-              <div>
+              <div className="p-7 sm:p-10 lg:p-12 flex flex-col justify-center">
                 <h3 className="font-display text-4xl text-white">{pod.title}</h3>
                 <div className="mt-3 flex items-center gap-2 text-white/60 text-sm">
                   <MapPin className="w-4 h-4 text-gold" />
@@ -528,7 +545,7 @@ function HomePage() {
                     { i: Bath, v: pod.bathrooms ?? 0, l: "Bathrooms" },
                     { i: Maximize2, v: pod.area_sqm ?? 0, l: "Sq. Meters" },
                   ].map((s) => (
-                    <div key={s.l} className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
+                    <div key={s.l} className="glass rounded-xl p-5 text-center">
                       <s.i className="w-5 h-5 text-gold mx-auto" />
                       <div className="mt-2 font-display text-3xl text-white">{s.v}</div>
                       <div className="text-xs text-white/50 uppercase tracking-wider mt-1">{s.l}</div>
@@ -551,11 +568,11 @@ function HomePage() {
                 )}
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link to="/properties" className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-6 py-3 rounded-md font-medium hover:shadow-lg hover:shadow-gold/30 transition-all">
-                    Explore Luxury Collection <ArrowRight className="w-4 h-4" />
+                  <Link to="/properties/$slug" params={{ slug: pod.slug }} className="btn-luxury inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep px-6 py-3 rounded-md font-medium">
+                    Book now <ArrowRight className="w-4 h-4" />
                   </Link>
-                  <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-6 py-3 rounded-md font-medium hover:bg-white/20 transition-colors">
-                    View Property
+                  <Link to="/properties" className="inline-flex items-center gap-2 glass text-white px-6 py-3 rounded-md font-medium hover:border-gold transition-colors">
+                    Explore collection
                   </Link>
                 </div>
               </div>
@@ -628,10 +645,10 @@ function HomePage() {
 function Field({ icon, label, placeholder }: { icon: React.ReactNode; label: string; placeholder: string }) {
   return (
     <div className="flex flex-col gap-1.5 min-w-0">
-      <label className="text-xs text-muted-foreground">{label}</label>
-      <div className="flex items-center gap-2 bg-muted rounded-md px-4 py-3 text-sm min-w-0">
+      <label className="cinematic-label">{label}</label>
+      <div className="cinematic-field flex items-center gap-2 rounded-md px-4 py-3 text-sm min-w-0">
         <span className="text-gold shrink-0">{icon}</span>
-        <span className="text-muted-foreground truncate">{placeholder}</span>
+        <span className="text-white/45 truncate">{placeholder}</span>
       </div>
     </div>
   );

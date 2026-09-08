@@ -15,7 +15,7 @@ export function PropertyCard({ property: p }: { property: Property }) {
     <Link
       to="/properties/$slug"
       params={{ slug: p.slug }}
-      className="group relative block min-h-[440px] overflow-hidden rounded-2xl border border-white/10 bg-noir-deep shadow-2xl hover:-translate-y-1 hover:border-gold/40 transition-all duration-500"
+      className="cinematic-surface group relative block min-h-[440px] overflow-hidden rounded-2xl border-white/15 bg-noir-deep shadow-2xl hover:-translate-y-1 hover:border-gold/60 transition-all duration-500"
     >
       <div className="absolute inset-0 overflow-hidden">
         <ProgressiveImage
@@ -50,12 +50,12 @@ export function PropertyCard({ property: p }: { property: Property }) {
         >
           <Heart className="w-4 h-4 text-white" />
         </button>
-        <div className="absolute top-14 left-3 glass-dark px-3 py-1.5 rounded-md text-xs font-medium text-white/80">
+        <div className="absolute top-14 left-3 glass-dark px-3 py-1.5 rounded-md text-xs font-medium text-white/80 backdrop-blur-xl">
           {CATEGORY_META[p.category].label} · For {p.listing === "rent" ? "Rent" : "Sale"}
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 p-5 pt-28 bg-gradient-to-t from-noir-deep via-noir-deep/90 to-transparent text-white">
+      <div className="absolute inset-x-0 bottom-0 p-5 pt-32 bg-gradient-to-t from-noir-deep via-noir-deep/90 to-transparent text-white backdrop-blur-[2px]">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-display text-2xl text-white leading-snug group-hover:text-gold transition-colors">
             {p.title}
