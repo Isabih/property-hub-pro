@@ -17,6 +17,10 @@ export const Route = createFileRoute("/_site/properties/")({
     meta: [
       { title: "Browse Properties — NOVAWORKS" },
       { name: "description", content: "Browse premium apartments, villas, offices, lands and luxury residences across Rwanda." },
+      { property: "og:title", content: "Browse Properties — NOVAWORKS" },
+      { property: "og:description", content: "Browse premium apartments, villas, offices, lands and luxury residences across Rwanda." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PropertiesPage,

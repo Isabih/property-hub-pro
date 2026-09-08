@@ -19,6 +19,8 @@ export const Route = createFileRoute("/_site/")({
       { name: "description", content: "Premium apartments, villas and investment properties in Kigali's most prestigious locations. Curated by NOVAWORKS, Rwanda's leading luxury real estate platform." },
       { property: "og:title", content: "NOVAWORKS — Luxury Real Estate Rwanda" },
       { property: "og:description", content: "Where prime property meets peace of mind." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: HomePage,
