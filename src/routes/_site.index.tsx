@@ -305,9 +305,9 @@ function HomePage() {
       </section>
 
       {/* SEARCH SECTION */}
-      <section className="relative -mt-24 z-20 pb-14 lg:pb-20">
+      <section className="relative -mt-28 z-20 pb-14 lg:pb-20">
         <div className="container-luxe">
-          <div className="cinematic-surface rounded-2xl overflow-hidden text-white">
+          <div className="glass-dark rounded-3xl overflow-hidden text-white shadow-2xl shadow-black/50">
             <div className="flex border-b border-white/10 bg-white/[0.025]">
               {(["rent", "sale", "all"] as const).map((t) => (
                 <button
