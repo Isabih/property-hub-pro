@@ -126,8 +126,8 @@ function HomePage() {
 
   return (
     <div>
-      {/* HERO — cinematic slideshow with Ken Burns */}
-      <section className="relative h-screen min-h-[700px] max-h-[1100px] overflow-hidden bg-noir-deep">
+      {/* HERO — cinematic shop-style layout with category sidebar + floating featured card */}
+      <section className="relative h-screen min-h-[760px] max-h-[1200px] overflow-hidden bg-noir-deep">
         {activeHeroVideo ? (
           activeYtId ? (
             <iframe
@@ -165,80 +165,120 @@ function HomePage() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
           </div>
         ))}
         {activeHeroVideo && (
           <>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/30" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
           </>
         )}
 
-        <div className="relative h-full container-luxe flex items-center pt-20">
-          <div className="max-w-4xl">
-            <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass mb-10 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gold" />
-              </span>
-              <span className="text-white/90 text-sm font-medium tracking-wide">Rwanda's Premier Luxury Real Estate</span>
+        <div className="relative h-full container-luxe flex items-center pt-28 lg:pt-32">
+          <div className="grid lg:grid-cols-[260px_1fr_340px] gap-6 lg:gap-10 items-center w-full">
+            {/* Category sidebar */}
+            <div className={`hidden lg:block transition-all duration-700 ${loaded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-6"}`}>
+              <div className="glass-dark rounded-2xl p-5 space-y-1">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-white/50 mb-3 px-2">Browse Categories</div>
+                {(dynCats
+                  ? dynCats.filter((c) => c.enabled)
+                  : (Object.keys(CATEGORY_META) as PropertyCategory[]).map((k) => ({
+                      key: k,
+                      label: CATEGORY_META[k].plural,
+                      enabled: true,
+                    }))
+                ).map((c) => {
+                  const cat = c.key as PropertyCategory;
+                  const Icon = CATEGORY_ICONS[cat] ?? Building2;
+                  return (
+                    <Link
+                      key={cat}
+                      to="/properties"
+                      search={{ category: cat }}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:text-gold hover:bg-white/5 transition-colors group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold group-hover:text-noir-deep transition-colors">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">{c.label}</span>
+                      <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className={`mb-8 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.05]">
-                <span className="block">{currentSlide.title}</span>
-                <span className="block gold-text italic">{currentSlide.titleAccent}</span>
-              </h1>
-            </div>
+            {/* Main headline */}
+            <div className="max-w-3xl">
+              <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass mb-8 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gold" />
+                </span>
+                <span className="text-white/90 text-sm font-medium tracking-wide">Rwanda's Premier Luxury Real Estate</span>
+              </div>
 
-            <p className={`text-xl md:text-2xl text-white/75 mb-12 max-w-2xl leading-relaxed font-light transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              {currentSlide.subtitle}
-            </p>
+              <div className={`mb-6 transition-all duration-700 delay-100 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.05]">
+                  <span className="block">{currentSlide.title}</span>
+                  <span className="block gold-text italic">{currentSlide.titleAccent}</span>
+                </h1>
+              </div>
 
-            <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              <Link to="/properties" className="btn-luxury group inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep h-14 px-8 rounded-md text-base font-medium">
-                Explore Properties <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <button
-                onClick={() => setStoryActive((v) => !v)}
-                className="inline-flex items-center gap-2 border border-white/30 text-white hover:bg-white/10 h-14 px-8 rounded-md text-base backdrop-blur-sm transition-colors"
-              >
-                {storyActive ? (
-                  <><Pause className="w-5 h-5 fill-current" /> Stop Video</>
-                ) : (
-                  <><Play className="w-5 h-5 fill-current" /> Watch Story</>
-                )}
-              </button>
-            </div>
+              <p className={`text-lg md:text-xl text-white/75 mb-10 max-w-xl leading-relaxed font-light transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+                {currentSlide.subtitle}
+              </p>
 
-            <div className={`mt-16 pt-10 border-t border-white/10 flex flex-wrap items-center gap-x-12 gap-y-6 transition-all duration-700 delay-400 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-              {[
-                { n: "500", l: "Premium Properties" },
-                { n: "15", l: "Years Experience" },
-                { n: "2K", l: "Happy Clients" },
-              ].map((s, idx) => (
-                <div key={s.l} className="flex items-center gap-12">
-                  {idx > 0 && <div className="w-px h-16 bg-white/10 hidden sm:block" />}
-                  <div>
-                    <p className="text-5xl font-display font-bold text-white mb-1 leading-none">{s.n}<span className="text-gold">+</span></p>
-                    <p className="text-white/50 text-xs uppercase tracking-[0.2em] mt-2">{s.l}</p>
+              <div className={`flex flex-wrap items-center gap-4 transition-all duration-700 delay-300 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+                <Link to="/properties" className="btn-luxury group inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold text-noir-deep h-12 px-7 rounded-md text-sm font-medium">
+                  Explore Properties <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <button
+                  onClick={() => setStoryActive((v) => !v)}
+                  className="inline-flex items-center gap-2 border border-white/30 text-white hover:bg-white/10 h-12 px-7 rounded-md text-sm backdrop-blur-sm transition-colors"
+                >
+                  {storyActive ? (
+                    <><Pause className="w-4 h-4 fill-current" /> Stop Video</>
+                  ) : (
+                    <><Play className="w-4 h-4 fill-current" /> Watch Story</>
+                  )}
+                </button>
+              </div>
+
+              <div className={`mt-12 pt-8 border-t border-white/10 flex flex-wrap items-center gap-x-10 gap-y-4 transition-all duration-700 delay-400 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+                {[
+                  { n: "500", l: "Premium Properties" },
+                  { n: "15", l: "Years Experience" },
+                  { n: "2K", l: "Happy Clients" },
+                ].map((s, idx) => (
+                  <div key={s.l} className="flex items-center gap-10">
+                    {idx > 0 && <div className="w-px h-14 bg-white/10 hidden sm:block" />}
+                    <div>
+                      <p className="text-4xl font-display font-bold text-white mb-1 leading-none">{s.n}<span className="text-gold">+</span></p>
+                      <p className="text-white/50 text-[10px] uppercase tracking-[0.2em] mt-1">{s.l}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Floating featured property card */}
+            <div className={`hidden xl:block transition-all duration-700 delay-200 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+              <HeroFeaturedCard property={featured[0]} />
             </div>
           </div>
         </div>
 
         {/* Slide controls */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-6 z-10">
-          <div className="flex items-center gap-3">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-5 z-10">
+          <div className="flex items-center gap-2.5">
             {HERO_SLIDES.map((_, i) => (
               <button
                 key={i}
                 onClick={() => { setSlide(i); setProgress(0); }}
-                className="group relative h-1 w-12 rounded-full bg-white/20 overflow-hidden"
+                className="group relative h-1 w-10 rounded-full bg-white/20 overflow-hidden"
                 aria-label={`Go to slide ${i + 1}`}
               >
                 <div
@@ -250,24 +290,24 @@ function HomePage() {
           </div>
           <button
             onClick={() => setPaused(!paused)}
-            className="w-10 h-10 rounded-full glass flex items-center justify-center text-white/80 hover:text-white transition-colors"
+            className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/80 hover:text-white transition-colors"
             aria-label={paused ? "Play" : "Pause"}
           >
-            {paused ? <Play className="w-4 h-4 ml-0.5" /> : <Pause className="w-4 h-4" />}
+            {paused ? <Play className="w-3.5 h-3.5 ml-0.5" /> : <Pause className="w-3.5 h-3.5" />}
           </button>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-12 right-8 hidden md:flex flex-col items-center gap-2 text-white/40 z-10">
+        <div className="absolute bottom-10 right-8 hidden md:flex flex-col items-center gap-2 text-white/40 z-10">
           <span className="text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl] rotate-180">Scroll</span>
           <ChevronDown className="w-4 h-4 animate-bounce" />
         </div>
       </section>
 
       {/* SEARCH SECTION */}
-      <section className="relative -mt-24 z-20 pb-14 lg:pb-20">
+      <section className="relative -mt-28 z-20 pb-14 lg:pb-20">
         <div className="container-luxe">
-          <div className="cinematic-surface rounded-2xl overflow-hidden text-white">
+          <div className="glass-dark rounded-3xl overflow-hidden text-white shadow-2xl shadow-black/50">
             <div className="flex border-b border-white/10 bg-white/[0.025]">
               {(["rent", "sale", "all"] as const).map((t) => (
                 <button
@@ -476,7 +516,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* PROPERTY OF THE DAY — featured below services per site arrangement */}
+      {/* PROPERTY OF THE DAY — cinematic glass card */}
       {pod && (
         <section className="py-24 bg-noir-deep text-white relative overflow-hidden">
           <ProgressiveImage
@@ -487,7 +527,7 @@ function HomePage() {
             sizes="100vw"
             widths={[800, 1200, 1600, 1920]}
             containerClassName="absolute inset-0"
-            className="h-full w-full object-cover opacity-25"
+            className="h-full w-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/90 to-noir-deep/65" />
           <div className="container-luxe relative">
@@ -499,7 +539,7 @@ function HomePage() {
               <p className="mt-4 text-white/60">Experience unparalleled elegance with our curated selection of premium properties</p>
             </div>
 
-            <div className="cinematic-surface mt-14 grid lg:grid-cols-[1.15fr_0.85fr] overflow-hidden rounded-2xl">
+            <div className="glass-dark mt-14 grid lg:grid-cols-[1.15fr_0.85fr] overflow-hidden rounded-3xl border border-white/15 shadow-2xl shadow-black/60">
               <div className="relative min-h-[420px] lg:min-h-[600px]">
                 <ProgressiveImage
                   src={pod.cover ?? "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=85"}
@@ -511,7 +551,7 @@ function HomePage() {
                   containerClassName="absolute inset-0"
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/90 via-transparent to-noir-deep/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/95 via-noir-deep/30 to-noir-deep/20" />
                   <div className="absolute top-4 left-4">
                     <span className="inline-flex items-center gap-1.5 bg-gold/95 text-noir-deep text-xs uppercase tracking-wider font-semibold px-3 py-1.5 rounded-md">
                       <Crown className="w-3.5 h-3.5" /> Luxury Property
@@ -525,7 +565,7 @@ function HomePage() {
                         {pod.listing_type === "rent" && <span className="text-base text-white/60">/mo</span>}
                       </div>
                     </div>
-                     <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 glass-dark text-white text-sm font-medium px-4 py-2.5 rounded-md hover:border-gold transition-colors">
+                     <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 glass text-white text-sm font-medium px-4 py-2.5 rounded-md hover:border-gold transition-colors">
                        View photos <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -699,4 +739,63 @@ function featuredToProperty(p: FeaturedProperty): Property {
     roomGallery: [],
     amenities: [],
   };
+}
+
+function HeroFeaturedCard({ property }: { property?: Property }) {
+  if (!property) return null;
+  const p = property;
+  return (
+    <Link
+      to="/properties/$slug"
+      params={{ slug: p.slug }}
+      className="group block relative overflow-hidden rounded-2xl glass-dark border border-white/15 hover:border-gold/60 transition-all duration-500 shadow-2xl shadow-black/60"
+    >
+      <div className="relative h-56 overflow-hidden">
+        <ProgressiveImage
+          src={p.image}
+          alt={p.title}
+          width={600}
+          height={400}
+          sizes="340px"
+          widths={[340, 600, 800]}
+          containerClassName="absolute inset-0"
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/30 to-transparent" />
+        <div className="absolute top-3 left-3">
+          <span className="inline-flex items-center gap-1 bg-gold text-noir-deep text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md">
+            <Crown className="w-3 h-3" /> Featured
+          </span>
+        </div>
+      </div>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-display text-xl text-white leading-snug group-hover:text-gold transition-colors line-clamp-1">
+            {p.title}
+          </h3>
+          <ArrowUpRight className="w-4 h-4 text-gold mt-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-white/60">
+          <MapPin className="w-3 h-3 text-gold" />
+          {p.location}, {p.district}
+        </div>
+        <div className="mt-3 font-display text-2xl text-white">
+          {p.currency === "USD" ? "$" : "RWF "}
+          {p.price.toLocaleString()}
+          {p.priceUnit === "month" && <span className="text-sm text-white/60">/mo</span>}
+        </div>
+        <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/65">
+          <div className="flex items-center gap-3">
+            {p.beds != null && (
+              <span className="flex items-center gap-1.5"><Bed className="w-3.5 h-3.5 text-gold" /> {p.beds} Beds</span>
+            )}
+            {p.baths != null && (
+              <span className="flex items-center gap-1.5"><Bath className="w-3.5 h-3.5 text-gold" /> {p.baths} Baths</span>
+            )}
+          </div>
+          <span className="flex items-center gap-1.5"><Maximize2 className="w-3.5 h-3.5 text-gold" /> {p.area} m²</span>
+        </div>
+      </div>
+    </Link>
+  );
 }
