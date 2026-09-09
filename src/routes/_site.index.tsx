@@ -740,3 +740,62 @@ function featuredToProperty(p: FeaturedProperty): Property {
     amenities: [],
   };
 }
+
+function HeroFeaturedCard({ property }: { property?: Property }) {
+  if (!property) return null;
+  const p = property;
+  return (
+    <Link
+      to="/properties/$slug"
+      params={{ slug: p.slug }}
+      className="group block relative overflow-hidden rounded-2xl glass-dark border border-white/15 hover:border-gold/60 transition-all duration-500 shadow-2xl shadow-black/60"
+    >
+      <div className="relative h-56 overflow-hidden">
+        <ProgressiveImage
+          src={p.image}
+          alt={p.title}
+          width={600}
+          height={400}
+          sizes="340px"
+          widths={[340, 600, 800]}
+          containerClassName="absolute inset-0"
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-noir-deep via-noir-deep/30 to-transparent" />
+        <div className="absolute top-3 left-3">
+          <span className="inline-flex items-center gap-1 bg-gold text-noir-deep text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-md">
+            <Crown className="w-3 h-3" /> Featured
+          </span>
+        </div>
+      </div>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-display text-xl text-white leading-snug group-hover:text-gold transition-colors line-clamp-1">
+            {p.title}
+          </h3>
+          <ArrowUpRight className="w-4 h-4 text-gold mt-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-white/60">
+          <MapPin className="w-3 h-3 text-gold" />
+          {p.location}, {p.district}
+        </div>
+        <div className="mt-3 font-display text-2xl text-white">
+          {p.currency === "USD" ? "$" : "RWF "}
+          {p.price.toLocaleString()}
+          {p.priceUnit === "month" && <span className="text-sm text-white/60">/mo</span>}
+        </div>
+        <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/65">
+          <div className="flex items-center gap-3">
+            {p.beds != null && (
+              <span className="flex items-center gap-1.5"><Bed className="w-3.5 h-3.5 text-gold" /> {p.beds} Beds</span>
+            )}
+            {p.baths != null && (
+              <span className="flex items-center gap-1.5"><Bath className="w-3.5 h-3.5 text-gold" /> {p.baths} Baths</span>
+            )}
+          </div>
+          <span className="flex items-center gap-1.5"><Maximize2 className="w-3.5 h-3.5 text-gold" /> {p.area} m²</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
