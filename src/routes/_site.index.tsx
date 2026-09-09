@@ -516,7 +516,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* PROPERTY OF THE DAY — featured below services per site arrangement */}
+      {/* PROPERTY OF THE DAY — cinematic glass card */}
       {pod && (
         <section className="py-24 bg-noir-deep text-white relative overflow-hidden">
           <ProgressiveImage
@@ -527,7 +527,7 @@ function HomePage() {
             sizes="100vw"
             widths={[800, 1200, 1600, 1920]}
             containerClassName="absolute inset-0"
-            className="h-full w-full object-cover opacity-25"
+            className="h-full w-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-noir-deep via-noir-deep/90 to-noir-deep/65" />
           <div className="container-luxe relative">
@@ -539,7 +539,7 @@ function HomePage() {
               <p className="mt-4 text-white/60">Experience unparalleled elegance with our curated selection of premium properties</p>
             </div>
 
-            <div className="cinematic-surface mt-14 grid lg:grid-cols-[1.15fr_0.85fr] overflow-hidden rounded-2xl">
+            <div className="glass-dark mt-14 grid lg:grid-cols-[1.15fr_0.85fr] overflow-hidden rounded-3xl border border-white/15 shadow-2xl shadow-black/60">
               <div className="relative min-h-[420px] lg:min-h-[600px]">
                 <ProgressiveImage
                   src={pod.cover ?? "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=85"}
@@ -551,7 +551,7 @@ function HomePage() {
                   containerClassName="absolute inset-0"
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/90 via-transparent to-noir-deep/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/95 via-noir-deep/30 to-noir-deep/20" />
                   <div className="absolute top-4 left-4">
                     <span className="inline-flex items-center gap-1.5 bg-gold/95 text-noir-deep text-xs uppercase tracking-wider font-semibold px-3 py-1.5 rounded-md">
                       <Crown className="w-3.5 h-3.5" /> Luxury Property
@@ -565,7 +565,7 @@ function HomePage() {
                         {pod.listing_type === "rent" && <span className="text-base text-white/60">/mo</span>}
                       </div>
                     </div>
-                     <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 glass-dark text-white text-sm font-medium px-4 py-2.5 rounded-md hover:border-gold transition-colors">
+                     <Link to="/properties/$slug" params={{ slug: pod.slug }} className="inline-flex items-center gap-2 glass text-white text-sm font-medium px-4 py-2.5 rounded-md hover:border-gold transition-colors">
                        View photos <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
