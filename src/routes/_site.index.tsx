@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Play, Pause, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown, ChevronDown } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Play, Pause, Search, MapPin, Building2, Castle, Home, Briefcase, Square, Store, Award, Globe, Users, Building, ShieldCheck, Sparkles, TrendingUp, Quote, Star, Bed, Bath, Maximize2, Crown, ChevronDown } from "lucide-react";
 import { CATEGORY_META, type PropertyCategory, type Property } from "@/lib/properties";
 import { fetchPropertyCategories } from "@/lib/property-types-public";
 import type { PropertyTypeRow } from "@/lib/property-types.functions";
