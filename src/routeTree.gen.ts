@@ -48,6 +48,7 @@ import { Route as AuthenticatedDashboardItSystemHealthRouteImport } from './rout
 import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
 import { Route as AuthenticatedDashboardItPropertyTypesRouteImport } from './routes/_authenticated/dashboard.it.property-types'
 import { Route as AuthenticatedDashboardItPropertyOfTheDayRouteImport } from './routes/_authenticated/dashboard.it.property-of-the-day'
+import { Route as AuthenticatedDashboardItPopupsRouteImport } from './routes/_authenticated/dashboard.it.popups'
 import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
 import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
 import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
@@ -269,6 +270,12 @@ const AuthenticatedDashboardItPropertyOfTheDayRoute =
     path: '/dashboard/it/property-of-the-day',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDashboardItPopupsRoute =
+  AuthenticatedDashboardItPopupsRouteImport.update({
+    id: '/dashboard/it/popups',
+    path: '/dashboard/it/popups',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardItPasswordResetsRoute =
   AuthenticatedDashboardItPasswordResetsRouteImport.update({
     id: '/dashboard/it/password-resets',
@@ -359,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
+  '/dashboard/it/popups': typeof AuthenticatedDashboardItPopupsRoute
   '/dashboard/it/property-of-the-day': typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   '/dashboard/it/property-types': typeof AuthenticatedDashboardItPropertyTypesRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
@@ -406,6 +414,7 @@ export interface FileRoutesByTo {
   '/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
+  '/dashboard/it/popups': typeof AuthenticatedDashboardItPopupsRoute
   '/dashboard/it/property-of-the-day': typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   '/dashboard/it/property-types': typeof AuthenticatedDashboardItPropertyTypesRoute
   '/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
@@ -457,6 +466,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/it/luxury': typeof AuthenticatedDashboardItLuxuryRoute
   '/_authenticated/dashboard/it/media-verify': typeof AuthenticatedDashboardItMediaVerifyRoute
   '/_authenticated/dashboard/it/password-resets': typeof AuthenticatedDashboardItPasswordResetsRoute
+  '/_authenticated/dashboard/it/popups': typeof AuthenticatedDashboardItPopupsRoute
   '/_authenticated/dashboard/it/property-of-the-day': typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   '/_authenticated/dashboard/it/property-types': typeof AuthenticatedDashboardItPropertyTypesRoute
   '/_authenticated/dashboard/it/settings': typeof AuthenticatedDashboardItSettingsRoute
@@ -507,6 +517,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
+    | '/dashboard/it/popups'
     | '/dashboard/it/property-of-the-day'
     | '/dashboard/it/property-types'
     | '/dashboard/it/settings'
@@ -554,6 +565,7 @@ export interface FileRouteTypes {
     | '/dashboard/it/luxury'
     | '/dashboard/it/media-verify'
     | '/dashboard/it/password-resets'
+    | '/dashboard/it/popups'
     | '/dashboard/it/property-of-the-day'
     | '/dashboard/it/property-types'
     | '/dashboard/it/settings'
@@ -604,6 +616,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/it/luxury'
     | '/_authenticated/dashboard/it/media-verify'
     | '/_authenticated/dashboard/it/password-resets'
+    | '/_authenticated/dashboard/it/popups'
     | '/_authenticated/dashboard/it/property-of-the-day'
     | '/_authenticated/dashboard/it/property-types'
     | '/_authenticated/dashboard/it/settings'
@@ -901,6 +914,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardItPropertyOfTheDayRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/it/popups': {
+      id: '/_authenticated/dashboard/it/popups'
+      path: '/dashboard/it/popups'
+      fullPath: '/dashboard/it/popups'
+      preLoaderRoute: typeof AuthenticatedDashboardItPopupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/it/password-resets': {
       id: '/_authenticated/dashboard/it/password-resets'
       path: '/dashboard/it/password-resets'
@@ -982,6 +1002,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardItLuxuryRoute: typeof AuthenticatedDashboardItLuxuryRoute
   AuthenticatedDashboardItMediaVerifyRoute: typeof AuthenticatedDashboardItMediaVerifyRoute
   AuthenticatedDashboardItPasswordResetsRoute: typeof AuthenticatedDashboardItPasswordResetsRoute
+  AuthenticatedDashboardItPopupsRoute: typeof AuthenticatedDashboardItPopupsRoute
   AuthenticatedDashboardItPropertyOfTheDayRoute: typeof AuthenticatedDashboardItPropertyOfTheDayRoute
   AuthenticatedDashboardItPropertyTypesRoute: typeof AuthenticatedDashboardItPropertyTypesRoute
   AuthenticatedDashboardItSettingsRoute: typeof AuthenticatedDashboardItSettingsRoute
@@ -1021,6 +1042,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDashboardItMediaVerifyRoute,
   AuthenticatedDashboardItPasswordResetsRoute:
     AuthenticatedDashboardItPasswordResetsRoute,
+  AuthenticatedDashboardItPopupsRoute: AuthenticatedDashboardItPopupsRoute,
   AuthenticatedDashboardItPropertyOfTheDayRoute:
     AuthenticatedDashboardItPropertyOfTheDayRoute,
   AuthenticatedDashboardItPropertyTypesRoute:
