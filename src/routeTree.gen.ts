@@ -9,137 +9,72 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as SiteRouteImport } from './routes/_site'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthIndexRouteImport } from './routes/auth.index'
+import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
-import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
-import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
-import { Route as AuthPasswordResetRouteImport } from './routes/auth.password-reset'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
-import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
-import { Route as SiteServicesRouteImport } from './routes/_site.services'
-import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
-import { Route as SiteLuxuryAccessRouteImport } from './routes/_site.luxury-access'
-import { Route as SiteListPropertyRouteImport } from './routes/_site.list-property'
-import { Route as SiteInvestorsRouteImport } from './routes/_site.investors'
-import { Route as SiteContactRouteImport } from './routes/_site.contact'
-import { Route as SiteBlogRouteImport } from './routes/_site.blog'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
-import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
-import { Route as ApiPublicFlutterwaveWebhookRouteImport } from './routes/api/public/flutterwave-webhook'
-import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
-import { Route as SitePortfolioVideosRouteImport } from './routes/_site.portfolio.videos'
-import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './routes/_authenticated/dashboard.service-requests'
-import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes/_authenticated/dashboard.receptionist'
-import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
-import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
-import { Route as AuthenticatedDashboardBookingsRouteImport } from './routes/_authenticated/dashboard.bookings'
+import { Route as SiteBlogRouteImport } from './routes/_site.blog'
+import { Route as SiteContactRouteImport } from './routes/_site.contact'
+import { Route as SiteInvestorsRouteImport } from './routes/_site.investors'
+import { Route as SiteListPropertyRouteImport } from './routes/_site.list-property'
+import { Route as SiteLuxuryAccessRouteImport } from './routes/_site.luxury-access'
+import { Route as SitePortfolioRouteImport } from './routes/_site.portfolio'
+import { Route as SiteServicesRouteImport } from './routes/_site.services'
+import { Route as SiteVerifyAccessRouteImport } from './routes/_site.verify-access'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthIndexRouteImport } from './routes/auth.index'
+import { Route as AuthPasswordResetRouteImport } from './routes/auth.password-reset'
+import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
+import { Route as AuthWelcomeRouteImport } from './routes/auth.welcome'
 import { Route as AuthenticatedDashboardAgentRouteImport } from './routes/_authenticated/dashboard.agent'
-import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
-import { Route as AuthenticatedDashboardItIndexRouteImport } from './routes/_authenticated/dashboard.it.index'
-import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
-import { Route as AuthenticatedDashboardBuyerIndexRouteImport } from './routes/_authenticated/dashboard.buyer.index'
+import { Route as AuthenticatedDashboardBookingsRouteImport } from './routes/_authenticated/dashboard.bookings'
+import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
+import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
+import { Route as AuthenticatedDashboardReceptionistRouteImport } from './routes/_authenticated/dashboard.receptionist'
+import { Route as AuthenticatedDashboardServiceRequestsRouteImport } from './routes/_authenticated/dashboard.service-requests'
+import { Route as SitePortfolioVideosRouteImport } from './routes/_site.portfolio.videos'
+import { Route as SitePropertiesIndexRouteImport } from './routes/_site.properties.index'
+import { Route as SitePropertiesSlugRouteImport } from './routes/_site.properties.$slug'
+import { Route as ApiPublicFlutterwaveWebhookRouteImport } from './routes/api/public/flutterwave-webhook'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
-import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
-import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
-import { Route as AuthenticatedDashboardItSystemHealthRouteImport } from './routes/_authenticated/dashboard.it.system-health'
-import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
-import { Route as AuthenticatedDashboardItPropertyTypesRouteImport } from './routes/_authenticated/dashboard.it.property-types'
-import { Route as AuthenticatedDashboardItPropertyOfTheDayRouteImport } from './routes/_authenticated/dashboard.it.property-of-the-day'
-import { Route as AuthenticatedDashboardItPopupsRouteImport } from './routes/_authenticated/dashboard.it.popups'
-import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
-import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
-import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
-import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
-import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
-import { Route as AuthenticatedDashboardBuyerBookingsRouteImport } from './routes/_authenticated/dashboard.buyer.bookings'
-import { Route as AuthenticatedDashboardAdminPortfolioVideosRouteImport } from './routes/_authenticated/dashboard.admin.portfolio-videos'
 import { Route as AuthenticatedDashboardAdminContactEditRouteImport } from './routes/_authenticated/dashboard.admin.contact-edit'
+import { Route as AuthenticatedDashboardAdminPortfolioVideosRouteImport } from './routes/_authenticated/dashboard.admin.portfolio-videos'
+import { Route as AuthenticatedDashboardBuyerIndexRouteImport } from './routes/_authenticated/dashboard.buyer.index'
+import { Route as AuthenticatedDashboardBuyerBookingsRouteImport } from './routes/_authenticated/dashboard.buyer.bookings'
+import { Route as AuthenticatedDashboardBuyerServiceRequestsRouteImport } from './routes/_authenticated/dashboard.buyer.service-requests'
+import { Route as AuthenticatedDashboardInquiriesIndexRouteImport } from './routes/_authenticated/dashboard.inquiries.index'
+import { Route as AuthenticatedDashboardItIndexRouteImport } from './routes/_authenticated/dashboard.it.index'
+import { Route as AuthenticatedDashboardItHomeContentRouteImport } from './routes/_authenticated/dashboard.it.home-content'
+import { Route as AuthenticatedDashboardItLuxuryRouteImport } from './routes/_authenticated/dashboard.it.luxury'
+import { Route as AuthenticatedDashboardItMediaVerifyRouteImport } from './routes/_authenticated/dashboard.it.media-verify'
+import { Route as AuthenticatedDashboardItPasswordResetsRouteImport } from './routes/_authenticated/dashboard.it.password-resets'
+import { Route as AuthenticatedDashboardItPopupsRouteImport } from './routes/_authenticated/dashboard.it.popups'
+import { Route as AuthenticatedDashboardItPropertyOfTheDayRouteImport } from './routes/_authenticated/dashboard.it.property-of-the-day'
+import { Route as AuthenticatedDashboardItPropertyTypesRouteImport } from './routes/_authenticated/dashboard.it.property-types'
+import { Route as AuthenticatedDashboardItSettingsRouteImport } from './routes/_authenticated/dashboard.it.settings'
+import { Route as AuthenticatedDashboardItSystemHealthRouteImport } from './routes/_authenticated/dashboard.it.system-health'
+import { Route as AuthenticatedDashboardItUsersRouteImport } from './routes/_authenticated/dashboard.it.users'
+import { Route as AuthenticatedDashboardPropertiesIndexRouteImport } from './routes/_authenticated/dashboard.properties.index'
+import { Route as AuthenticatedDashboardPropertiesNewRouteImport } from './routes/_authenticated/dashboard.properties.new'
 import { Route as AuthenticatedDashboardItStaffNewRouteImport } from './routes/_authenticated/dashboard.it.staff.new'
 
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthIndexRoute = AuthIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthRoute,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => SiteRoute,
-} as any)
-const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthVerifyRoute = AuthVerifyRouteImport.update({
-  id: '/verify',
-  path: '/verify',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPasswordResetRoute = AuthPasswordResetRouteImport.update({
-  id: '/password-reset',
-  path: '/password-reset',
-  getParentRoute: () => AuthRoute,
-} as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
-  id: '/verify-access',
-  path: '/verify-access',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SiteServicesRoute = SiteServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SitePortfolioRoute = SitePortfolioRouteImport.update({
-  id: '/portfolio',
-  path: '/portfolio',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SiteLuxuryAccessRoute = SiteLuxuryAccessRouteImport.update({
-  id: '/luxury-access',
-  path: '/luxury-access',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SiteListPropertyRoute = SiteListPropertyRouteImport.update({
-  id: '/list-property',
-  path: '/list-property',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SiteInvestorsRoute = SiteInvestorsRouteImport.update({
-  id: '/investors',
-  path: '/investors',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SiteContactRoute = SiteContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => SiteRoute,
-} as any)
-const SiteBlogRoute = SiteBlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
   getParentRoute: () => SiteRoute,
 } as any)
 const SiteAboutRoute = SiteAboutRouteImport.update({
@@ -147,49 +82,75 @@ const SiteAboutRoute = SiteAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => SiteRoute,
 } as any)
-const SitePropertiesIndexRoute = SitePropertiesIndexRouteImport.update({
-  id: '/properties/',
-  path: '/properties/',
+const SiteBlogRoute = SiteBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => SiteRoute,
 } as any)
-const ApiPublicFlutterwaveWebhookRoute =
-  ApiPublicFlutterwaveWebhookRouteImport.update({
-    id: '/api/public/flutterwave-webhook',
-    path: '/api/public/flutterwave-webhook',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
-  id: '/properties/$slug',
-  path: '/properties/$slug',
+const SiteContactRoute = SiteContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => SiteRoute,
 } as any)
-const SitePortfolioVideosRoute = SitePortfolioVideosRouteImport.update({
-  id: '/videos',
-  path: '/videos',
-  getParentRoute: () => SitePortfolioRoute,
+const SiteInvestorsRoute = SiteInvestorsRouteImport.update({
+  id: '/investors',
+  path: '/investors',
+  getParentRoute: () => SiteRoute,
 } as any)
-const AuthenticatedDashboardServiceRequestsRoute =
-  AuthenticatedDashboardServiceRequestsRouteImport.update({
-    id: '/dashboard/service-requests',
-    path: '/dashboard/service-requests',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardReceptionistRoute =
-  AuthenticatedDashboardReceptionistRouteImport.update({
-    id: '/dashboard/receptionist',
-    path: '/dashboard/receptionist',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardOwnerRoute =
-  AuthenticatedDashboardOwnerRouteImport.update({
-    id: '/dashboard/owner',
-    path: '/dashboard/owner',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardNotificationsRoute =
-  AuthenticatedDashboardNotificationsRouteImport.update({
-    id: '/dashboard/notifications',
-    path: '/dashboard/notifications',
+const SiteListPropertyRoute = SiteListPropertyRouteImport.update({
+  id: '/list-property',
+  path: '/list-property',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteLuxuryAccessRoute = SiteLuxuryAccessRouteImport.update({
+  id: '/luxury-access',
+  path: '/luxury-access',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SitePortfolioRoute = SitePortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteServicesRoute = SiteServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteVerifyAccessRoute = SiteVerifyAccessRouteImport.update({
+  id: '/verify-access',
+  path: '/verify-access',
+  getParentRoute: () => SiteRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPasswordResetRoute = AuthPasswordResetRouteImport.update({
+  id: '/password-reset',
+  path: '/password-reset',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthWelcomeRoute = AuthWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthenticatedDashboardAgentRoute =
+  AuthenticatedDashboardAgentRouteImport.update({
+    id: '/dashboard/agent',
+    path: '/dashboard/agent',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardBookingsRoute =
@@ -198,35 +159,50 @@ const AuthenticatedDashboardBookingsRoute =
     path: '/dashboard/bookings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardAgentRoute =
-  AuthenticatedDashboardAgentRouteImport.update({
-    id: '/dashboard/agent',
-    path: '/dashboard/agent',
+const AuthenticatedDashboardNotificationsRoute =
+  AuthenticatedDashboardNotificationsRouteImport.update({
+    id: '/dashboard/notifications',
+    path: '/dashboard/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardPropertiesIndexRoute =
-  AuthenticatedDashboardPropertiesIndexRouteImport.update({
-    id: '/dashboard/properties/',
-    path: '/dashboard/properties/',
+const AuthenticatedDashboardOwnerRoute =
+  AuthenticatedDashboardOwnerRouteImport.update({
+    id: '/dashboard/owner',
+    path: '/dashboard/owner',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardItIndexRoute =
-  AuthenticatedDashboardItIndexRouteImport.update({
-    id: '/dashboard/it/',
-    path: '/dashboard/it/',
+const AuthenticatedDashboardReceptionistRoute =
+  AuthenticatedDashboardReceptionistRouteImport.update({
+    id: '/dashboard/receptionist',
+    path: '/dashboard/receptionist',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardInquiriesIndexRoute =
-  AuthenticatedDashboardInquiriesIndexRouteImport.update({
-    id: '/dashboard/inquiries/',
-    path: '/dashboard/inquiries/',
+const AuthenticatedDashboardServiceRequestsRoute =
+  AuthenticatedDashboardServiceRequestsRouteImport.update({
+    id: '/dashboard/service-requests',
+    path: '/dashboard/service-requests',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardBuyerIndexRoute =
-  AuthenticatedDashboardBuyerIndexRouteImport.update({
-    id: '/dashboard/buyer/',
-    path: '/dashboard/buyer/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const SitePortfolioVideosRoute = SitePortfolioVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => SitePortfolioRoute,
+} as any)
+const SitePropertiesIndexRoute = SitePropertiesIndexRouteImport.update({
+  id: '/properties/',
+  path: '/properties/',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SitePropertiesSlugRoute = SitePropertiesSlugRouteImport.update({
+  id: '/properties/$slug',
+  path: '/properties/$slug',
+  getParentRoute: () => SiteRoute,
+} as any)
+const ApiPublicFlutterwaveWebhookRoute =
+  ApiPublicFlutterwaveWebhookRouteImport.update({
+    id: '/api/public/flutterwave-webhook',
+    path: '/api/public/flutterwave-webhook',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const AuthenticatedDashboardAdminIndexRoute =
   AuthenticatedDashboardAdminIndexRouteImport.update({
@@ -234,82 +210,10 @@ const AuthenticatedDashboardAdminIndexRoute =
     path: '/dashboard/admin/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardPropertiesNewRoute =
-  AuthenticatedDashboardPropertiesNewRouteImport.update({
-    id: '/dashboard/properties/new',
-    path: '/dashboard/properties/new',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItUsersRoute =
-  AuthenticatedDashboardItUsersRouteImport.update({
-    id: '/dashboard/it/users',
-    path: '/dashboard/it/users',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItSystemHealthRoute =
-  AuthenticatedDashboardItSystemHealthRouteImport.update({
-    id: '/dashboard/it/system-health',
-    path: '/dashboard/it/system-health',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItSettingsRoute =
-  AuthenticatedDashboardItSettingsRouteImport.update({
-    id: '/dashboard/it/settings',
-    path: '/dashboard/it/settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItPropertyTypesRoute =
-  AuthenticatedDashboardItPropertyTypesRouteImport.update({
-    id: '/dashboard/it/property-types',
-    path: '/dashboard/it/property-types',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItPropertyOfTheDayRoute =
-  AuthenticatedDashboardItPropertyOfTheDayRouteImport.update({
-    id: '/dashboard/it/property-of-the-day',
-    path: '/dashboard/it/property-of-the-day',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItPopupsRoute =
-  AuthenticatedDashboardItPopupsRouteImport.update({
-    id: '/dashboard/it/popups',
-    path: '/dashboard/it/popups',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItPasswordResetsRoute =
-  AuthenticatedDashboardItPasswordResetsRouteImport.update({
-    id: '/dashboard/it/password-resets',
-    path: '/dashboard/it/password-resets',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItMediaVerifyRoute =
-  AuthenticatedDashboardItMediaVerifyRouteImport.update({
-    id: '/dashboard/it/media-verify',
-    path: '/dashboard/it/media-verify',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItLuxuryRoute =
-  AuthenticatedDashboardItLuxuryRouteImport.update({
-    id: '/dashboard/it/luxury',
-    path: '/dashboard/it/luxury',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardItHomeContentRoute =
-  AuthenticatedDashboardItHomeContentRouteImport.update({
-    id: '/dashboard/it/home-content',
-    path: '/dashboard/it/home-content',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardBuyerServiceRequestsRoute =
-  AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
-    id: '/dashboard/buyer/service-requests',
-    path: '/dashboard/buyer/service-requests',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDashboardBuyerBookingsRoute =
-  AuthenticatedDashboardBuyerBookingsRouteImport.update({
-    id: '/dashboard/buyer/bookings',
-    path: '/dashboard/buyer/bookings',
+const AuthenticatedDashboardAdminContactEditRoute =
+  AuthenticatedDashboardAdminContactEditRouteImport.update({
+    id: '/dashboard/admin/contact-edit',
+    path: '/dashboard/admin/contact-edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardAdminPortfolioVideosRoute =
@@ -318,10 +222,106 @@ const AuthenticatedDashboardAdminPortfolioVideosRoute =
     path: '/dashboard/admin/portfolio-videos',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardAdminContactEditRoute =
-  AuthenticatedDashboardAdminContactEditRouteImport.update({
-    id: '/dashboard/admin/contact-edit',
-    path: '/dashboard/admin/contact-edit',
+const AuthenticatedDashboardBuyerIndexRoute =
+  AuthenticatedDashboardBuyerIndexRouteImport.update({
+    id: '/dashboard/buyer/',
+    path: '/dashboard/buyer/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardBuyerBookingsRoute =
+  AuthenticatedDashboardBuyerBookingsRouteImport.update({
+    id: '/dashboard/buyer/bookings',
+    path: '/dashboard/buyer/bookings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardBuyerServiceRequestsRoute =
+  AuthenticatedDashboardBuyerServiceRequestsRouteImport.update({
+    id: '/dashboard/buyer/service-requests',
+    path: '/dashboard/buyer/service-requests',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardInquiriesIndexRoute =
+  AuthenticatedDashboardInquiriesIndexRouteImport.update({
+    id: '/dashboard/inquiries/',
+    path: '/dashboard/inquiries/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItIndexRoute =
+  AuthenticatedDashboardItIndexRouteImport.update({
+    id: '/dashboard/it/',
+    path: '/dashboard/it/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItHomeContentRoute =
+  AuthenticatedDashboardItHomeContentRouteImport.update({
+    id: '/dashboard/it/home-content',
+    path: '/dashboard/it/home-content',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItLuxuryRoute =
+  AuthenticatedDashboardItLuxuryRouteImport.update({
+    id: '/dashboard/it/luxury',
+    path: '/dashboard/it/luxury',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItMediaVerifyRoute =
+  AuthenticatedDashboardItMediaVerifyRouteImport.update({
+    id: '/dashboard/it/media-verify',
+    path: '/dashboard/it/media-verify',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItPasswordResetsRoute =
+  AuthenticatedDashboardItPasswordResetsRouteImport.update({
+    id: '/dashboard/it/password-resets',
+    path: '/dashboard/it/password-resets',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItPopupsRoute =
+  AuthenticatedDashboardItPopupsRouteImport.update({
+    id: '/dashboard/it/popups',
+    path: '/dashboard/it/popups',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItPropertyOfTheDayRoute =
+  AuthenticatedDashboardItPropertyOfTheDayRouteImport.update({
+    id: '/dashboard/it/property-of-the-day',
+    path: '/dashboard/it/property-of-the-day',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItPropertyTypesRoute =
+  AuthenticatedDashboardItPropertyTypesRouteImport.update({
+    id: '/dashboard/it/property-types',
+    path: '/dashboard/it/property-types',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItSettingsRoute =
+  AuthenticatedDashboardItSettingsRouteImport.update({
+    id: '/dashboard/it/settings',
+    path: '/dashboard/it/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItSystemHealthRoute =
+  AuthenticatedDashboardItSystemHealthRouteImport.update({
+    id: '/dashboard/it/system-health',
+    path: '/dashboard/it/system-health',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardItUsersRoute =
+  AuthenticatedDashboardItUsersRouteImport.update({
+    id: '/dashboard/it/users',
+    path: '/dashboard/it/users',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardPropertiesIndexRoute =
+  AuthenticatedDashboardPropertiesIndexRouteImport.update({
+    id: '/dashboard/properties/',
+    path: '/dashboard/properties/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardPropertiesNewRoute =
+  AuthenticatedDashboardPropertiesNewRouteImport.update({
+    id: '/dashboard/properties/new',
+    path: '/dashboard/properties/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardItStaffNewRoute =
@@ -641,11 +641,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_site': {
@@ -655,109 +655,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/auth/': {
-      id: '/auth/'
-      path: '/'
-      fullPath: '/auth/'
-      preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthRoute
     }
     '/_site/': {
       id: '/_site/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof SiteIndexRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/auth/welcome': {
-      id: '/auth/welcome'
-      path: '/welcome'
-      fullPath: '/auth/welcome'
-      preLoaderRoute: typeof AuthWelcomeRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/verify': {
-      id: '/auth/verify'
-      path: '/verify'
-      fullPath: '/auth/verify'
-      preLoaderRoute: typeof AuthVerifyRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/password-reset': {
-      id: '/auth/password-reset'
-      path: '/password-reset'
-      fullPath: '/auth/password-reset'
-      preLoaderRoute: typeof AuthPasswordResetRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_site/verify-access': {
-      id: '/_site/verify-access'
-      path: '/verify-access'
-      fullPath: '/verify-access'
-      preLoaderRoute: typeof SiteVerifyAccessRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/services': {
-      id: '/_site/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof SiteServicesRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/portfolio': {
-      id: '/_site/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof SitePortfolioRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/luxury-access': {
-      id: '/_site/luxury-access'
-      path: '/luxury-access'
-      fullPath: '/luxury-access'
-      preLoaderRoute: typeof SiteLuxuryAccessRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/list-property': {
-      id: '/_site/list-property'
-      path: '/list-property'
-      fullPath: '/list-property'
-      preLoaderRoute: typeof SiteListPropertyRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/investors': {
-      id: '/_site/investors'
-      path: '/investors'
-      fullPath: '/investors'
-      preLoaderRoute: typeof SiteInvestorsRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/contact': {
-      id: '/_site/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof SiteContactRouteImport
-      parentRoute: typeof SiteRoute
-    }
-    '/_site/blog': {
-      id: '/_site/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof SiteBlogRouteImport
       parentRoute: typeof SiteRoute
     }
     '/_site/about': {
@@ -767,60 +676,102 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteAboutRouteImport
       parentRoute: typeof SiteRoute
     }
-    '/_site/properties/': {
-      id: '/_site/properties/'
-      path: '/properties'
-      fullPath: '/properties/'
-      preLoaderRoute: typeof SitePropertiesIndexRouteImport
+    '/_site/blog': {
+      id: '/_site/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof SiteBlogRouteImport
       parentRoute: typeof SiteRoute
     }
-    '/api/public/flutterwave-webhook': {
-      id: '/api/public/flutterwave-webhook'
-      path: '/api/public/flutterwave-webhook'
-      fullPath: '/api/public/flutterwave-webhook'
-      preLoaderRoute: typeof ApiPublicFlutterwaveWebhookRouteImport
+    '/_site/contact': {
+      id: '/_site/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof SiteContactRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/investors': {
+      id: '/_site/investors'
+      path: '/investors'
+      fullPath: '/investors'
+      preLoaderRoute: typeof SiteInvestorsRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/list-property': {
+      id: '/_site/list-property'
+      path: '/list-property'
+      fullPath: '/list-property'
+      preLoaderRoute: typeof SiteListPropertyRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/luxury-access': {
+      id: '/_site/luxury-access'
+      path: '/luxury-access'
+      fullPath: '/luxury-access'
+      preLoaderRoute: typeof SiteLuxuryAccessRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/portfolio': {
+      id: '/_site/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof SitePortfolioRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/services': {
+      id: '/_site/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof SiteServicesRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/verify-access': {
+      id: '/_site/verify-access'
+      path: '/verify-access'
+      fullPath: '/verify-access'
+      preLoaderRoute: typeof SiteVerifyAccessRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_site/properties/$slug': {
-      id: '/_site/properties/$slug'
-      path: '/properties/$slug'
-      fullPath: '/properties/$slug'
-      preLoaderRoute: typeof SitePropertiesSlugRouteImport
-      parentRoute: typeof SiteRoute
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/_site/portfolio/videos': {
-      id: '/_site/portfolio/videos'
-      path: '/videos'
-      fullPath: '/portfolio/videos'
-      preLoaderRoute: typeof SitePortfolioVideosRouteImport
-      parentRoute: typeof SitePortfolioRoute
+    '/auth/password-reset': {
+      id: '/auth/password-reset'
+      path: '/password-reset'
+      fullPath: '/auth/password-reset'
+      preLoaderRoute: typeof AuthPasswordResetRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/_authenticated/dashboard/service-requests': {
-      id: '/_authenticated/dashboard/service-requests'
-      path: '/dashboard/service-requests'
-      fullPath: '/dashboard/service-requests'
-      preLoaderRoute: typeof AuthenticatedDashboardServiceRequestsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/auth/verify': {
+      id: '/auth/verify'
+      path: '/verify'
+      fullPath: '/auth/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/_authenticated/dashboard/receptionist': {
-      id: '/_authenticated/dashboard/receptionist'
-      path: '/dashboard/receptionist'
-      fullPath: '/dashboard/receptionist'
-      preLoaderRoute: typeof AuthenticatedDashboardReceptionistRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/auth/welcome': {
+      id: '/auth/welcome'
+      path: '/welcome'
+      fullPath: '/auth/welcome'
+      preLoaderRoute: typeof AuthWelcomeRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/_authenticated/dashboard/owner': {
-      id: '/_authenticated/dashboard/owner'
-      path: '/dashboard/owner'
-      fullPath: '/dashboard/owner'
-      preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/notifications': {
-      id: '/_authenticated/dashboard/notifications'
-      path: '/dashboard/notifications'
-      fullPath: '/dashboard/notifications'
-      preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
+    '/_authenticated/dashboard/agent': {
+      id: '/_authenticated/dashboard/agent'
+      path: '/dashboard/agent'
+      fullPath: '/dashboard/agent'
+      preLoaderRoute: typeof AuthenticatedDashboardAgentRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/bookings': {
@@ -830,40 +781,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBookingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/agent': {
-      id: '/_authenticated/dashboard/agent'
-      path: '/dashboard/agent'
-      fullPath: '/dashboard/agent'
-      preLoaderRoute: typeof AuthenticatedDashboardAgentRouteImport
+    '/_authenticated/dashboard/notifications': {
+      id: '/_authenticated/dashboard/notifications'
+      path: '/dashboard/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/properties/': {
-      id: '/_authenticated/dashboard/properties/'
-      path: '/dashboard/properties'
-      fullPath: '/dashboard/properties/'
-      preLoaderRoute: typeof AuthenticatedDashboardPropertiesIndexRouteImport
+    '/_authenticated/dashboard/owner': {
+      id: '/_authenticated/dashboard/owner'
+      path: '/dashboard/owner'
+      fullPath: '/dashboard/owner'
+      preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/it/': {
-      id: '/_authenticated/dashboard/it/'
-      path: '/dashboard/it'
-      fullPath: '/dashboard/it/'
-      preLoaderRoute: typeof AuthenticatedDashboardItIndexRouteImport
+    '/_authenticated/dashboard/receptionist': {
+      id: '/_authenticated/dashboard/receptionist'
+      path: '/dashboard/receptionist'
+      fullPath: '/dashboard/receptionist'
+      preLoaderRoute: typeof AuthenticatedDashboardReceptionistRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/inquiries/': {
-      id: '/_authenticated/dashboard/inquiries/'
-      path: '/dashboard/inquiries'
-      fullPath: '/dashboard/inquiries/'
-      preLoaderRoute: typeof AuthenticatedDashboardInquiriesIndexRouteImport
+    '/_authenticated/dashboard/service-requests': {
+      id: '/_authenticated/dashboard/service-requests'
+      path: '/dashboard/service-requests'
+      fullPath: '/dashboard/service-requests'
+      preLoaderRoute: typeof AuthenticatedDashboardServiceRequestsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/buyer/': {
-      id: '/_authenticated/dashboard/buyer/'
-      path: '/dashboard/buyer'
-      fullPath: '/dashboard/buyer/'
-      preLoaderRoute: typeof AuthenticatedDashboardBuyerIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/_site/portfolio/videos': {
+      id: '/_site/portfolio/videos'
+      path: '/videos'
+      fullPath: '/portfolio/videos'
+      preLoaderRoute: typeof SitePortfolioVideosRouteImport
+      parentRoute: typeof SitePortfolioRoute
+    }
+    '/_site/properties/': {
+      id: '/_site/properties/'
+      path: '/properties'
+      fullPath: '/properties/'
+      preLoaderRoute: typeof SitePropertiesIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/properties/$slug': {
+      id: '/_site/properties/$slug'
+      path: '/properties/$slug'
+      fullPath: '/properties/$slug'
+      preLoaderRoute: typeof SitePropertiesSlugRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/api/public/flutterwave-webhook': {
+      id: '/api/public/flutterwave-webhook'
+      path: '/api/public/flutterwave-webhook'
+      fullPath: '/api/public/flutterwave-webhook'
+      preLoaderRoute: typeof ApiPublicFlutterwaveWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard/admin/': {
       id: '/_authenticated/dashboard/admin/'
@@ -872,95 +844,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/properties/new': {
-      id: '/_authenticated/dashboard/properties/new'
-      path: '/dashboard/properties/new'
-      fullPath: '/dashboard/properties/new'
-      preLoaderRoute: typeof AuthenticatedDashboardPropertiesNewRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/users': {
-      id: '/_authenticated/dashboard/it/users'
-      path: '/dashboard/it/users'
-      fullPath: '/dashboard/it/users'
-      preLoaderRoute: typeof AuthenticatedDashboardItUsersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/system-health': {
-      id: '/_authenticated/dashboard/it/system-health'
-      path: '/dashboard/it/system-health'
-      fullPath: '/dashboard/it/system-health'
-      preLoaderRoute: typeof AuthenticatedDashboardItSystemHealthRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/settings': {
-      id: '/_authenticated/dashboard/it/settings'
-      path: '/dashboard/it/settings'
-      fullPath: '/dashboard/it/settings'
-      preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/property-types': {
-      id: '/_authenticated/dashboard/it/property-types'
-      path: '/dashboard/it/property-types'
-      fullPath: '/dashboard/it/property-types'
-      preLoaderRoute: typeof AuthenticatedDashboardItPropertyTypesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/property-of-the-day': {
-      id: '/_authenticated/dashboard/it/property-of-the-day'
-      path: '/dashboard/it/property-of-the-day'
-      fullPath: '/dashboard/it/property-of-the-day'
-      preLoaderRoute: typeof AuthenticatedDashboardItPropertyOfTheDayRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/popups': {
-      id: '/_authenticated/dashboard/it/popups'
-      path: '/dashboard/it/popups'
-      fullPath: '/dashboard/it/popups'
-      preLoaderRoute: typeof AuthenticatedDashboardItPopupsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/password-resets': {
-      id: '/_authenticated/dashboard/it/password-resets'
-      path: '/dashboard/it/password-resets'
-      fullPath: '/dashboard/it/password-resets'
-      preLoaderRoute: typeof AuthenticatedDashboardItPasswordResetsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/media-verify': {
-      id: '/_authenticated/dashboard/it/media-verify'
-      path: '/dashboard/it/media-verify'
-      fullPath: '/dashboard/it/media-verify'
-      preLoaderRoute: typeof AuthenticatedDashboardItMediaVerifyRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/luxury': {
-      id: '/_authenticated/dashboard/it/luxury'
-      path: '/dashboard/it/luxury'
-      fullPath: '/dashboard/it/luxury'
-      preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/it/home-content': {
-      id: '/_authenticated/dashboard/it/home-content'
-      path: '/dashboard/it/home-content'
-      fullPath: '/dashboard/it/home-content'
-      preLoaderRoute: typeof AuthenticatedDashboardItHomeContentRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/buyer/service-requests': {
-      id: '/_authenticated/dashboard/buyer/service-requests'
-      path: '/dashboard/buyer/service-requests'
-      fullPath: '/dashboard/buyer/service-requests'
-      preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/buyer/bookings': {
-      id: '/_authenticated/dashboard/buyer/bookings'
-      path: '/dashboard/buyer/bookings'
-      fullPath: '/dashboard/buyer/bookings'
-      preLoaderRoute: typeof AuthenticatedDashboardBuyerBookingsRouteImport
+    '/_authenticated/dashboard/admin/contact-edit': {
+      id: '/_authenticated/dashboard/admin/contact-edit'
+      path: '/dashboard/admin/contact-edit'
+      fullPath: '/dashboard/admin/contact-edit'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminContactEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/admin/portfolio-videos': {
@@ -970,11 +858,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminPortfolioVideosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/admin/contact-edit': {
-      id: '/_authenticated/dashboard/admin/contact-edit'
-      path: '/dashboard/admin/contact-edit'
-      fullPath: '/dashboard/admin/contact-edit'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminContactEditRouteImport
+    '/_authenticated/dashboard/buyer/': {
+      id: '/_authenticated/dashboard/buyer/'
+      path: '/dashboard/buyer'
+      fullPath: '/dashboard/buyer/'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/buyer/bookings': {
+      id: '/_authenticated/dashboard/buyer/bookings'
+      path: '/dashboard/buyer/bookings'
+      fullPath: '/dashboard/buyer/bookings'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerBookingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/buyer/service-requests': {
+      id: '/_authenticated/dashboard/buyer/service-requests'
+      path: '/dashboard/buyer/service-requests'
+      fullPath: '/dashboard/buyer/service-requests'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerServiceRequestsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/inquiries/': {
+      id: '/_authenticated/dashboard/inquiries/'
+      path: '/dashboard/inquiries'
+      fullPath: '/dashboard/inquiries/'
+      preLoaderRoute: typeof AuthenticatedDashboardInquiriesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/': {
+      id: '/_authenticated/dashboard/it/'
+      path: '/dashboard/it'
+      fullPath: '/dashboard/it/'
+      preLoaderRoute: typeof AuthenticatedDashboardItIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/home-content': {
+      id: '/_authenticated/dashboard/it/home-content'
+      path: '/dashboard/it/home-content'
+      fullPath: '/dashboard/it/home-content'
+      preLoaderRoute: typeof AuthenticatedDashboardItHomeContentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/luxury': {
+      id: '/_authenticated/dashboard/it/luxury'
+      path: '/dashboard/it/luxury'
+      fullPath: '/dashboard/it/luxury'
+      preLoaderRoute: typeof AuthenticatedDashboardItLuxuryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/media-verify': {
+      id: '/_authenticated/dashboard/it/media-verify'
+      path: '/dashboard/it/media-verify'
+      fullPath: '/dashboard/it/media-verify'
+      preLoaderRoute: typeof AuthenticatedDashboardItMediaVerifyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/password-resets': {
+      id: '/_authenticated/dashboard/it/password-resets'
+      path: '/dashboard/it/password-resets'
+      fullPath: '/dashboard/it/password-resets'
+      preLoaderRoute: typeof AuthenticatedDashboardItPasswordResetsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/popups': {
+      id: '/_authenticated/dashboard/it/popups'
+      path: '/dashboard/it/popups'
+      fullPath: '/dashboard/it/popups'
+      preLoaderRoute: typeof AuthenticatedDashboardItPopupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/property-of-the-day': {
+      id: '/_authenticated/dashboard/it/property-of-the-day'
+      path: '/dashboard/it/property-of-the-day'
+      fullPath: '/dashboard/it/property-of-the-day'
+      preLoaderRoute: typeof AuthenticatedDashboardItPropertyOfTheDayRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/property-types': {
+      id: '/_authenticated/dashboard/it/property-types'
+      path: '/dashboard/it/property-types'
+      fullPath: '/dashboard/it/property-types'
+      preLoaderRoute: typeof AuthenticatedDashboardItPropertyTypesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/settings': {
+      id: '/_authenticated/dashboard/it/settings'
+      path: '/dashboard/it/settings'
+      fullPath: '/dashboard/it/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardItSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/system-health': {
+      id: '/_authenticated/dashboard/it/system-health'
+      path: '/dashboard/it/system-health'
+      fullPath: '/dashboard/it/system-health'
+      preLoaderRoute: typeof AuthenticatedDashboardItSystemHealthRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/it/users': {
+      id: '/_authenticated/dashboard/it/users'
+      path: '/dashboard/it/users'
+      fullPath: '/dashboard/it/users'
+      preLoaderRoute: typeof AuthenticatedDashboardItUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/properties/': {
+      id: '/_authenticated/dashboard/properties/'
+      path: '/dashboard/properties'
+      fullPath: '/dashboard/properties/'
+      preLoaderRoute: typeof AuthenticatedDashboardPropertiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/properties/new': {
+      id: '/_authenticated/dashboard/properties/new'
+      path: '/dashboard/properties/new'
+      fullPath: '/dashboard/properties/new'
+      preLoaderRoute: typeof AuthenticatedDashboardPropertiesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/it/staff/new': {
