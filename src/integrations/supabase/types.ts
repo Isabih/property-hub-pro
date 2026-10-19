@@ -16,36 +16,51 @@ export type Database = {
     Tables: {
       apartments: {
         Row: {
+          area_sqm: number | null
+          bathrooms: number | null
           bedrooms: number | null
           code: string
           created_at: string
+          description: string | null
           floor: number | null
           id: string
+          image_url: string | null
           name: string | null
+          nightly_rate: number | null
           notes: string | null
           property_id: string
           status: string
           updated_at: string
         }
         Insert: {
+          area_sqm?: number | null
+          bathrooms?: number | null
           bedrooms?: number | null
           code: string
           created_at?: string
+          description?: string | null
           floor?: number | null
           id?: string
+          image_url?: string | null
           name?: string | null
+          nightly_rate?: number | null
           notes?: string | null
           property_id: string
           status?: string
           updated_at?: string
         }
         Update: {
+          area_sqm?: number | null
+          bathrooms?: number | null
           bedrooms?: number | null
           code?: string
           created_at?: string
+          description?: string | null
           floor?: number | null
           id?: string
+          image_url?: string | null
           name?: string | null
+          nightly_rate?: number | null
           notes?: string | null
           property_id?: string
           status?: string
@@ -1030,6 +1045,29 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      list_building_apartments: {
+        Args: { building_id?: string }
+        Returns: {
+          address: string
+          area_sqm: number
+          bathrooms: number
+          bedrooms: number
+          building_slug: string
+          building_title: string
+          city: string
+          code: string
+          currency: string
+          description: string
+          district: string
+          floor: number
+          id: string
+          image_url: string
+          name: string
+          nightly_rate: number
+          property_id: string
+          status: string
+        }[]
       }
     }
     Enums: {
